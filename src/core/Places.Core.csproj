@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AssemblyName>PingDong.Newmoon.Places.Core</AssemblyName>
+    <RootNamespace>PingDong.Newmoon.Places.Core</RootNamespace>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Ping Dong</Authors>
+    <PackageId>PingDong.Newmoon.Places.Core</PackageId>
+    <PackageTags>Places</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
+    <PackageReference Include="PingDong.CleanArchitect.Core" Version="0.0.1.6" />
+  </ItemGroup>
+
+</Project>
