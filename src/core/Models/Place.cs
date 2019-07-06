@@ -7,10 +7,15 @@ namespace PingDong.Newmoon.Places.Core
     {
         #region ctor
 
+        public Place(string name) : this(name, null)
+        {
+
+        }
+
         public Place(string name, Address address)
         {
             Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
-            Address = (address != null && address.IsValid) ? address : throw new ArgumentNullException(nameof(address));
+            Address = address != null && address.IsValid ? address : throw new ArgumentNullException(nameof(address));
         }
 
         #endregion
@@ -23,10 +28,8 @@ namespace PingDong.Newmoon.Places.Core
 
         public void Update(string name, Address address)
         {
-            this.Name = name;
-            this.Address = address;
-
-            AddDomainEvent(new PlaceUpdatedDomainEvent(this));
+            Name = name;
+            Address = address;
         }
 
         #endregion

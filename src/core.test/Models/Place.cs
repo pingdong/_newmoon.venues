@@ -112,7 +112,6 @@ namespace PingDong.Newmoon.Places.Core
             Assert.AreEqual(name, place.Name);
             Assert.AreEqual(address, place.Address);
             Assert.IsFalse(place.IsOccupied);
-            Assert.IsTrue(place.HasDomainEvent(typeof(PlaceUpdatedDomainEvent)));
         }
 
         #endregion

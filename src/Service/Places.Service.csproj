@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>PingDong.Newmoon.Places.Service</AssemblyName>
+    <RootNamespace>PingDong.Newmoon.Places.Service</RootNamespace>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Ping Dong</Authors>
+    <PackageId>Places.Service</PackageId>
+    <PackageTags>Places</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Service\src\PingDong.CleanArchitect.Service\PingDong.CleanArchitect.Service.csproj" />
+    <ProjectReference Include="..\core\Places.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Integration Events\Inbounds\" />
+    <Folder Include="Integration Events\Outbounds\" />
+  </ItemGroup>
+
+</Project>

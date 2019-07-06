@@ -9,11 +9,6 @@ namespace PingDong.Newmoon.Places.Core
     //      Immutable    
 
 
-    // TODO: Value Object
-    // EF Core, current 2.1, doesn't support inject value object
-    // https://github.com/aspnet/EntityFrameworkCore/issues/12078
-    // https://github.com/aspnet/EntityFrameworkCore/issues/9148
-
     public class Address : ValueObject
     {
         public string No { get; }

@@ -13,7 +13,10 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.4.0" />
-    <PackageReference Include="PingDong.CleanArchitect.Core" Version="0.0.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
   </ItemGroup>
 
 </Project>

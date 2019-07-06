@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AssemblyName>PingDong.Newmoon.Places.Infrastructure</AssemblyName>
+    <RootNamespace>PingDong.Newmoon.Places.Infrastructure</RootNamespace>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Ping Dong</Authors>
+    <PackageId>Places.Infrastructure</PackageId>
+    <PackageTags>Places</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_1;</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="Polly" Version="7.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Infrastructure.SqlServer\src\PingDong.CleanArchitect.Infrastructure.SqlServer\PingDong.CleanArchitect.Infrastructure.SqlServer.csproj" />
+    <ProjectReference Include="..\Core\Places.Core.csproj" />
+  </ItemGroup>
+
+</Project>
