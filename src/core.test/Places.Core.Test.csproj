@@ -8,7 +8,7 @@
     <RootNamespace>PingDong.Newmoon.Places.Core.Test</RootNamespace>
     <VersionPrefix>0.1.0</VersionPrefix>
     <Authors>Ping Dong</Authors>
-    <PackageId>PingDong.Newmoon.Places.Core</PackageId>
+    <PackageId>PingDong.Newmoon.Places.Core.Test</PackageId>
     <PackageTags>Newmoon Places</PackageTags>
   </PropertyGroup>
 
