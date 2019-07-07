@@ -15,7 +15,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
         public DefaultDbContext CreateDbContext(string[] args)
         {
             // Configuration
-            var settingFile = Path.Combine(Directory.GetCurrentDirectory(), @"..\Places", "local.settings.json");
+            var settingFile = Path.Combine(Directory.GetCurrentDirectory(), @"..\Places.Api", "local.settings.json");
                 
             var config = new ConfigurationBuilder()
                                 .AddJsonFile(settingFile, optional: true, reloadOnChange: true)
