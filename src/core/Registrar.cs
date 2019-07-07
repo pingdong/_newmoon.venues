@@ -1,11 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace PingDong.CleanArchitect.Service
+namespace PingDong.Newmoon.Places.Core
 {
-    public class ServiceRegistrar
+    public class Registrar
     {
         public virtual void Register(IServiceCollection services)
         {
+            // Register all validators
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

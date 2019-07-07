@@ -8,7 +8,6 @@ namespace PingDong.Newmoon.Places.Core
     //      Without Identity
     //      Immutable    
 
-
     public class Address : ValueObject
     {
         public string No { get; }
@@ -38,11 +37,5 @@ namespace PingDong.Newmoon.Places.Core
             yield return Country;
             yield return ZipCode;
         }
-
-        public bool IsValid => !(
-                                 string.IsNullOrWhiteSpace(No) || 
-                                 string.IsNullOrWhiteSpace(Street) ||
-                                 string.IsNullOrWhiteSpace(City)
-                                );
     }
 }

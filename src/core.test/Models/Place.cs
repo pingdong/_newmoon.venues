@@ -1,80 +1,81 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Core.Testing;
+using Xunit;
 
 namespace PingDong.Newmoon.Places.Core
 {
-    [TestClass]
     public class PlaceTest
     {
         #region Occupied
 
         #region Init
 
-        [TestMethod]
+        [Fact]
         public void Status_AfterCreated()
         {
             var place = CreateDefaultPlace();
 
-            Assert.IsFalse(place.IsOccupied);
+            Assert.False(place.IsOccupied);
         }
 
         #endregion
 
         #region Engage
 
-        [TestMethod]
+        [Fact]
         public void Engage()
         {
             var place = CreateDefaultPlace();
 
-            Assert.IsFalse(place.IsOccupied);
+            Assert.False(place.IsOccupied);
             place.Engage();
-            Assert.IsTrue(place.HasDomainEvent(typeof(PlaceStateChangedDomainEvent)));
-            Assert.IsTrue(place.IsOccupied);
+            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
+            Assert.True(place.IsOccupied);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(DomainException))]
+        [Fact]
         public void Engage_Occupied()
         {
             var place = CreateDefaultPlace();
 
             place.Engage();
-            Assert.IsTrue(place.HasDomainEvent(typeof(PlaceStateChangedDomainEvent)));
-            Assert.IsTrue(place.IsOccupied);
-
-            place.Engage();
-            Assert.IsTrue(place.HasDomainEvent(typeof(PlaceStateChangedDomainEvent)));
+            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
+            Assert.True(place.IsOccupied);
+            
+            Assert.Throws<DomainException>(() => place.Engage());
+            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
         }
 
         #endregion
 
         #region Disengage
 
-        [TestMethod]
+        [Fact]
         public void Disengage()
         {
             var place = CreateDefaultPlace();
 
             place.Engage();
-            Assert.IsTrue(place.HasDomainEvent(typeof(PlaceStateChangedDomainEvent)));
-            Assert.IsTrue(place.IsOccupied);
+            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
+            Assert.True(place.IsOccupied);
 
             place.Disengage();
-            Assert.IsTrue(place.HasDomainEvent(typeof(PlaceStateChangedDomainEvent), 2));
-            Assert.IsFalse(place.IsOccupied);
+            Assert.True(place.HasDomainEvent(typeof(PlaceDisengagedDomainEvent)));
+            Assert.False(place.IsOccupied);
+
+            Assert.True(place.HasDomainEvents(2));
+            Assert.True(place.HasDomainEvents( new[]{ typeof(PlaceEngagedDomainEvent), typeof(PlaceDisengagedDomainEvent) } ));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(DomainException))]
+        [Fact]
         public void Disengage_Unoccupied()
         {
             var place = CreateDefaultPlace();
 
-            Assert.IsFalse(place.IsOccupied);
-            place.Disengage();
-            Assert.IsTrue(place.HasNoDomainEvent());
+            Assert.False(place.IsOccupied);
+            Assert.Throws<DomainException>(() => place.Disengage());
+            Assert.True(place.HasNoDomainEvent());
         }
 
         #endregion
@@ -83,7 +84,7 @@ namespace PingDong.Newmoon.Places.Core
 
         #region Properties
 
-        [TestMethod]
+        [Fact]
         public void Properties()
         {
             var address = new Address("11", "Queen", "Auckland", "Auckland", "New Zealand", "1026");
@@ -91,27 +92,56 @@ namespace PingDong.Newmoon.Places.Core
 
             var place = new Place(name, address);
 
-            Assert.AreEqual(name, place.Name);
-            Assert.AreEqual(address, place.Address);
-            Assert.IsFalse(place.IsOccupied);
+            Assert.Equal(name, place.Name);
+            Assert.Equal(address, place.Address);
+            Assert.False(place.IsOccupied);
         }
-
-
-        [TestMethod]
+        
+        [Fact]
         public void Properties_Update()
         {
-            var address = new Address("11", "Queen", "Auckland", "Auckland", "New Zealand", "1026");
+            var address = CreateDefaultAddress();
             var name = "Test";
 
+            var place = new Place(name, address);
+            Assert.Equal(name, place.Name);
+            Assert.Equal(address, place.Address);
+
+            var newName = "New Test";
+            var newAddress = new Address("11", "Queen", "Auckland", "Auckland", "New Zealand", "1026");
+            Assert.NotEqual(name, newName);
+            Assert.NotEqual(address, newAddress);
+
+            place.Update(newName, newAddress);
+            Assert.Equal(newName, place.Name);
+            Assert.Equal(newAddress, place.Address);
+            Assert.False(place.IsOccupied);
+        }
+
+        #endregion
+
+        #region Validation
+
+        [Fact]
+        public void Validation_Constructor()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Place(null, CreateDefaultAddress()));
+            Assert.Throws<ArgumentNullException>(() => new Place(string.Empty, CreateDefaultAddress()));
+            Assert.Throws<ArgumentNullException>(() => new Place(" ", CreateDefaultAddress()));
+            
+            Assert.Throws<ArgumentNullException>(() => new Place("Test", null));
+        }
+
+        [Fact]
+        public void Validation_Update()
+        {
             var place = CreateDefaultPlace();
-
-            Assert.AreNotEqual(name, place.Name);
-            Assert.AreNotEqual(address, place.Address);
-
-            place.Update(name, address);
-            Assert.AreEqual(name, place.Name);
-            Assert.AreEqual(address, place.Address);
-            Assert.IsFalse(place.IsOccupied);
+            
+            Assert.Throws<ArgumentNullException>(() => place.Update(null, CreateDefaultAddress()));
+            Assert.Throws<ArgumentNullException>(() => place.Update(string.Empty, CreateDefaultAddress()));
+            Assert.Throws<ArgumentNullException>(() => place.Update(" ", CreateDefaultAddress()));
+            
+            Assert.Throws<ArgumentNullException>(() => place.Update("Test", null));
         }
 
         #endregion
@@ -120,7 +150,12 @@ namespace PingDong.Newmoon.Places.Core
 
         private Place CreateDefaultPlace()
         {
-            return new Place("Default", new Address("20", "Symond", "Auckland", "Auckland", "New Zealand", "0926"));
+            return new Place("Default", CreateDefaultAddress());
+        }
+
+        private Address CreateDefaultAddress()
+        {
+            return new Address("1", "Queen St.", "Auckland", "Auckland", "New Zealand", "0926");
         }
 
         #endregion

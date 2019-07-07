@@ -7,15 +7,20 @@ namespace PingDong.Newmoon.Places.Core
     {
         #region ctor
 
-        public Place(string name) : this(name, null)
+        // [TODO] Full support of ValueObject
+        // Under the limit support of ValueObject in EF Core 2.x
+        // Have to provide a ctor that can ignore ValueObject
+        public Place(string name)
         {
-
+            Name = string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
         }
 
         public Place(string name, Address address)
         {
-            Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
-            Address = address != null && address.IsValid ? address : throw new ArgumentNullException(nameof(address));
+            Validate(name, address);
+
+            Name = name;
+            Address = address;
         }
 
         #endregion
@@ -28,8 +33,18 @@ namespace PingDong.Newmoon.Places.Core
 
         public void Update(string name, Address address)
         {
+            Validate(name, address);
+
             Name = name;
             Address = address;
+        }
+
+        private void Validate(string name, Address address)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException(nameof(name));
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
         }
 
         #endregion
@@ -45,7 +60,7 @@ namespace PingDong.Newmoon.Places.Core
 
             IsOccupied = true;
 
-            AddDomainEvent(new PlaceStateChangedDomainEvent(Id, Name, IsOccupied));
+            AddDomainEvent(new PlaceEngagedDomainEvent(Id, Name));
         }
 
         public void Disengage()
@@ -55,7 +70,7 @@ namespace PingDong.Newmoon.Places.Core
 
             IsOccupied = false;
 
-            AddDomainEvent(new PlaceStateChangedDomainEvent(Id, Name, IsOccupied));
+            AddDomainEvent(new PlaceDisengagedDomainEvent(Id, Name));
         }
 
         #endregion

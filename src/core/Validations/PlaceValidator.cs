@@ -11,7 +11,6 @@ namespace PingDong.Newmoon.Places.Core.Validations
             RuleFor(evt => evt.Name).NotEmpty().WithMessage("Name is required");
 
             RuleFor(evt => evt.Address).NotEmpty().WithMessage("Address is required");
-
             RuleFor(evt => evt.Address).SetValidator(new AddressValidator());
         }
     }

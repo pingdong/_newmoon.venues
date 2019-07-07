@@ -3,17 +3,15 @@ using MediatR;
 
 namespace PingDong.Newmoon.Places.Core
 {
-    public class PlaceStateChangedDomainEvent : INotification
+    public class PlaceEngagedDomainEvent : INotification
     {
         public Guid PlaceId { get; }
         public string PlaceName { get; }
-        public bool IsOccupied { get; }
 
-        public PlaceStateChangedDomainEvent(Guid placeId, string placeName, bool isOccupied)
+        public PlaceEngagedDomainEvent(Guid placeId, string placeName)
         {
             PlaceId = placeId;
             PlaceName = placeName;
-            IsOccupied = isOccupied;
         }
     }
 }

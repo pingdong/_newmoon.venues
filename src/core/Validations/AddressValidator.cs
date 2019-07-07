@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace PingDong.Newmoon.Places.Core.Validations
 {
@@ -9,12 +8,9 @@ namespace PingDong.Newmoon.Places.Core.Validations
         {
             CascadeMode = CascadeMode.Continue;
 
-            RuleFor(evt => evt.IsValid).Equal(true).WithMessage("The provided address is not valid");
-        }
-
-        private bool BeAValidStartDate(DateTime date)
-        {
-            return date.Hour >= 9;
+            RuleFor(evt => evt.No).NotEmpty().NotEmpty().WithMessage("The provided address doesn't have a valid 'No'");
+            RuleFor(evt => evt.Street).NotEmpty().WithMessage("The provided address doesn't have a valid 'Street'");
+            RuleFor(evt => evt.City).NotEmpty().WithMessage("The provided address doesn't have a valid 'City'");
         }
     }
 }
