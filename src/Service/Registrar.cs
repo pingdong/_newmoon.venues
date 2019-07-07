@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using PingDong.CleanArchitect.Service;
 
 namespace PingDong.Newmoon.Places.Services
@@ -9,6 +11,9 @@ namespace PingDong.Newmoon.Places.Services
         {
             // Idempotent: Register RequestManager
             services.AddScoped(typeof(IRequestManager<>), typeof(RequestManager<>));
+
+            // MediatR
+            services.AddMediatR(Assembly.GetExecutingAssembly());
         }
     }
 }
