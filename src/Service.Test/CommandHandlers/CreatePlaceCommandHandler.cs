@@ -12,8 +12,7 @@ namespace PingDong.Newmoon.Places.Service.Commands
     {
         private readonly string _defaultName = "Place";
         private readonly Address _defaultAddress = new Address("1", "st.", "akl", "ak", "nz","0920");
-
-
+        
         [Fact]
         public async void Handle()
         {
@@ -23,7 +22,6 @@ namespace PingDong.Newmoon.Places.Service.Commands
             Place savedPlace = null;
 
             repositoryMock.Setup(repository => repository.AddAsync(It.IsAny<Place>()))
-                            .Returns<Place>(x => Task.FromResult(x))
                             .Callback<Place>(r => savedPlace = r);
             repositoryMock.Setup(repository => repository.UnitOfWork.SaveEntitiesAsync(It.IsAny<CancellationToken>()))
                             .Returns(Task.FromResult(true));

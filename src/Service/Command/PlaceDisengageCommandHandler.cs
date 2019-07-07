@@ -25,6 +25,8 @@ namespace PingDong.Newmoon.Places.Service.Commands
                 return false;
 
             place.Disengage();
+
+            await _repository.UpdateAsync(place);
             
             return await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }

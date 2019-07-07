@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PingDong.CleanArchitect.Service;
 
-namespace PingDong.CleanArchitect.Service
+namespace PingDong.Newmoon.Places.Services
 {
-    public class ServiceRegistrar
+    public class Registrar
     {
         public virtual void Register(IServiceCollection services)
         {

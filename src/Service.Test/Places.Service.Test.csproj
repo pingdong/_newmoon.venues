@@ -23,9 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Core.Testing\src\PingDong.CleanArchitect.Core.Testing\PingDong.CleanArchitect.Core.Testing.csproj" />
     <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
     <ProjectReference Include="..\core\Places.Core.csproj" />
     <ProjectReference Include="..\Service\Places.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Domain Events\" />
+    <Folder Include="Integration Events\" />
   </ItemGroup>
 
 </Project>
