@@ -7,75 +7,164 @@ namespace PingDong.Newmoon.Places.Core
 {
     public class PlaceTest
     {
-        #region Occupied
+        #region State
 
-        #region Init
+        #region Occupy
 
         [Fact]
-        public void Status_AfterCreated()
+        public void State_Occupy()
         {
             var place = CreateDefaultPlace();
 
-            Assert.False(place.IsOccupied);
-        }
+            place.Occupy();
 
-        #endregion
-
-        #region Engage
-
-        [Fact]
-        public void Engage()
-        {
-            var place = CreateDefaultPlace();
-
-            Assert.False(place.IsOccupied);
-            place.Engage();
-            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
-            Assert.True(place.IsOccupied);
+            Assert.True(place.HasDomainEvent(typeof(PlaceOccupiedDomainEvent)));
+            Assert.Equal(PlaceState.Occupied, place.State);
         }
 
         [Fact]
-        public void Engage_Occupied()
+        public void State_Occupy_ClosedPlace()
         {
             var place = CreateDefaultPlace();
+            place.Close();
+            place.ClearDomainEvents();
 
-            place.Engage();
-            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
-            Assert.True(place.IsOccupied);
-            
-            Assert.Throws<DomainException>(() => place.Engage());
-            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
-        }
+            Assert.Throws<DomainException>(() => place.Occupy());
 
-        #endregion
-
-        #region Disengage
-
-        [Fact]
-        public void Disengage()
-        {
-            var place = CreateDefaultPlace();
-
-            place.Engage();
-            Assert.True(place.HasDomainEvent(typeof(PlaceEngagedDomainEvent)));
-            Assert.True(place.IsOccupied);
-
-            place.Disengage();
-            Assert.True(place.HasDomainEvent(typeof(PlaceDisengagedDomainEvent)));
-            Assert.False(place.IsOccupied);
-
-            Assert.True(place.HasDomainEvents(2));
-            Assert.True(place.HasDomainEvents( new[]{ typeof(PlaceEngagedDomainEvent), typeof(PlaceDisengagedDomainEvent) } ));
-        }
-
-        [Fact]
-        public void Disengage_Unoccupied()
-        {
-            var place = CreateDefaultPlace();
-
-            Assert.False(place.IsOccupied);
-            Assert.Throws<DomainException>(() => place.Disengage());
             Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.TemporaryClosed, place.State);
+        }
+
+        [Fact]
+        public void State_Occupy_Occupied()
+        {
+            var place = CreateDefaultPlace();
+            place.Occupy();
+            place.ClearDomainEvents();
+
+            Assert.Throws<DomainException>(() => place.Occupy());
+            
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.Occupied, place.State);
+        }
+
+        #endregion
+
+        #region Free
+
+        [Fact]
+        public void State_Free()
+        {
+            var place = CreateDefaultPlace();
+
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.Free, place.State);
+        }
+
+        [Fact]
+        public void State_Free_Freed()
+        {
+            var place = CreateDefaultPlace();
+
+            Assert.Throws<DomainException>(() => place.Free());
+
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.Free, place.State);
+        }
+
+        [Fact]
+        public void State_Free_TemporaryClosed()
+        {
+            var place = CreateDefaultPlace();
+            place.Close();
+            place.ClearDomainEvents();
+
+            Assert.Throws<DomainException>(() => place.Free());
+            
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.TemporaryClosed, place.State);
+        }
+
+        #endregion
+
+        #region Close
+
+        [Fact]
+        public void State_Close()
+        {
+            var place = CreateDefaultPlace();
+
+            place.Close();
+
+            Assert.True(place.HasDomainEvent(typeof(PlaceTemporaryClosedDomainEvent)));
+            Assert.Equal(PlaceState.TemporaryClosed, place.State);
+        }
+
+        [Fact]
+        public void State_Close_Closed()
+        {
+            var place = CreateDefaultPlace();
+            place.Close();
+            place.ClearDomainEvents();
+
+            Assert.Throws<DomainException>(() => place.Close());
+
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.TemporaryClosed, place.State);
+        }
+
+        [Fact]
+        public void State_Close_Occupied()
+        {
+            var place = CreateDefaultPlace();
+            place.Occupy();
+            place.ClearDomainEvents();
+
+            Assert.Throws<DomainException>(() => place.Close());
+            
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.Occupied, place.State);
+        }
+
+        #endregion
+
+        #region Open
+
+        [Fact]
+        public void State_Open()
+        {
+            var place = CreateDefaultPlace();
+            place.Close();
+            place.ClearDomainEvents();
+
+            place.Open();
+
+            Assert.True(place.HasDomainEvent(typeof(PlaceFreedDomainEvent)));
+            Assert.Equal(PlaceState.Free, place.State);
+        }
+
+        [Fact]
+        public void State_Open_Freed()
+        {
+            var place = CreateDefaultPlace();
+
+            Assert.Throws<DomainException>(() => place.Open());
+
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.Free, place.State);
+        }
+
+        [Fact]
+        public void State_Open_Occupied()
+        {
+            var place = CreateDefaultPlace();
+            place.Occupy();
+            place.ClearDomainEvents();
+
+            Assert.Throws<DomainException>(() => place.Open());
+            
+            Assert.True(place.HasNoDomainEvent());
+            Assert.Equal(PlaceState.Occupied, place.State);
         }
 
         #endregion
@@ -94,7 +183,6 @@ namespace PingDong.Newmoon.Places.Core
 
             Assert.Equal(name, place.Name);
             Assert.Equal(address, place.Address);
-            Assert.False(place.IsOccupied);
         }
         
         [Fact]
@@ -115,7 +203,6 @@ namespace PingDong.Newmoon.Places.Core
             place.Update(newName, newAddress);
             Assert.Equal(newName, place.Name);
             Assert.Equal(newAddress, place.Address);
-            Assert.False(place.IsOccupied);
         }
 
         #endregion

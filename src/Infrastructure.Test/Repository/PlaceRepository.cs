@@ -20,6 +20,7 @@ namespace PingDong.Newmoon.Events.Infrastructure.Repositories
                 // Surprise, a variable can be named in Simplified Chinese!!
                 // Just for fun
                 var 某地点 = new Place(_defaultName, _defaultAddress);
+                某地点.Occupy();
 
                 // Ack
                 await repository.AddAsync(某地点);
@@ -33,6 +34,7 @@ namespace PingDong.Newmoon.Events.Infrastructure.Repositories
                 var place = list[0];
                 Assert.Equal(_defaultName, place.Name);
                 Assert.Equal(_defaultAddress, place.Address);
+                Assert.Equal(PlaceState.Occupied, place.State);
             });
         }
     }

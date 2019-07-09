@@ -9,22 +9,22 @@ using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class PlaceDisengageCommandHandler : IRequestHandler<PlaceDisengageCommand, bool>
+    public class PlaceCloseCommandHandler : IRequestHandler<PlaceCloseCommand, bool>
     {
         private readonly IRepository<Guid, Place> _repository;
 
-        public PlaceDisengageCommandHandler(IRepository<Guid, Place> repository)
+        public PlaceCloseCommandHandler(IRepository<Guid, Place> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<bool> Handle(PlaceDisengageCommand message, CancellationToken cancellationToken)
+        public async Task<bool> Handle(PlaceCloseCommand message, CancellationToken cancellationToken)
         {
             var place = await _repository.FindByIdAsync(message.Id);
             if (place == null)
                 return false;
 
-            place.Disengage();
+            place.Close();
 
             await _repository.UpdateAsync(place);
             
@@ -32,9 +32,9 @@ namespace PingDong.Newmoon.Places.Service.Commands
         }
     }
 
-    public class PlaceDisengageIdentifiedCommandHandler : IdentifiedCommandHandler<Guid, bool, PlaceDisengageCommand>
+    public class PlaceCloseIdentifiedCommandHandler : IdentifiedCommandHandler<Guid, bool, PlaceCloseCommand>
     {
-        public PlaceDisengageIdentifiedCommandHandler(IMediator mediator, IRequestManager<Guid> requestManager) : base(mediator, requestManager)
+        public PlaceCloseIdentifiedCommandHandler(IMediator mediator, IRequestManager<Guid> requestManager) : base(mediator, requestManager)
         {
         }
 

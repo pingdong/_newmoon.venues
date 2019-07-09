@@ -2,14 +2,14 @@
 using PingDong.Newmoon.Places.Service.Commands;
 using Xunit;
 
-namespace PingDong.Newmoon.Places.Core.Test
+namespace PingDong.Newmoon.Places.Service.Test
 {
-    public class PlaceEngageCommandTest
+    public class PlaceOpenCommandTest
     {
         [Fact]
         public void ConstructorAssignedProperties()
         {
-            var tester = new ClassTester<PlaceEngageCommand>();
+            var tester = new ClassTester<PlaceOpenCommand>();
             
             Assert.True(tester.VerifyPropertiesAssignedFromConstructor());
         }

@@ -9,22 +9,22 @@ using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class PlaceEngageCommandHandler : IRequestHandler<PlaceEngageCommand, bool>
+    public class PlaceOccupyCommandHandler : IRequestHandler<PlaceOccupyCommand, bool>
     {
         private readonly IRepository<Guid, Place> _repository;
 
-        public PlaceEngageCommandHandler(IRepository<Guid, Place> repository)
+        public PlaceOccupyCommandHandler(IRepository<Guid, Place> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<bool> Handle(PlaceEngageCommand message, CancellationToken cancellationToken)
+        public async Task<bool> Handle(PlaceOccupyCommand message, CancellationToken cancellationToken)
         {
             var place = await _repository.FindByIdAsync(message.Id);
             if (place == null)
                 return false;
 
-            place.Engage();
+            place.Occupy();
 
             await _repository.UpdateAsync(place);
             
@@ -32,9 +32,9 @@ namespace PingDong.Newmoon.Places.Service.Commands
         }
     }
 
-    public class PlaceEngageIdentifiedCommandHandler : IdentifiedCommandHandler<Guid, bool, PlaceEngageCommand>
+    public class PlaceOccupyIdentifiedCommandHandler : IdentifiedCommandHandler<Guid, bool, PlaceOccupyCommand>
     {
-        public PlaceEngageIdentifiedCommandHandler(IMediator mediator, IRequestManager<Guid> requestManager) : base(mediator, requestManager)
+        public PlaceOccupyIdentifiedCommandHandler(IMediator mediator, IRequestManager<Guid> requestManager) : base(mediator, requestManager)
         {
         }
 

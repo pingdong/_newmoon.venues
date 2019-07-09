@@ -23,8 +23,10 @@ namespace PingDong.Newmoon.Places.Infrastructure.EntityConfigurations
                 .HasColumnName("PlaceName")
                 .HasMaxLength(200)
                 .IsRequired();
-
-            cfg.Property<bool>("IsOccupied")
+            
+            cfg.Ignore(b => b.State);
+            cfg.Property("_placeStateId")
+                .HasColumnName("StateId")
                 .IsRequired();
 
             cfg.OwnsOne(o => o.Address, b =>

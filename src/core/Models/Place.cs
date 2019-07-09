@@ -49,28 +49,56 @@ namespace PingDong.Newmoon.Places.Core
 
         #endregion
 
-        #region Occupied
+        #region State
+        private int _placeStateId = PlaceState.Free.Id;
+        public PlaceState State => PlaceState.From(_placeStateId);
 
-        public bool IsOccupied { get; private set; }
-
-        public void Engage()
+        public void Occupy()
         {
-            if (IsOccupied)
-                throw new DomainException($"{Name} is occupied");
+            if (_placeStateId == PlaceState.Occupied.Id)
+                throw new DomainException($"{Name} is already occupied");
+            if (_placeStateId == PlaceState.TemporaryClosed.Id)
+                throw new DomainException($"{Name} is temporary closed, unable to occupy");
 
-            IsOccupied = true;
+            _placeStateId = PlaceState.Occupied.Id;
 
-            AddDomainEvent(new PlaceEngagedDomainEvent(Id, Name));
+            AddDomainEvent(new PlaceOccupiedDomainEvent(Id, Name));
         }
 
-        public void Disengage()
+        public void Free()
         {
-            if (!IsOccupied)
-                throw new DomainException($"{Name} is unoccupied");
+            if (_placeStateId == PlaceState.Free.Id)
+                throw new DomainException($"{Name} is free. Unable to free");
+            if (_placeStateId == PlaceState.TemporaryClosed.Id)
+                throw new DomainException($"{Name} is temporary closed. Unable to free");
 
-            IsOccupied = false;
+            _placeStateId = PlaceState.Free.Id;
 
-            AddDomainEvent(new PlaceDisengagedDomainEvent(Id, Name));
+            AddDomainEvent(new PlaceFreedDomainEvent(Id, Name));
+        }
+
+        public void Close()
+        {
+            if (_placeStateId == PlaceState.TemporaryClosed.Id)
+                throw new DomainException($"{Name} is already closed");
+            if (_placeStateId == PlaceState.Occupied.Id)
+                throw new DomainException($"{Name} is occupied, unable to close an occupied place");
+
+            _placeStateId = PlaceState.TemporaryClosed.Id;
+
+            AddDomainEvent(new PlaceTemporaryClosedDomainEvent(Id, Name));
+        }
+
+        public void Open()
+        {
+            if (_placeStateId == PlaceState.Free.Id)
+                throw new DomainException($"{Name} is already opened");
+            if (_placeStateId == PlaceState.Occupied.Id)
+                throw new DomainException($"{Name} is already occupied. Unable to open it");
+
+            _placeStateId = PlaceState.Free.Id;
+
+            AddDomainEvent(new PlaceFreedDomainEvent(Id, Name));
         }
 
         #endregion

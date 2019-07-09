@@ -7,16 +7,16 @@ using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service.DomainPlaces
 {
-    public class PlaceDisengagedDomainEventHandler : INotificationHandler<PlaceDisengagedDomainEvent>
+    public class PlaceOccupiedDomainEventHandler : INotificationHandler<PlaceOccupiedDomainEvent>
     {
         private readonly ILogger _logger;
 
-        public PlaceDisengagedDomainEventHandler(ILogger logger)
+        public PlaceOccupiedDomainEventHandler(ILogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task Handle(PlaceDisengagedDomainEvent domainEvent, CancellationToken cancellationToken)
+        public Task Handle(PlaceOccupiedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
             // TODO: Send integration event to notify all interesting parties
 

@@ -18,9 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
-    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Service\src\PingDong.CleanArchitect.Service\PingDong.CleanArchitect.Service.csproj" />
+    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Service\src\PingDong.CleanArchitect.Service\PingDong.CleanArchitect.Service.csproj" />
+    <ProjectReference Include="..\..\..\..\Library\EventBus\Core\src\PingDong.EventBus.Core\PingDong.EventBus.Core.csproj" />
     <ProjectReference Include="..\core\Places.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Integration Events\Inbound\" />
+    <Folder Include="Integration Events\Outbound\" />
   </ItemGroup>
 
 </Project>

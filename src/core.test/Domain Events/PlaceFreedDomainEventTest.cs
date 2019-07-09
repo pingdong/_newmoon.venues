@@ -3,12 +3,12 @@ using Xunit;
 
 namespace PingDong.Newmoon.Places.Core.Test
 {
-    public class PlaceEngagedDomainEventTest
+    public class PlaceFreedDomainEventTest
     {
         [Fact]
         public void ConstructorAssignedProperties()
         {
-            var tester = new ClassTester<PlaceEngagedDomainEvent>();
+            var tester = new ClassTester<PlaceFreedDomainEvent>();
             
             Assert.True(tester.VerifyPropertiesAssignedFromConstructor());
         }

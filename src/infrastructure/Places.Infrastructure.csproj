@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Infrastructure.SqlServer\src\PingDong.CleanArchitect.Infrastructure.SqlServer\PingDong.CleanArchitect.Infrastructure.SqlServer.csproj" />
+    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Infrastructure.SqlServer\src\PingDong.CleanArchitect.Infrastructure.SqlServer\PingDong.CleanArchitect.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\Core\Places.Core.csproj" />
   </ItemGroup>
 

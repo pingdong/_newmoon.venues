@@ -3,12 +3,12 @@ using MediatR;
 
 namespace PingDong.Newmoon.Places.Core
 {
-    public class PlaceDisengagedDomainEvent : INotification
+    public class PlaceFreedDomainEvent : INotification
     {
         public Guid PlaceId { get; }
         public string PlaceName { get; }
 
-        public PlaceDisengagedDomainEvent(Guid placeId, string placeName)
+        public PlaceFreedDomainEvent(Guid placeId, string placeName)
         {
             PlaceId = placeId;
             PlaceName = placeName;

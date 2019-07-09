@@ -8,7 +8,7 @@ using Xunit;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class PlaceDisengageCommandHandlerTest : IDisposable
+    public class PlaceOccupyCommandHandlerTest : IDisposable
     {
         private readonly string _defaultName = "Place";
         private readonly Address _defaultAddress = new Address("1", "st.", "akl", "ak", "nz","0920");
@@ -20,8 +20,6 @@ namespace PingDong.Newmoon.Places.Service.Commands
             var repositoryMock = new Mock<IRepository<Guid, Place>>();
 
             var place = new Place(_defaultName, _defaultAddress);
-            place.Engage();
-
             Place savedPlace = null;
 
             repositoryMock.Setup(repository => repository.UpdateAsync(It.IsAny<Place>()))
@@ -31,10 +29,10 @@ namespace PingDong.Newmoon.Places.Service.Commands
             repositoryMock.Setup(repository => repository.UnitOfWork.SaveEntitiesAsync(It.IsAny<CancellationToken>()))
                             .Returns(Task.FromResult(true));
 
-            var handler = new PlaceDisengageCommandHandler(repositoryMock.Object);
+            var handler = new PlaceOccupyCommandHandler(repositoryMock.Object);
             
             // Act
-            var msg = new PlaceDisengageCommand(Guid.NewGuid());
+            var msg = new PlaceOccupyCommand(Guid.NewGuid());
             var token = new CancellationToken();
             var result = await handler.Handle(msg, token);
 
@@ -50,7 +48,7 @@ namespace PingDong.Newmoon.Places.Service.Commands
             Assert.NotNull(savedPlace);
             Assert.Equal(_defaultName, savedPlace.Name);
             Assert.Equal(_defaultAddress, savedPlace.Address);
-            Assert.False(savedPlace.IsOccupied);
+            Assert.Equal(PlaceState.Occupied, savedPlace.State);
 
             repositoryMock.VerifyNoOtherCalls();
         }

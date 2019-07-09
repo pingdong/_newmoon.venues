@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Core.Testing\src\PingDong.CleanArchitect.Core.Testing\PingDong.CleanArchitect.Core.Testing.csproj" />
-    <ProjectReference Include="..\..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Core.Testing\src\PingDong.CleanArchitect.Core.Testing\PingDong.CleanArchitect.Core.Testing.csproj" />
+    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
     <ProjectReference Include="..\core\Places.Core.csproj" />
   </ItemGroup>
 
