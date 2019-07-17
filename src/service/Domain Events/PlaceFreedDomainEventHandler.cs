@@ -1,26 +1,25 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
+using PingDong.CleanArchitect.Service;
+using PingDong.EventBus.Core;
 using PingDong.Newmoon.Places.Core;
+using PingDong.Newmoon.Places.Service.IntegrationEvents;
 
-namespace PingDong.Newmoon.Places.Service.DomainPlaces
+namespace PingDong.Newmoon.Places.Service.DomainEvents
 {
-    public class PlaceFreedDomainEventHandler : INotificationHandler<PlaceFreedDomainEvent>
+    public class PlaceFreedDomainEventHandler : EventBusDomainEventHandler, INotificationHandler<PlaceFreedDomainEvent>
     {
-        private readonly ILogger _logger;
-
-        public PlaceFreedDomainEventHandler(ILogger logger)
+        public PlaceFreedDomainEventHandler(IEventBusPublisher eventBus)
+            : base(eventBus)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task Handle(PlaceFreedDomainEvent domainEvent, CancellationToken cancellationToken)
+        public async Task Handle(PlaceFreedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            // TODO: Send integration event to notify all interesting parties
-
-            return Task.CompletedTask;
+            var integrationEvent = new PlaceOccupiedIntegrationEvent(domainEvent.PlaceId, domainEvent.PlaceName);
+            
+            await PublishAsync(domainEvent, integrationEvent);
         }
     }
 }

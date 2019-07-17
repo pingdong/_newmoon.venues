@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PingDong.CleanArchitect.Infrastructure;
-using PingDong.CleanArchitect.Infrastructure.SqlServer;
 
 namespace PingDong.Newmoon.Places.Infrastructure
 {

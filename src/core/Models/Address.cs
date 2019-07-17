@@ -10,13 +10,6 @@ namespace PingDong.Newmoon.Places.Core
 
     public class Address : ValueObject
     {
-        public string No { get; }
-        public string Street { get; }
-        public string City { get; }
-        public string State { get; }
-        public string Country { get; }
-        public string ZipCode { get; }
-        
         public Address(string no, string street, string city, string state, string country, string zipCode)
         {
             No = no;
@@ -27,6 +20,13 @@ namespace PingDong.Newmoon.Places.Core
             ZipCode = zipCode;
         }
 
+        public string No { get; }
+        public string Street { get; }
+        public string City { get; }
+        public string State { get; }
+        public string Country { get; }
+        public string ZipCode { get; }
+        
         protected override IEnumerable<object> GetAtomicValues()
         {
             // Using a yield return statement to return each element one at a time

@@ -15,18 +15,13 @@
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Scrutor" Version="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
     <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Service\src\PingDong.CleanArchitect.Service\PingDong.CleanArchitect.Service.csproj" />
-    <ProjectReference Include="..\..\..\..\Library\EventBus\Core\src\PingDong.EventBus.Core\PingDong.EventBus.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Library\EventBus\azure\src\PingDong.EventBus.Azure\PingDong.EventBus.Azure.csproj" />
     <ProjectReference Include="..\core\Places.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Integration Events\Inbound\" />
-    <Folder Include="Integration Events\Outbound\" />
   </ItemGroup>
 
 </Project>

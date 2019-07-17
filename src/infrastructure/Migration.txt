@@ -1,0 +1,2 @@
+﻿dotnet ef migrations add Init -v
+dotnet ef migrations script -i -o migration.sql

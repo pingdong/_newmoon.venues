@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using FluentValidation;
-using MediatR;
+﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using PingDong.CleanArchitect.Service;
+using System.Reflection;
+using PingDong.CleanArchitect.Core;
 
 namespace PingDong.Newmoon.Places.Core
 {
@@ -10,10 +9,13 @@ namespace PingDong.Newmoon.Places.Core
     {
         public virtual void Register(IServiceCollection services)
         {
-            // MediatR: Register all behaviors
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-            // FluentValidation: Register all validators
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            // FluentValidation
+            services.AddValidatorsFromAssemblies(new [] {
+                //    From CleanArchitect.Core
+                typeof(Entity<>).Assembly,
+                //    From this assembly
+                Assembly.GetExecutingAssembly()
+            });
         }
     }
 }

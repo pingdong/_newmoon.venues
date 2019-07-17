@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using PingDong.CleanArchitect.Infrastructure;
 using PingDong.CleanArchitect.Service;
-using PingDong.CleanArchitect.Service.Idempotency;
 using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
@@ -18,13 +17,13 @@ namespace PingDong.Newmoon.Places.Service.Commands
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<bool> Handle(PlaceFreeCommand message, CancellationToken cancellationToken)
+        public async Task<bool> Handle(PlaceFreeCommand command, CancellationToken cancellationToken)
         {
-            var place = await _repository.FindByIdAsync(message.Id);
+            var place = await _repository.FindByIdAsync(command.Id);
             if (place == null)
                 return false;
-
-            place.Free();
+            
+            place.Prepare(command).Free();
 
             await _repository.UpdateAsync(place);
             

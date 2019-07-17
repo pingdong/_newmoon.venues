@@ -12,7 +12,7 @@ namespace PingDong.Newmoon.Places.Core
         // Have to provide a ctor that can ignore ValueObject
         public Place(string name)
         {
-            Name = string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
+            Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
         }
 
         public Place(string name, Address address)
@@ -25,7 +25,7 @@ namespace PingDong.Newmoon.Places.Core
 
         #endregion
 
-        #region Properties
+        #region General
 
         public string Name { get; private set; }
 
@@ -50,6 +50,7 @@ namespace PingDong.Newmoon.Places.Core
         #endregion
 
         #region State
+
         private int _placeStateId = PlaceState.Free.Id;
         public PlaceState State => PlaceState.From(_placeStateId);
 
@@ -61,7 +62,7 @@ namespace PingDong.Newmoon.Places.Core
                 throw new DomainException($"{Name} is temporary closed, unable to occupy");
 
             _placeStateId = PlaceState.Occupied.Id;
-
+            
             AddDomainEvent(new PlaceOccupiedDomainEvent(Id, Name));
         }
 
@@ -73,7 +74,7 @@ namespace PingDong.Newmoon.Places.Core
                 throw new DomainException($"{Name} is temporary closed. Unable to free");
 
             _placeStateId = PlaceState.Free.Id;
-
+            
             AddDomainEvent(new PlaceFreedDomainEvent(Id, Name));
         }
 
@@ -97,7 +98,7 @@ namespace PingDong.Newmoon.Places.Core
                 throw new DomainException($"{Name} is already occupied. Unable to open it");
 
             _placeStateId = PlaceState.Free.Id;
-
+            
             AddDomainEvent(new PlaceFreedDomainEvent(Id, Name));
         }
 

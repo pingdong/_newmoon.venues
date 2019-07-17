@@ -1,7 +1,0 @@
-﻿Inbounds
-	Engage
-	Disengage
-
-Outbound
-	Engage
-	Disengage

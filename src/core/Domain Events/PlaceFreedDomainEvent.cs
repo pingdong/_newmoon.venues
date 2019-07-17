@@ -1,17 +1,17 @@
 ﻿using System;
-using MediatR;
+using PingDong.CleanArchitect.Core;
 
 namespace PingDong.Newmoon.Places.Core
 {
-    public class PlaceFreedDomainEvent : INotification
+    public class PlaceFreedDomainEvent : DomainEvent
     {
-        public Guid PlaceId { get; }
-        public string PlaceName { get; }
-
         public PlaceFreedDomainEvent(Guid placeId, string placeName)
         {
             PlaceId = placeId;
             PlaceName = placeName;
         }
+
+        public Guid PlaceId { get; }
+        public string PlaceName { get; }
     }
 }

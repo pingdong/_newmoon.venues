@@ -12,13 +12,23 @@ namespace PingDong.Newmoon.Places.Infrastructure.EntityConfigurations
             // Table
             cfg.ToTable("Places", DefaultDbContext.DefaultSchema);
             
-            // Primary Key
+            // Base Entity
+            //    Primary Key
             cfg.HasKey(o => o.Id);
-
-            // Columns
+            //    Columns
             cfg.Property(o => o.Id)
-                .HasColumnName("PlaceId");
+                .HasColumnName("Id");
+            cfg.Property(o => o.TenantId)
+                .HasColumnName("TenantId")
+                // Ignore TenantId if this is a single tenant application
+                .IsRequired(); 
+            //    Index
+            cfg.HasIndex(p => new { p.Id, p.TenantId });
+            //   Ignore
+            cfg.Ignore(b => b.CorrelationId);
+            cfg.Ignore(b => b.DomainEvents);
 
+            // Properties
             cfg.Property(o => o.Name)
                 .HasColumnName("PlaceName")
                 .HasMaxLength(200)
@@ -61,9 +71,6 @@ namespace PingDong.Newmoon.Places.Infrastructure.EntityConfigurations
                     .HasMaxLength(10)
                     .IsRequired();
             });
-
-            // Ignore
-            cfg.Ignore(b => b.DomainEvents);
         }
     }
 }

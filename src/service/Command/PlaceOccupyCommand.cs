@@ -1,15 +1,14 @@
 ﻿using System;
-using MediatR;
+using PingDong.CleanArchitect.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class PlaceOccupyCommand : IRequest<bool>
+    public class PlaceOccupyCommand : Command
     {
-        public Guid Id { get; }
-
         public PlaceOccupyCommand(Guid id)
         {
             Id = id;
         }
+        public Guid Id { get; }
     }
 }
