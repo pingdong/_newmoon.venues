@@ -76,8 +76,6 @@ namespace PingDong.Newmoon.Places.Functions
 
             if (_correlationId != default)
                 _accessor.HttpContext.Request.Headers.Add("x-correlation-id", _correlationId.ToString());
-            if (_requestId != default)
-                _accessor.HttpContext.Request.Headers.Add("x-request-id", _correlationId.ToString());
 
             _accessor.HttpContext.Response.ContentType = "application/json";
 
