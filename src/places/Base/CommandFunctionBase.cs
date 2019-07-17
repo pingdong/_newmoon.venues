@@ -14,10 +14,12 @@ namespace PingDong.Newmoon.Places.Functions
     public class CommandFunctionBase : FunctionBase
     {
         private readonly IMediator _mediator;
+        private readonly IHttpContextAccessor _accessor;
 
-        public CommandFunctionBase(IMediator mediator)
+        public CommandFunctionBase(IHttpContextAccessor accessor, IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
         }
 
         public async Task<IActionResult> ExecuteAsync(ExecutionContext context, HttpRequest request, ILogger logger, Func<Task<IActionResult>> func)
@@ -69,7 +71,18 @@ namespace PingDong.Newmoon.Places.Functions
 
             // Execute function
             var result = await func();
-            
+
+            #region Post-process
+
+            if (_correlationId != default)
+                _accessor.HttpContext.Request.Headers.Add("x-correlation-id", _correlationId.ToString());
+            if (_requestId != default)
+                _accessor.HttpContext.Request.Headers.Add("x-request-id", _correlationId.ToString());
+
+            _accessor.HttpContext.Response.ContentType = "application/json";
+
+            #endregion
+
             #region End
 
             var end = DateTime.UtcNow;

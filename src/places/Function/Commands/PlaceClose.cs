@@ -14,7 +14,7 @@ namespace PingDong.Newmoon.Places
 {
     public class PlaceClose : CommandFunctionBase
     {
-        public PlaceClose(IMediator mediator) : base(mediator)
+        public PlaceClose(IHttpContextAccessor accessor, IMediator mediator) : base(accessor, mediator)
         {
 
         }
