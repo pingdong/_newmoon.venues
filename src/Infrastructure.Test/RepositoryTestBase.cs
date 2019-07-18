@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Infrastructure;
 using PingDong.CleanArchitect.Infrastructure.SqlServer;
 using PingDong.Newmoon.Places.Core;
@@ -21,7 +20,7 @@ namespace PingDong.Newmoon.Events.Infrastructure.Repositories
                                     .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                                     .Options;
 
-            using (var context = new DefaultDbContext(options, new EmptyMediator()))
+            using (var context = new DefaultDbContext(options, new GenericDbContext.EmptyMediator(), new GenericDbContext.EmptyTenantProvider<string>()))
             {
                 // It's VERY important.
                 await context.Database.EnsureCreatedAsync();

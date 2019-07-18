@@ -11,15 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Service", "src\Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places", "src\Places\Places.csproj", "{5BD6256A-CCB9-4299-8F04-0387C6906B40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingDong.CleanArchitect.Core", "..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj", "{33037F31-6A9A-40E2-9FF6-58530BA8A346}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Core.Test", "src\core.test\Places.Core.Test.csproj", "{5ED19F6A-F058-4894-B399-3058B2C83F3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingDong.EventBus.Core", "..\..\Library\EventBus\Core\src\PingDong.EventBus.Core\PingDong.EventBus.Core.csproj", "{ADE290B6-B429-4796-B075-D89407103AF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Infrastructure.Test", "src\infrastructure.test\Places.Infrastructure.Test.csproj", "{F6027F6F-F71A-423C-B4DA-7511245FB6D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingDong.EventBus.Azure", "..\..\Library\EventBus\azure\src\PingDong.EventBus.Azure\PingDong.EventBus.Azure.csproj", "{21A33D44-C0F1-42C8-BFD0-C6850FADC268}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Service.Test", "src\service.test\Places.Service.Test.csproj", "{3540AD8C-C8E3-4872-B52B-D23247AD96DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingDong.CleanArchitect.Service", "..\..\Library\CleanArchitect\Service\src\PingDong.CleanArchitect.Service\PingDong.CleanArchitect.Service.csproj", "{BDEB9C3F-994F-4FD5-83C9-7DB5B8E01FFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Test.Integration", "src\Places.Test.Integration\Places.Test.Integration.csproj", "{5AEADE45-2A00-4820-BB40-97C183897F64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingDong.CleanArchitect.Infrastructure.SqlServer", "..\..\Library\CleanArchitect\Infrastructure.SqlServer\src\PingDong.CleanArchitect.Infrastructure.SqlServer\PingDong.CleanArchitect.Infrastructure.SqlServer.csproj", "{C55832BD-C023-4E1F-B5BB-73FA15D532EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Places.Test.Function", "Places.Test.Function\Places.Test.Function.csproj", "{38A12F4E-39B8-4101-8EFF-663443F8B7A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,26 +43,26 @@ Global
 		{5BD6256A-CCB9-4299-8F04-0387C6906B40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BD6256A-CCB9-4299-8F04-0387C6906B40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BD6256A-CCB9-4299-8F04-0387C6906B40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33037F31-6A9A-40E2-9FF6-58530BA8A346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33037F31-6A9A-40E2-9FF6-58530BA8A346}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33037F31-6A9A-40E2-9FF6-58530BA8A346}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33037F31-6A9A-40E2-9FF6-58530BA8A346}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADE290B6-B429-4796-B075-D89407103AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADE290B6-B429-4796-B075-D89407103AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADE290B6-B429-4796-B075-D89407103AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADE290B6-B429-4796-B075-D89407103AF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{21A33D44-C0F1-42C8-BFD0-C6850FADC268}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21A33D44-C0F1-42C8-BFD0-C6850FADC268}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21A33D44-C0F1-42C8-BFD0-C6850FADC268}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21A33D44-C0F1-42C8-BFD0-C6850FADC268}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BDEB9C3F-994F-4FD5-83C9-7DB5B8E01FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDEB9C3F-994F-4FD5-83C9-7DB5B8E01FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BDEB9C3F-994F-4FD5-83C9-7DB5B8E01FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BDEB9C3F-994F-4FD5-83C9-7DB5B8E01FFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C55832BD-C023-4E1F-B5BB-73FA15D532EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C55832BD-C023-4E1F-B5BB-73FA15D532EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C55832BD-C023-4E1F-B5BB-73FA15D532EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C55832BD-C023-4E1F-B5BB-73FA15D532EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ED19F6A-F058-4894-B399-3058B2C83F3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ED19F6A-F058-4894-B399-3058B2C83F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ED19F6A-F058-4894-B399-3058B2C83F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ED19F6A-F058-4894-B399-3058B2C83F3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6027F6F-F71A-423C-B4DA-7511245FB6D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6027F6F-F71A-423C-B4DA-7511245FB6D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6027F6F-F71A-423C-B4DA-7511245FB6D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6027F6F-F71A-423C-B4DA-7511245FB6D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AEADE45-2A00-4820-BB40-97C183897F64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AEADE45-2A00-4820-BB40-97C183897F64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AEADE45-2A00-4820-BB40-97C183897F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AEADE45-2A00-4820-BB40-97C183897F64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

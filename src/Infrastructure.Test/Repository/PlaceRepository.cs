@@ -1,4 +1,5 @@
-﻿using PingDong.Newmoon.Places.Core;
+﻿using System;
+using PingDong.Newmoon.Places.Core;
 using Xunit;
 
 namespace PingDong.Newmoon.Events.Infrastructure.Repositories

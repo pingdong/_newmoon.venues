@@ -10,16 +10,14 @@ namespace PingDong.Newmoon.Places.Functions
             var value = request.Headers["x-request-id"];
             return Guid.TryParse(value, out var requestId) ? requestId : Guid.Empty;
         }
-        public static Guid GetCorrelationId(this HttpRequest request)
+        public static string GetCorrelationId(this HttpRequest request)
         {
-            var value = request.Headers["x-correlation-id"];
-            return Guid.TryParse(value, out var correlationId) ? correlationId : Guid.Empty;
+            return request.Headers["x-correlation-id"];
         }
 
-        public static Guid GetTenantId(this HttpRequest request)
+        public static string GetTenantId(this HttpRequest request)
         {
-            var value = request.HttpContext.User.FindFirst("tid")?.Value;
-            return Guid.TryParse(value, out var tenantId) ? tenantId : Guid.Empty;
+            return request.HttpContext.User.FindFirst("tid")?.Value;
         }
     }
 }

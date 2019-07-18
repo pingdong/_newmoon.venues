@@ -46,11 +46,8 @@ namespace PingDong.Newmoon.Places.Functions
             if (_requestId == Guid.Empty)
                 return new BadRequestErrorMessageResult("Missing x-request-id header or is invalid");
             // Remove this check if this is a single tenant application
-            if (_tenantId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(_tenantId))
                 return new BadRequestErrorMessageResult("Missing tid in JWT or is invalid");
-            // If correlationId is empty, create a new one
-            if (_correlationId == Guid.Empty)
-                _correlationId = Guid.NewGuid();
 
             #endregion
 
@@ -95,10 +92,10 @@ namespace PingDong.Newmoon.Places.Functions
 
         #region Validation
 
-        private bool ValidateTenantId(Guid tenantId)
+        private bool ValidateTenantId(string tenantId)
         {
             // TODO: check tenantId
-            return Guid.Empty != tenantId;
+            return !string.IsNullOrWhiteSpace(tenantId);
         }
 
         #endregion
@@ -109,11 +106,11 @@ namespace PingDong.Newmoon.Places.Functions
 
         #region Command
 
-        private Guid _tenantId;
-        private Guid _correlationId;
+        private string _tenantId;
+        private string _correlationId;
         private Guid _requestId;
 
-        protected async Task<IActionResult> CommandDispatchAsync<TCommand>(TCommand command) where TCommand: Command
+        protected async Task<IActionResult> CommandDispatchAsync<TCommand>(TCommand command) where TCommand: Command<bool>
         {
             command.TenantId = _tenantId;
             command.CorrelationId = _correlationId;

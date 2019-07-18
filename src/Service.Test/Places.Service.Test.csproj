@@ -14,6 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="Moq" Version="4.12.0" />
+    <PackageReference Include="PingDong.CleanArchitect.Core.Testing" Version="0.0.1.8" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -23,8 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Core.Testing\src\PingDong.CleanArchitect.Core.Testing\PingDong.CleanArchitect.Core.Testing.csproj" />
-    <ProjectReference Include="..\..\..\..\Library\CleanArchitect\Core\src\PingDong.CleanArchitect.Core\PingDong.CleanArchitect.Core.csproj" />
     <ProjectReference Include="..\core\Places.Core.csproj" />
     <ProjectReference Include="..\Service\Places.Service.csproj" />
   </ItemGroup>

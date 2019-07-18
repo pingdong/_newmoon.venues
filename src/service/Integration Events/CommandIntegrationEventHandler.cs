@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Service;
-using PingDong.EventBus.Core;
 
 namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 {
@@ -16,15 +15,18 @@ namespace PingDong.Newmoon.Places.Service.IntegrationEvents
             _mediator = mediator;
         }
 
-        protected async Task<bool> CommandDispatchAsync<TCommand>(IntegrationEvent @event, TCommand command) where TCommand: Command
+        protected async Task<bool> CommandDispatchAsync<TCommand>(IntegrationEvent @event, TCommand command) where TCommand: Command<bool>
         {
-            if (@event.RequestId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(@event.RequestId))
+                return false;
+
+            if (Guid.TryParse(@event.RequestId, out Guid requestId))
                 return false;
 
             command.CorrelationId = @event.CorrelationId;
             command.TenantId = @event.TenantId;
 
-            var identifiedCommand = new IdentifiedCommand<Guid, bool, TCommand>(@event.RequestId, command);
+            var identifiedCommand = new IdentifiedCommand<Guid, bool, TCommand>(requestId, command);
             return await _mediator.Send(identifiedCommand).ConfigureAwait(false);
         }
     }

@@ -3,7 +3,7 @@ using PingDong.CleanArchitect.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class PlaceOpenCommand : Command
+    public class PlaceOpenCommand : Command<bool>
     {
         public PlaceOpenCommand(Guid id)
         {

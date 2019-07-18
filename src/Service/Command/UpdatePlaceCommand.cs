@@ -4,7 +4,7 @@ using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class UpdatePlaceCommand : Command
+    public class UpdatePlaceCommand : Command<bool>
     {
         public UpdatePlaceCommand(Guid id, string name, Address address)
         {

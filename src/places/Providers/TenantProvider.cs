@@ -4,9 +4,9 @@ using PingDong.CleanArchitect.Service;
 
 namespace PingDong.Newmoon.Places.Functions
 {
-    internal class TenantProvider : ITenantProvider
+    internal class TenantProvider : ITenantProvider<string>
     {
-        private readonly Guid _tenantId;
+        private readonly string _tenantId;
 
         public TenantProvider(IHttpContextAccessor accessor)
         {
@@ -16,7 +16,7 @@ namespace PingDong.Newmoon.Places.Functions
             _tenantId = accessor.HttpContext.Request.GetTenantId();
         }
 
-        public Guid GetTenantId()
+        public string GetTenantId()
         {
             return _tenantId;
         }

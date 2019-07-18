@@ -1,5 +1,5 @@
 ﻿using System;
-using PingDong.EventBus.Core;
+using PingDong.CleanArchitect.Core;
 
 namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 {

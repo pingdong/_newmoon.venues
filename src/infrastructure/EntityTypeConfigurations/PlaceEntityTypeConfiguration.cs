@@ -20,6 +20,8 @@ namespace PingDong.Newmoon.Places.Infrastructure.EntityConfigurations
                 .HasColumnName("Id");
             cfg.Property(o => o.TenantId)
                 .HasColumnName("TenantId")
+                // Change to Guid in DB to save space
+                .HasColumnType("UniqueIdentifier")
                 // Ignore TenantId if this is a single tenant application
                 .IsRequired(); 
             //    Index

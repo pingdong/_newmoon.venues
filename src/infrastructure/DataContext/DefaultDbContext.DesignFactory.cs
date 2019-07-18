@@ -27,7 +27,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
             var optionsBuilder = new DbContextOptionsBuilder<DefaultDbContext>()
                                         .UseSqlServer(connectionString);
 
-            return new DefaultDbContext(optionsBuilder.Options, new GenericDbContext.EmptyMediator(), new GenericDbContext.EmptyTenantProvider());
+            return new DefaultDbContext(optionsBuilder.Options, new GenericDbContext.EmptyMediator(), new GenericDbContext.EmptyTenantProvider<string>());
         }
     }
 }

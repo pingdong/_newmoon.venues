@@ -22,7 +22,7 @@ namespace PingDong.Newmoon.Places
             // Monitoring
             builder.Services.AddLogging();
             // Multiple tenant
-            builder.Services.AddTransient<ITenantProvider, TenantProvider>();
+            builder.Services.AddTransient<ITenantProvider<string>, TenantProvider>();
 
             // Core
             var core = new Core.Registrar();

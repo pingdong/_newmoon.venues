@@ -3,7 +3,7 @@ using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class CreatePlaceCommand : Command
+    public class CreatePlaceCommand : Command<bool>
     {
         public CreatePlaceCommand(string name, Address address)
         {

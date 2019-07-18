@@ -14,23 +14,33 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Occupy()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
 
             place.Occupy();
 
             Assert.True(place.HasDomainEvent(typeof(PlaceOccupiedDomainEvent)));
+            Assert.Equal(correlationId,  place.GetCorrelationId(typeof(PlaceOccupiedDomainEvent)));
+            Assert.Equal(tenantId,  place.GetTenantId(typeof(PlaceOccupiedDomainEvent)));
+            
             Assert.Equal(PlaceState.Occupied, place.State);
         }
 
         [Fact]
         public void State_Occupy_ClosedPlace()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
+
             place.Close();
             place.ClearDomainEvents();
-
+            
             Assert.Throws<DomainException>(() => place.Occupy());
-
+            
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.TemporaryClosed, place.State);
         }
@@ -38,7 +48,11 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Occupy_Occupied()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
+
             place.Occupy();
             place.ClearDomainEvents();
 
@@ -55,7 +69,10 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Free()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
 
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.Free, place.State);
@@ -64,7 +81,10 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Free_Freed()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
 
             Assert.Throws<DomainException>(() => place.Free());
 
@@ -75,10 +95,14 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Free_TemporaryClosed()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
+
             place.Close();
             place.ClearDomainEvents();
-
+            
             Assert.Throws<DomainException>(() => place.Free());
             
             Assert.True(place.HasNoDomainEvent());
@@ -92,21 +116,30 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Close()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
 
             place.Close();
 
             Assert.True(place.HasDomainEvent(typeof(PlaceTemporaryClosedDomainEvent)));
+            Assert.Equal(correlationId,  place.GetCorrelationId(typeof(PlaceTemporaryClosedDomainEvent)));
+            Assert.Equal(tenantId,  place.GetTenantId(typeof(PlaceTemporaryClosedDomainEvent)));
             Assert.Equal(PlaceState.TemporaryClosed, place.State);
         }
 
         [Fact]
         public void State_Close_Closed()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
+
             place.Close();
             place.ClearDomainEvents();
-
+            
             Assert.Throws<DomainException>(() => place.Close());
 
             Assert.True(place.HasNoDomainEvent());
@@ -116,7 +149,11 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Close_Occupied()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
+
             place.Occupy();
             place.ClearDomainEvents();
 
@@ -133,20 +170,28 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Open()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
             place.Close();
             place.ClearDomainEvents();
-
+            
             place.Open();
 
             Assert.True(place.HasDomainEvent(typeof(PlaceFreedDomainEvent)));
+            Assert.Equal(correlationId,  place.GetCorrelationId(typeof(PlaceFreedDomainEvent)));
+            Assert.Equal(tenantId,  place.GetTenantId(typeof(PlaceFreedDomainEvent)));
             Assert.Equal(PlaceState.Free, place.State);
         }
 
         [Fact]
         public void State_Open_Freed()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
 
             Assert.Throws<DomainException>(() => place.Open());
 
@@ -157,10 +202,14 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void State_Open_Occupied()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
+
             place.Occupy();
             place.ClearDomainEvents();
-
+            
             Assert.Throws<DomainException>(() => place.Open());
             
             Assert.True(place.HasNoDomainEvent());
@@ -222,7 +271,10 @@ namespace PingDong.Newmoon.Places.Core
         [Fact]
         public void Validation_Update()
         {
-            var place = CreateDefaultPlace();
+            var correlationId = Guid.NewGuid().ToString();
+            var tenantId = Guid.NewGuid().ToString();
+
+            var place = CreateDefaultPlace(tenantId, correlationId);
             
             Assert.Throws<ArgumentNullException>(() => place.Update(null, CreateDefaultAddress()));
             Assert.Throws<ArgumentNullException>(() => place.Update(string.Empty, CreateDefaultAddress()));
@@ -235,9 +287,13 @@ namespace PingDong.Newmoon.Places.Core
 
         #region Helper
 
-        private Place CreateDefaultPlace()
+        private Place CreateDefaultPlace(string tenantId, string correlationId)
         {
-            return new Place("Default", CreateDefaultAddress());
+            return new Place("Default", CreateDefaultAddress())
+                {
+                    TenantId = tenantId,
+                    CorrelationId = correlationId
+                };
         }
 
         private Address CreateDefaultAddress()
