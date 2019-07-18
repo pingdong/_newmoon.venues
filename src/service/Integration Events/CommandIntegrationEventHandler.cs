@@ -15,7 +15,7 @@ namespace PingDong.Newmoon.Places.Service.IntegrationEvents
             _mediator = mediator;
         }
 
-        protected async Task<bool> CommandDispatchAsync<TCommand>(IntegrationEvent @event, TCommand command) where TCommand: Command<bool>
+        protected async Task<bool> DispatchAsync<TCommand>(IntegrationEvent @event, TCommand command) where TCommand: Command<bool>
         {
             if (string.IsNullOrWhiteSpace(@event.RequestId))
                 return false;

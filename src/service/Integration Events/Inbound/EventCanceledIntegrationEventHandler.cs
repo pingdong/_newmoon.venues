@@ -26,7 +26,7 @@ namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 
             var command = new PlaceFreeCommand(@event.PlaceId);
 
-            await CommandDispatchAsync(@event, command);
+            await DispatchAsync(@event, command);
         }
     }
 }
