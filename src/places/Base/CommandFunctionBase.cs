@@ -72,7 +72,7 @@ namespace PingDong.Newmoon.Places.Functions
             #region Post-process
 
             if (_correlationId != default)
-                _accessor.HttpContext.Request.Headers.Add("x-correlation-id", _correlationId.ToString());
+                _accessor.HttpContext.Request.Headers.Add("x-correlation-id", _correlationId);
 
             _accessor.HttpContext.Response.ContentType = "application/json";
 

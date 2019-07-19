@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Infrastructure.EntityConfigurations
@@ -21,7 +23,10 @@ namespace PingDong.Newmoon.Places.Infrastructure.EntityConfigurations
             cfg.Property(o => o.TenantId)
                 .HasColumnName("TenantId")
                 // Change to Guid in DB to save space
-                .HasColumnType("UniqueIdentifier")
+                .HasColumnType("uniqueIdentifier")
+                // Saving in Guid to save storage space
+                //    as Guid is internally used as TenantId
+                .HasConversion(StringGuidConverter())
                 // Ignore TenantId if this is a single tenant application
                 .IsRequired(); 
             //    Index
@@ -73,6 +78,13 @@ namespace PingDong.Newmoon.Places.Infrastructure.EntityConfigurations
                     .HasMaxLength(10)
                     .IsRequired();
             });
+        }
+
+        private ValueConverter<string, Guid> StringGuidConverter()
+        {
+            return new ValueConverter<string, Guid>(
+                v => new Guid(v),
+                v => v.ToString());
         }
     }
 }
