@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.4.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="8.4.0" />
-    <PackageReference Include="PingDong.CleanArchitect.Core" Version="0.0.1.14" />
+    <PackageReference Include="PingDong.CleanArchitect.Core" Version="0.0.1.15" />
   </ItemGroup>
 
 </Project>

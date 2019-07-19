@@ -4,16 +4,17 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using PingDong.CleanArchitect.Core;
+using PingDong.CleanArchitect.Core.Validation;
 using PingDong.CleanArchitect.Infrastructure;
 
 namespace PingDong.Newmoon.Places.Infrastructure
 {
-    public class GenericRepository<TId, T> : IRepository<TId, T> where T : Entity<TId>, IAggregateRoot 
+    public class GenericRepository<TId, TEntity> : IRepository<TId, TEntity> where TEntity : Entity<TId>, IAggregateRoot 
     {
         private readonly DefaultDbContext _context;
-        private readonly IEnumerable<IValidator<T>> _validators;
+        private readonly IEnumerable<IValidator<TEntity>> _validators;
 
-        public GenericRepository(DefaultDbContext context, IEnumerable<IValidator<T>> validators)
+        public GenericRepository(DefaultDbContext context, IEnumerable<IValidator<TEntity>> validators)
         {
             _context = context;
             _validators = validators;
@@ -23,17 +24,17 @@ namespace PingDong.Newmoon.Places.Infrastructure
         
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<T> FindByIdAsync(TId id)
+        public async Task<TEntity> FindByIdAsync(TId id)
         {
-            return await _context.Set<T>().FindAsync(id).ConfigureAwait(false);
+            return await _context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
         }
 
-        public async Task<IList<T>> ListAsync()
+        public async Task<IList<TEntity>> ListAsync()
         {
-            return await _context.Set<T>().ToListAsync().ConfigureAwait(false);
+            return await _context.Set<TEntity>().ToListAsync().ConfigureAwait(false);
         }
         
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -43,7 +44,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
 
             _validators.Validate(entity);
 
-            await _context.Set<T>().AddAsync(entity).ConfigureAwait(false);
+            await _context.Set<TEntity>().AddAsync(entity).ConfigureAwait(false);
         }
         
         public async Task RemoveAsync(TId id)
@@ -51,14 +52,14 @@ namespace PingDong.Newmoon.Places.Infrastructure
             if(EqualityComparer<TId>.Default.Equals(id, default)) 
                 throw new ArgumentNullException(nameof(id));
 
-            var entity = await _context.Set<T>().FindAsync(id).ConfigureAwait(false);
+            var entity = await _context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
             if (null == entity)
                 throw new ArgumentOutOfRangeException(nameof(id));
 
-            _context.Set<T>().Remove(entity);
+            _context.Set<TEntity>().Remove(entity);
         }
         
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -66,7 +67,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
             if (entity.IsTransient())
                 throw new ArgumentException(nameof(entity));
             
-            var existing = await _context.Set<T>().FindAsync(entity.Id).ConfigureAwait(false);
+            var existing = await _context.Set<TEntity>().FindAsync(entity.Id).ConfigureAwait(false);
             if (existing == null)
                 throw new ArgumentOutOfRangeException(nameof(entity));
 

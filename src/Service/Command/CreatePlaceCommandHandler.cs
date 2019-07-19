@@ -20,7 +20,7 @@ namespace PingDong.Newmoon.Places.Service.Commands
         public async Task<bool> Handle(CreatePlaceCommand command, CancellationToken cancellationToken)
         {
             var place = new Place(command.Name, command.Address);
-            place.Prepare(command);
+            place.Preprocess(command);
 
             await _repository.AddAsync(place);
 

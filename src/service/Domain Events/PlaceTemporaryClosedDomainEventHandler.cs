@@ -8,10 +8,10 @@ using PingDong.Newmoon.Places.Service.IntegrationEvents;
 
 namespace PingDong.Newmoon.Places.Service.DomainEvents
 {
-    public class PlaceTemporaryClosedDomainEventHandler : EventBusDomainEventHandler, INotificationHandler<PlaceTemporaryClosedDomainEvent>
+    public class PlaceTemporaryClosedDomainEventHandler : DomainEventHandler, INotificationHandler<PlaceTemporaryClosedDomainEvent>
     {
-        public PlaceTemporaryClosedDomainEventHandler(IEventBusPublisher eventBus) 
-            : base(eventBus)
+        public PlaceTemporaryClosedDomainEventHandler(IEventBusPublisher eventBus, IMediator mediator)
+            : base(eventBus, mediator)
         {
         }
 
@@ -19,7 +19,7 @@ namespace PingDong.Newmoon.Places.Service.DomainEvents
         {
             var integrationEvent = new PlaceTemporaryClosedIntegrationEvent(domainEvent.PlaceId, domainEvent.PlaceName);
             
-            await PublishAsync(domainEvent, integrationEvent);
+            await PublishAsync(integrationEvent, domainEvent);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace PingDong.Newmoon.Places.Service.Commands
             if (place == null)
                 return false;
             
-            place.Prepare(command).Open();
+            place.Preprocess(command).Open();
 
             await _repository.UpdateAsync(place);
             

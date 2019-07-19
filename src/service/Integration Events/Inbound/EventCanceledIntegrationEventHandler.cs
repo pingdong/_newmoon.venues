@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MediatR;
+using PingDong.CleanArchitect.Service;
 using PingDong.EventBus.Core;
 using PingDong.Newmoon.Places.Service.Commands;
 
 namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 {
-    internal class EventCanceledIntegrationEventHandler : CommandIntegrationEventHandler, IIntegrationEventHandler<EventCanceledIntegrationEvent>
+    internal class EventCanceledIntegrationEventHandler : IntegrationEventHandler, IIntegrationEventHandler<EventCanceledIntegrationEvent>
     {
         public EventCanceledIntegrationEventHandler(IMediator mediator)
             : base(mediator)
@@ -26,7 +27,7 @@ namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 
             var command = new PlaceFreeCommand(@event.PlaceId);
 
-            await DispatchAsync(@event, command);
+            await DispatchAsync(command, @event);
         }
     }
 }
