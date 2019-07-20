@@ -242,6 +242,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
 
             requestConfiguration.HasKey(cr => cr.Id);
             requestConfiguration.Property(cr => cr.Name).IsRequired();
+            requestConfiguration.Ignore(cr => cr.DomainEvents);
         }
     }
 
