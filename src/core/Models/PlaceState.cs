@@ -23,7 +23,7 @@ namespace PingDong.Newmoon.Places.Core
         {
             var state = List().SingleOrDefault(s => string.Equals(s.Name, name, StringComparison.CurrentCultureIgnoreCase));
 
-            if (state == null)
+            if (state is null)
                 throw new DomainException($"Possible values for PlaceState: { string.Join(",", List().Select(s => s.Name)) }");
 
             return state;
@@ -33,9 +33,9 @@ namespace PingDong.Newmoon.Places.Core
         {
             var state = List().SingleOrDefault(s => s.Id == id);
 
-            if (state == null)
-                throw new DomainException($"Possible values for PlaceState: { string.Join(",", List().Select(s => s.Id)) }");
-            
+            if (state is null)
+                throw new DomainException($"Possible values for PlaceState: { string.Join(",", List().Select(s => s.Name)) }");
+
             return state;
         }
     }
