@@ -28,9 +28,4 @@
     <ProjectReference Include="..\Service\Places.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain Events\" />
-    <Folder Include="Integration Events\" />
-  </ItemGroup>
-
 </Project>

@@ -87,7 +87,7 @@ namespace PingDong.Newmoon.Places.Core
 
             _placeStateId = PlaceState.TemporaryClosed.Id;
 
-            AddDomainEvent(new PlaceTemporaryClosedDomainEvent(Id, Name));
+            AddDomainEvent(new PlaceClosedDomainEvent(Id, Name));
         }
 
         public void Open()

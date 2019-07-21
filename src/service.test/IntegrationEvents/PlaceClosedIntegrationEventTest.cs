@@ -1,15 +1,15 @@
 ﻿using PingDong.CleanArchitect.Core.Testing;
 using Xunit;
 
-namespace PingDong.Newmoon.Places.Service.Commands
+namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 {
-    public class PlaceOccupyCommandTest
+    public class PlaceClosedIntegrationEventTest
     {
         [Fact]
         public void ConstructorAssignedProperties()
         {
-            var tester = new ClassTester<PlaceOccupyCommand>();
-            
+            var tester = new ClassTester<PlaceClosedIntegrationEvent>();
+
             Assert.True(tester.VerifyPropertiesAssignedFromConstructor());
         }
     }

@@ -54,6 +54,36 @@ namespace PingDong.Newmoon.Places.Service.Commands
             repositoryMock.VerifyNoOtherCalls();
         }
         
+        [Fact]
+        public async void NotExisted()
+        {
+            // Arrange
+            var repositoryMock = new Mock<IRepository<Guid, Place>>();
+            
+            repositoryMock.Setup(repository => repository.FindByIdAsync(It.IsAny<Guid>()))
+                .Returns<Guid>(x => Task.FromResult<Place>(null));
+
+            var handler = new PlaceOpenCommandHandler(repositoryMock.Object);
+            
+            // Act
+            var msg = new PlaceOpenCommand(Guid.NewGuid());
+            var token = new CancellationToken();
+            var result = await handler.Handle(msg, token);
+
+            // Assert
+            Assert.False(result);
+            // Repository.FindById is called
+            repositoryMock.Verify(p => p.FindByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            repositoryMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void EmptyCtor()
+        {
+            Assert.Throws<ArgumentNullException>(() => new PlaceOpenCommandHandler(null));
+        }
+        
         public void Dispose()
         {
             // Clean up the test environment

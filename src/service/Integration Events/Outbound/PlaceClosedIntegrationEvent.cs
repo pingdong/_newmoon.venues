@@ -3,9 +3,9 @@ using PingDong.CleanArchitect.Core;
 
 namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 {
-    public class PlaceTemporaryClosedIntegrationEvent : IntegrationEvent
+    public class PlaceClosedIntegrationEvent : IntegrationEvent
     {
-        public PlaceTemporaryClosedIntegrationEvent(Guid placeId, string placeName)
+        public PlaceClosedIntegrationEvent(Guid placeId, string placeName)
         {
             PlaceId = placeId;
             PlaceName = placeName;

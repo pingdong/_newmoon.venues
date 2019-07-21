@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using PingDong.CleanArchitect.Core.Testing;
-using PingDong.Newmoon.Places.Service.Commands;
+using PingDong.Newmoon.Places.Core;
 using Xunit;
 
-namespace PingDong.Newmoon.Places.Core.Test
+namespace PingDong.Newmoon.Places.Service.Commands
 {
     public class CreatePlaceCommandTest
     {

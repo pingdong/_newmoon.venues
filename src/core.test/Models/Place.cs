@@ -123,9 +123,9 @@ namespace PingDong.Newmoon.Places.Core
 
             place.Close();
 
-            Assert.True(place.HasDomainEvent(typeof(PlaceTemporaryClosedDomainEvent)));
-            Assert.Equal(correlationId,  place.GetCorrelationId(typeof(PlaceTemporaryClosedDomainEvent)));
-            Assert.Equal(tenantId,  place.GetTenantId(typeof(PlaceTemporaryClosedDomainEvent)));
+            Assert.True(place.HasDomainEvent(typeof(PlaceClosedDomainEvent)));
+            Assert.Equal(correlationId,  place.GetCorrelationId(typeof(PlaceClosedDomainEvent)));
+            Assert.Equal(tenantId,  place.GetTenantId(typeof(PlaceClosedDomainEvent)));
             Assert.Equal(PlaceState.TemporaryClosed, place.State);
         }
 

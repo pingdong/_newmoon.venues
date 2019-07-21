@@ -8,7 +8,7 @@ namespace PingDong.Newmoon.Places.Core.Test
         [Fact]
         public void ConstructorAssignedProperties()
         {
-            var tester = new ClassTester<PlaceTemporaryClosedDomainEvent>();
+            var tester = new ClassTester<PlaceClosedDomainEvent>();
             
             Assert.True(tester.VerifyPropertiesAssignedFromConstructor());
         }

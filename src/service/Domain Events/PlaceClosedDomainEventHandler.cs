@@ -8,16 +8,16 @@ using PingDong.Newmoon.Places.Service.IntegrationEvents;
 
 namespace PingDong.Newmoon.Places.Service.DomainEvents
 {
-    public class PlaceFreedDomainEventHandler : DomainEventHandler, INotificationHandler<PlaceFreedDomainEvent>
+    public class PlaceClosedDomainEventHandler : DomainEventHandler, INotificationHandler<PlaceClosedDomainEvent>
     {
-        public PlaceFreedDomainEventHandler(IEventBusPublisher eventBus, IMediator mediator)
+        public PlaceClosedDomainEventHandler(IEventBusPublisher eventBus, IMediator mediator)
             : base(eventBus, mediator)
         {
         }
 
-        public async Task Handle(PlaceFreedDomainEvent domainEvent, CancellationToken cancellationToken)
+        public async Task Handle(PlaceClosedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = new PlaceFreedIntegrationEvent(domainEvent.PlaceId, domainEvent.PlaceName);
+            var integrationEvent = new PlaceClosedIntegrationEvent(domainEvent.PlaceId, domainEvent.PlaceName);
             
             await PublishAsync(integrationEvent, domainEvent);
         }

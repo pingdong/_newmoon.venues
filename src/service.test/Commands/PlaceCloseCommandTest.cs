@@ -1,8 +1,7 @@
 ﻿using PingDong.CleanArchitect.Core.Testing;
-using PingDong.Newmoon.Places.Service.Commands;
 using Xunit;
 
-namespace PingDong.Newmoon.Places.Service.Test
+namespace PingDong.Newmoon.Places.Service.Commands
 {
     public class PlaceCloseCommandTest
     {

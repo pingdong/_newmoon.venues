@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MediatR;
 using PingDong.CleanArchitect.Service;
 using PingDong.EventBus.Core;
 using PingDong.Newmoon.Places.Service.Commands;
 
+[assembly:InternalsVisibleTo("PingDong.Newmoon.Places.Service.Test")]
 namespace PingDong.Newmoon.Places.Service.IntegrationEvents
 {
     internal class EventCanceledIntegrationEventHandler : IntegrationEventHandler, IIntegrationEventHandler<EventCanceledIntegrationEvent>

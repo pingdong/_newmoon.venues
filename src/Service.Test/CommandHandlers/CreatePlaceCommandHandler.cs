@@ -47,6 +47,12 @@ namespace PingDong.Newmoon.Places.Service.Commands
             repositoryMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public void EmptyCtor()
+        {
+            Assert.Throws<ArgumentNullException>(() => new CreatePlaceCommandHandler(null));
+        }
+
 
         public void Dispose()
         {
