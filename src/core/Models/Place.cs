@@ -1,5 +1,6 @@
 ﻿using System;
 using PingDong.CleanArchitect.Core;
+using PingDong.Newmoon.Places.Core.Validations;
 
 namespace PingDong.Newmoon.Places.Core
 {
@@ -43,8 +44,13 @@ namespace PingDong.Newmoon.Places.Core
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException(nameof(name));
+            
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
+            var addressValidator = new AddressValidator();
+            var result = addressValidator.Validate(address);
+            if (!result.IsValid)
+                throw new ArgumentException(nameof(address));
         }
 
         #endregion

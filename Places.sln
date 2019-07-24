@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Service.Test", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Test.Integration", "src\Places.Test.Integration\Places.Test.Integration.csproj", "{5AEADE45-2A00-4820-BB40-97C183897F64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Places.Test.Function", "Places.Test.Function\Places.Test.Function.csproj", "{38A12F4E-39B8-4101-8EFF-663443F8B7A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Test.Function", "Places.Test.Function\Places.Test.Function.csproj", "{38A12F4E-39B8-4101-8EFF-663443F8B7A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

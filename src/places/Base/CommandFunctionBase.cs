@@ -8,6 +8,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Service;
+using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Functions
 {
@@ -15,11 +16,13 @@ namespace PingDong.Newmoon.Places.Functions
     {
         private readonly IMediator _mediator;
         private readonly IHttpContextAccessor _accessor;
+        private readonly ITenantValidator _tenantValidator;
 
-        public CommandFunctionBase(IHttpContextAccessor accessor, IMediator mediator)
+        public CommandFunctionBase(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator tenantValidator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+            _tenantValidator = tenantValidator ?? throw new ArgumentNullException(nameof(tenantValidator));
         }
 
         public async Task<IActionResult> ExecuteAsync(ExecutionContext context, HttpRequest request, ILogger logger, Func<Task<IActionResult>> func)
@@ -55,7 +58,7 @@ namespace PingDong.Newmoon.Places.Functions
 
             #region Tenant
             
-            if (!ValidateTenantId(_tenantId))
+            if (!await _tenantValidator.IsValidAsync(_tenantId))
             {
                 logger.LogWarning("Missing tenantId or tenantId is invalid");
 
@@ -89,16 +92,6 @@ namespace PingDong.Newmoon.Places.Functions
 
             return result;
         }
-
-        #region Validation
-
-        private bool ValidateTenantId(string tenantId)
-        {
-            // TODO: check tenantId
-            return !string.IsNullOrWhiteSpace(tenantId);
-        }
-
-        #endregion
 
         #region Extraction
 

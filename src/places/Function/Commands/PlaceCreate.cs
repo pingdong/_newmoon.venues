@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using PingDong.Newmoon.Places.Core;
 using PingDong.Newmoon.Places.Functions;
 using PingDong.Newmoon.Places.Service.Commands;
 
@@ -14,7 +15,8 @@ namespace PingDong.Newmoon.Places
 {
     public class PlaceCreate : CommandFunctionBase
     {
-        public PlaceCreate(IHttpContextAccessor accessor, IMediator mediator) : base(accessor, mediator)
+        public PlaceCreate(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator tenantValidator) 
+            : base(accessor, mediator, tenantValidator)
         {
 
         }
