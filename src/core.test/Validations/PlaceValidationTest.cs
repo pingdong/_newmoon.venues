@@ -11,12 +11,7 @@ namespace PingDong.Newmoon.Places.Core.Test.Validations
         public void InvalidAddress_Should_Fail()
         {
             var address = new Address("20", null, "Auckland", "Auckland", "New Zealand", "0926");
-            var place = new Place("Test", address);
-            
-            var rule = new PlaceValidator();
-
-            rule.TestValidate(place).ShouldHaveError();
-            rule.ShouldHaveValidationErrorFor(p => p.Address.Street, place);
+            Assert.Throws<ArgumentException>(() => new Place("Test", address));
         }
 
         [Fact]
