@@ -9,6 +9,7 @@
     <Authors>Ping Dong</Authors>
     <PackageId>PingDong.Newmoon.Places.Services.Test</PackageId>
     <PackageTags>Places</PackageTags>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
