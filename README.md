@@ -2,9 +2,9 @@
 Place management service
 
 Develop Branch:<br />
-[![Build Status](https://pingdong.visualstudio.com/Newmoon/_apis/build/status/places?branchName=develop)](https://pingdong.visualstudio.com/Newmoon/_build/latest?definitionId=29&branchName=develop)
+[![Build Status](https://pingdong.visualstudio.com/Newmoon/_apis/build/status/places?branchName=develop)](https://pingdong.visualstudio.com/Newmoon/_build/latest?definitionId=29&branchName=develop)<br />
 Master Branch:<br />
-[![Build Status](https://pingdong.visualstudio.com/Newmoon/_apis/build/status/places?branchName=master)](https://pingdong.visualstudio.com/Newmoon/_build/latest?definitionId=29&branchName=master)
+[![Build Status](https://pingdong.visualstudio.com/Newmoon/_apis/build/status/places?branchName=master)](https://pingdong.visualstudio.com/Newmoon/_build/latest?definitionId=29&branchName=master)<br />
 <br />
 
 Deployment to QA<br />
