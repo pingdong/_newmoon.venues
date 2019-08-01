@@ -45,7 +45,6 @@ steps:
   inputs:
     projectpath: src/infrastructure/Places.Infrastructure.csproj
     databasecontexts: DefaultDbContext
-    startupprojectpath: src/places
     targetfolder: '$(Build.ArtifactStagingDirectory)'
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   env:
