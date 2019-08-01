@@ -8,6 +8,7 @@
     <Authors>Ping Dong</Authors>
     <PackageId>Places.Service</PackageId>
     <PackageTags>Places</PackageTags>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
