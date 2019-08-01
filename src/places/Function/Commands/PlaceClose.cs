@@ -7,7 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using PingDong.Newmoon.Places.Core;
+using PingDong.CleanArchitect.Service;
 using PingDong.Newmoon.Places.Functions;
 using PingDong.Newmoon.Places.Service.Commands;
 

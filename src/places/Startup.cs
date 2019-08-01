@@ -19,8 +19,6 @@ namespace PingDong.Newmoon.Places
                                  .AddEnvironmentVariables()
                                  .Build();
             builder.Services.AddSingleton<IConfiguration>(config);
-            // Monitoring
-            builder.Services.AddLogging();
             // Multiple tenant
             builder.Services.AddTransient<ITenantProvider<string>, TenantProvider>();
 

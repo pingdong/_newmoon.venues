@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using PingDong.CleanArchitect.Core;
 
 namespace PingDong.Newmoon.Places.Functions
 {
@@ -19,9 +20,18 @@ namespace PingDong.Newmoon.Places.Functions
             
             #endregion
 
-            // Execute function
-            await func();
-            
+            try
+            {
+                // Execute function
+                await func();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(EventIds.Failure, ex, ex.Message);
+
+                throw;
+            }
+
             #region End
 
             var end = DateTime.UtcNow;

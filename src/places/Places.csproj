@@ -11,7 +11,6 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.29" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\core\Places.Core.csproj" />
     <ProjectReference Include="..\infrastructure\Places.Infrastructure.csproj" />
     <ProjectReference Include="..\Service\Places.Service.csproj" />
   </ItemGroup>

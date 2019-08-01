@@ -18,7 +18,7 @@ namespace PingDong.Newmoon.Places.Service.DomainEvents
         public async Task Handle(PlaceClosedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
             var integrationEvent = new PlaceClosedIntegrationEvent(domainEvent.PlaceId, domainEvent.PlaceName);
-            
+
             await PublishAsync(integrationEvent, domainEvent);
         }
     }

@@ -8,19 +8,19 @@ using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service.Commands
 {
-    public class CreatePlaceCommandHandler : IRequestHandler<CreatePlaceCommand, bool>
+    public class CreatePlaceCommandHandler : CommandHandler, IRequestHandler<CreatePlaceCommand, bool>
     {
         private readonly IRepository<Guid, Place> _repository;
 
         public CreatePlaceCommandHandler(IRepository<Guid, Place> repository)
+            : base(repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         public async Task<bool> Handle(CreatePlaceCommand command, CancellationToken cancellationToken)
         {
-            var place = new Place(command.Name, command.Address);
-            place.Preprocess(command);
+            var place = CreatePlace(command, command.Name, command.Address);
 
             await _repository.AddAsync(place);
 
@@ -36,7 +36,7 @@ namespace PingDong.Newmoon.Places.Service.Commands
 
         protected override bool CreateResultForDuplicateRequest()
         {
-            // Ignore duplicate requests for creating order.
+            // Ignore duplicate requests
             return true;
         }
     }

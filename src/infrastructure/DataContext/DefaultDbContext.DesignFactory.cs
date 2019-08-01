@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Infrastructure.SqlServer;
 
 namespace PingDong.Newmoon.Places.Infrastructure

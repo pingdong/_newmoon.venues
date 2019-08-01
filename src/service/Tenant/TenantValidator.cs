@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using PingDong.Newmoon.Places.Core;
+using PingDong.CleanArchitect.Service;
 
 namespace PingDong.Newmoon.Places.Service
 {

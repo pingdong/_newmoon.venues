@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MediatR;
+using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Service;
 using PingDong.EventBus.Core;
 using PingDong.Newmoon.Places.Service.Commands;
@@ -25,7 +26,7 @@ namespace PingDong.Newmoon.Places.Service.IntegrationEvents
         public async Task Handle(EventCanceledIntegrationEvent @event)
         {
             if (@event == null || @event.PlaceId == Guid.Empty)
-                return;
+                throw new IntegrationEventException(EventIds.InvalidIntegrationEvent, "The Event Canceled integration event is invalid", @event);
 
             var command = new PlaceFreeCommand(@event.PlaceId);
 

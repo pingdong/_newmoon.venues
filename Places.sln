@@ -17,10 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Infrastructure.Test"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Service.Test", "src\service.test\Places.Service.Test.csproj", "{3540AD8C-C8E3-4872-B52B-D23247AD96DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Test.Integration", "src\Places.Test.Integration\Places.Test.Integration.csproj", "{5AEADE45-2A00-4820-BB40-97C183897F64}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Test.Function", "Places.Test.Function\Places.Test.Function.csproj", "{38A12F4E-39B8-4101-8EFF-663443F8B7A3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,14 +51,6 @@ Global
 		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5AEADE45-2A00-4820-BB40-97C183897F64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5AEADE45-2A00-4820-BB40-97C183897F64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5AEADE45-2A00-4820-BB40-97C183897F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5AEADE45-2A00-4820-BB40-97C183897F64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38A12F4E-39B8-4101-8EFF-663443F8B7A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

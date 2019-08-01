@@ -8,7 +8,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Service;
-using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Functions
 {
@@ -69,13 +68,36 @@ namespace PingDong.Newmoon.Places.Functions
 
             #endregion
 
-            // Execute function
-            var result = await func();
+            IActionResult result;
+
+            try
+            {
+                // Execute function
+                result = await func();
+            }
+            catch (RequestDuplicatedException ex)
+            {
+                logger.LogWarning(ex.EventId, ex, ex.Message, ex.RequestId);
+
+                result = new BadRequestErrorMessageResult(ex.Message);
+            }
+            catch (DomainException ex)
+            {
+                logger.LogError(ex.EventId, ex, ex.Message, ex.Tracker.CorrelationId);
+
+                result = new BadRequestErrorMessageResult(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(EventIds.Failure, ex, ex.Message);
+
+                result = new InternalServerErrorResult();
+            }
 
             #region Post-process
 
             if (_correlationId != default)
-                _accessor.HttpContext.Request.Headers.Add("x-correlation-id", _correlationId);
+                _accessor.HttpContext.Response.Headers.Add("x-correlation-id", _correlationId);
 
             _accessor.HttpContext.Response.ContentType = "application/json";
 

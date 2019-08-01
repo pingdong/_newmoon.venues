@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using PingDong.CleanArchitect.Service;
 using PingDong.EventBus.Azure;
 using PingDong.EventBus.Core;
-using PingDong.Newmoon.Places.Core;
 
 namespace PingDong.Newmoon.Places.Service
 {
@@ -34,6 +33,9 @@ namespace PingDong.Newmoon.Places.Service
                 Assembly.GetExecutingAssembly()
             });
             
+            // Multiple tenant
+            services.AddScoped<ITenantValidator, TenantValidator>();
+            
             // ServiceBus
             //    Register Publisher
             services.AddScoped<IEventBusPublisher, TopicPublisher>();
@@ -48,7 +50,6 @@ namespace PingDong.Newmoon.Places.Service
                     serviceProvider
                     , serviceProvider.GetRequiredService<ILogger<ServiceBusMessageDispatcher>>()
                     , subscriptions
-                    , EventTypeSuffix
                 )
             );
             //   Register Integration Event Handler
@@ -61,9 +62,6 @@ namespace PingDong.Newmoon.Places.Service
                         .AsImplementedInterfaces()
                         .WithScopedLifetime()
             );
-
-            // Services
-            services.AddScoped<ITenantValidator, TenantValidator>();
         }
         
         private const string EventTypeSuffix = "IntegrationEvent";
@@ -72,7 +70,6 @@ namespace PingDong.Newmoon.Places.Service
 
         private SubscriptionsManager CreateSubscriptionManager()
         {
-
             var subscriptions = new SubscriptionsManager();
 
             var assembly = Assembly.GetExecutingAssembly();
@@ -86,7 +83,11 @@ namespace PingDong.Newmoon.Places.Service
             var eventHandlers = types.Where(t => t.Name.EndsWith(EventHandlerSuffix)).ToList();
             foreach (var type in eventTypes)
             {
-                var handler = eventHandlers.FirstOrDefault(t => t.Name.StartsWith(type.Name));
+                var eventName = type.Name.Replace(EventTypeSuffix, "", StringComparison.InvariantCultureIgnoreCase);
+
+                var handler = eventHandlers.FirstOrDefault(t => t.Name.Replace(EventHandlerSuffix, "", StringComparison.OrdinalIgnoreCase)
+                                                                        .Equals(eventName, StringComparison.OrdinalIgnoreCase)
+                                                            );
                 // Skipping to look for handlers for all outbound integration event
                 if (handler != null)
                     subscriptions.AddSubscriber(type, handler);
@@ -99,7 +100,7 @@ namespace PingDong.Newmoon.Places.Service
             foreach (var handler in dynamicEventHandlers)
             {
                 var name = handler.Name;
-                var dynamicEventName = name.Remove(name.IndexOf(DynamicEventHandlerSuffix, StringComparison.OrdinalIgnoreCase));
+                var dynamicEventName = name.Replace(DynamicEventHandlerSuffix, "", StringComparison.OrdinalIgnoreCase);
                 subscriptions.AddSubscriber(dynamicEventName, handler);
             }
 

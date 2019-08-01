@@ -18,12 +18,12 @@ namespace PingDong.Newmoon.Places.Service.DomainEvents
             // Arrange
             var mediator = new Mock<IMediator>();
 
-            IdentifiedCommand<Guid, bool, Command<bool>> command = null;
+            IdentifiedCommand<Guid, bool, PlaceFreeCommand> command = null;
 
             mediator.Setup(svc => svc.Send(It.IsAny<IRequest<bool>>(), It.IsAny<CancellationToken>()))
                 .Callback<IRequest<bool>, CancellationToken>((cmd, token) =>
                 {
-                    command = cmd as IdentifiedCommand<Guid, bool, Command<bool>>;
+                    command = cmd as IdentifiedCommand<Guid, bool, PlaceFreeCommand>;
                 })
                 .ReturnsAsync(true)
                 .Verifiable();
@@ -71,7 +71,7 @@ namespace PingDong.Newmoon.Places.Service.DomainEvents
                 TenantId = "TestTenant",
                 RequestId = Guid.NewGuid().ToString()
             };
-            await handler.Handle(integrationEvent);
+            await Assert.ThrowsAnyAsync<IntegrationEventException>(() => handler.Handle(integrationEvent));
 
             // Assert
             mediator.VerifyNoOtherCalls();
@@ -86,7 +86,7 @@ namespace PingDong.Newmoon.Places.Service.DomainEvents
             var handler = new EventCanceledIntegrationEventHandler(mediator.Object);
             
             // Act
-            await handler.Handle(null);
+            await Assert.ThrowsAnyAsync<IntegrationEventException>(() => handler.Handle(null));
 
             // Assert
             mediator.VerifyNoOtherCalls();

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
+using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Infrastructure;
 using PingDong.Newmoon.Places.Core;
 using Xunit;
@@ -67,10 +68,9 @@ namespace PingDong.Newmoon.Places.Service.Commands
             // Act
             var msg = new PlaceCloseCommand(Guid.NewGuid());
             var token = new CancellationToken();
-            var result = await handler.Handle(msg, token);
+            await Assert.ThrowsAnyAsync<ObjectNotFoundException>(() => handler.Handle(msg, token));
 
             // Assert
-            Assert.False(result);
             // Repository.FindById is called
             repositoryMock.Verify(p => p.FindByIdAsync(It.IsAny<Guid>()), Times.Once);
 

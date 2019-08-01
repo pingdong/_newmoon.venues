@@ -1,9 +1,9 @@
 ﻿using System;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PingDong.CleanArchitect.Infrastructure.SqlServer;
 using PingDong.CleanArchitect.Service;
 using PingDong.Newmoon.Places.Core;
+using PingDong.CleanArchitect.Infrastructure.SqlServer;
 using PingDong.Newmoon.Places.Infrastructure.EntityConfigurations;
 
 namespace PingDong.Newmoon.Places.Infrastructure
@@ -30,7 +30,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
             modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration<Guid>());
             
             modelBuilder.Entity<Place>().HasQueryFilter(p => p.TenantId == _tenant.GetTenantId());
-            modelBuilder.Entity<ClientRequest<Guid>>().HasQueryFilter(p => p.TenantId == _tenant.GetTenantId());
+            modelBuilder.Entity<ClientRequest<Guid>>();
         }  
     }
 }

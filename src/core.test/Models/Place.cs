@@ -3,7 +3,7 @@ using PingDong.CleanArchitect.Core;
 using PingDong.CleanArchitect.Core.Testing;
 using Xunit;
 
-namespace PingDong.Newmoon.Places.Core
+namespace PingDong.Newmoon.Places.Core.Test
 {
     public class PlaceTest
     {
@@ -39,7 +39,7 @@ namespace PingDong.Newmoon.Places.Core
             place.Close();
             place.ClearDomainEvents();
             
-            Assert.Throws<DomainException>(() => place.Occupy());
+            Assert.Throws<EntityException>(() => place.Occupy());
             
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.TemporaryClosed, place.State);
@@ -56,7 +56,7 @@ namespace PingDong.Newmoon.Places.Core
             place.Occupy();
             place.ClearDomainEvents();
 
-            Assert.Throws<DomainException>(() => place.Occupy());
+            Assert.Throws<EntityException>(() => place.Occupy());
             
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.Occupied, place.State);
@@ -86,7 +86,7 @@ namespace PingDong.Newmoon.Places.Core
 
             var place = CreateDefaultPlace(tenantId, correlationId);
 
-            Assert.Throws<DomainException>(() => place.Free());
+            Assert.Throws<EntityException>(() => place.Free());
 
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.Free, place.State);
@@ -103,7 +103,7 @@ namespace PingDong.Newmoon.Places.Core
             place.Close();
             place.ClearDomainEvents();
             
-            Assert.Throws<DomainException>(() => place.Free());
+            Assert.Throws<EntityException>(() => place.Free());
             
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.TemporaryClosed, place.State);
@@ -140,7 +140,7 @@ namespace PingDong.Newmoon.Places.Core
             place.Close();
             place.ClearDomainEvents();
             
-            Assert.Throws<DomainException>(() => place.Close());
+            Assert.Throws<EntityException>(() => place.Close());
 
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.TemporaryClosed, place.State);
@@ -157,7 +157,7 @@ namespace PingDong.Newmoon.Places.Core
             place.Occupy();
             place.ClearDomainEvents();
 
-            Assert.Throws<DomainException>(() => place.Close());
+            Assert.Throws<EntityException>(() => place.Close());
             
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.Occupied, place.State);
@@ -193,7 +193,7 @@ namespace PingDong.Newmoon.Places.Core
 
             var place = CreateDefaultPlace(tenantId, correlationId);
 
-            Assert.Throws<DomainException>(() => place.Open());
+            Assert.Throws<EntityException>(() => place.Open());
 
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.Free, place.State);
@@ -210,7 +210,7 @@ namespace PingDong.Newmoon.Places.Core
             place.Occupy();
             place.ClearDomainEvents();
             
-            Assert.Throws<DomainException>(() => place.Open());
+            Assert.Throws<EntityException>(() => place.Open());
             
             Assert.True(place.HasNoDomainEvent());
             Assert.Equal(PlaceState.Occupied, place.State);

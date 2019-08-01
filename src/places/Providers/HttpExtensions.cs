@@ -17,7 +17,12 @@ namespace PingDong.Newmoon.Places.Functions
 
         public static string GetTenantId(this HttpRequest request)
         {
-            return request.HttpContext.User.FindFirst("tid")?.Value;
+            var tid = request.HttpContext.User.FindFirst("tid")?.Value;
+
+            if (string.IsNullOrWhiteSpace(tid))
+                tid = request.Headers["x-tenant-id"];
+
+            return tid;
         }
     }
 }

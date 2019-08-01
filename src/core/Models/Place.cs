@@ -63,9 +63,9 @@ namespace PingDong.Newmoon.Places.Core
         public void Occupy()
         {
             if (_placeStateId == PlaceState.Occupied.Id)
-                throw new DomainException($"{Name} is already occupied");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is already occupied", this);
             if (_placeStateId == PlaceState.TemporaryClosed.Id)
-                throw new DomainException($"{Name} is temporary closed, unable to occupy");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is temporary closed, unable to occupy", this);
 
             _placeStateId = PlaceState.Occupied.Id;
             
@@ -75,9 +75,9 @@ namespace PingDong.Newmoon.Places.Core
         public void Free()
         {
             if (_placeStateId == PlaceState.Free.Id)
-                throw new DomainException($"{Name} is free. Unable to free");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is free. Unable to free", this);
             if (_placeStateId == PlaceState.TemporaryClosed.Id)
-                throw new DomainException($"{Name} is temporary closed. Unable to free");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is temporary closed. Unable to free", this);
 
             _placeStateId = PlaceState.Free.Id;
             
@@ -87,9 +87,9 @@ namespace PingDong.Newmoon.Places.Core
         public void Close()
         {
             if (_placeStateId == PlaceState.TemporaryClosed.Id)
-                throw new DomainException($"{Name} is already closed");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is already closed", this);
             if (_placeStateId == PlaceState.Occupied.Id)
-                throw new DomainException($"{Name} is occupied, unable to close an occupied place");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is occupied, unable to close an occupied place", this);
 
             _placeStateId = PlaceState.TemporaryClosed.Id;
 
@@ -99,9 +99,9 @@ namespace PingDong.Newmoon.Places.Core
         public void Open()
         {
             if (_placeStateId == PlaceState.Free.Id)
-                throw new DomainException($"{Name} is already opened");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is already opened", this);
             if (_placeStateId == PlaceState.Occupied.Id)
-                throw new DomainException($"{Name} is already occupied. Unable to open it");
+                throw new EntityException(EventIds.ViolateBusinessLogic, $"{Name} is already occupied. Unable to open it", this);
 
             _placeStateId = PlaceState.Free.Id;
             

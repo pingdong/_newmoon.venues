@@ -6,19 +6,16 @@ namespace PingDong.Newmoon.Places.Functions
 {
     internal class TenantProvider : ITenantProvider<string>
     {
-        private readonly string _tenantId;
+        private readonly IHttpContextAccessor _accessor;
 
         public TenantProvider(IHttpContextAccessor accessor)
         {
-            if (accessor == null)
-                throw new ArgumentNullException(nameof(accessor));
-
-            _tenantId = accessor.HttpContext.Request.GetTenantId();
+            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
         }
 
         public string GetTenantId()
         {
-            return _tenantId;
+            return _accessor.HttpContext.Request.GetTenantId();
         }
     }
 }

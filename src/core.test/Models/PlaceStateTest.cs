@@ -30,7 +30,7 @@ namespace PingDong.Newmoon.Places.Core.Test
         [Fact]
         public void FromInt_Invalid()
         {
-            Assert.Throws<DomainException>(() => PlaceState.From(999));
+            Assert.Throws<EntityException>(() => PlaceState.From(999));
         }
     }
 }
