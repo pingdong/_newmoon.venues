@@ -19,6 +19,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
                 
             var config = new ConfigurationBuilder()
                                 .AddJsonFile(settingFile, optional: true, reloadOnChange: true)
+                                .AddEnvironmentVariables()
                                 .Build();
             var connectionString = config["ConnectionStrings:Default"];
 
