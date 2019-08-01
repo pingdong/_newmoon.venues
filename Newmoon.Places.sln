@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Core", "src\core\Pla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Infrastructure", "src\infrastructure\Places.Infrastructure.csproj", "{A3A10A7F-C902-43C7-AD9D-087891173954}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Service", "src\Service\Places.Service.csproj", "{903689D4-3319-403C-B20E-667354F74CC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Service", "src\service\Places.Service.csproj", "{903689D4-3319-403C-B20E-667354F74CC0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places", "src\Places\Places.csproj", "{5BD6256A-CCB9-4299-8F04-0387C6906B40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places", "src\places\Places.csproj", "{5BD6256A-CCB9-4299-8F04-0387C6906B40}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Core.Test", "src\core.tests\Places.Core.Tests.csproj", "{5ED19F6A-F058-4894-B399-3058B2C83F3F}"
 EndProject
