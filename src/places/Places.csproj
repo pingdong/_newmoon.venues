@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\infrastructure\Places.Infrastructure.csproj" />
-    <ProjectReference Include="..\Service\Places.Service.csproj" />
+    <ProjectReference Include="..\service\Places.Service.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
