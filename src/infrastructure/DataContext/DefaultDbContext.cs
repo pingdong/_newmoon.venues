@@ -12,11 +12,11 @@ namespace PingDong.Newmoon.Places.Infrastructure
     {
         public const string DefaultSchema = "dbo";
 
-        private readonly ITenantProvider<string> _tenant;
+        private readonly ITenantProvider<string> _tenantProvider;
 
         public DefaultDbContext(DbContextOptions options, IMediator mediator, ITenantProvider<string> tenantProvider) : base(options, mediator)
         {
-            _tenant = tenantProvider ?? throw new ArgumentNullException(nameof(tenantProvider));
+            _tenantProvider = tenantProvider ?? throw new ArgumentNullException(nameof(tenantProvider));
         }
         
         public DbSet<ClientRequest<Guid>> Requests { get; set; }
@@ -29,7 +29,7 @@ namespace PingDong.Newmoon.Places.Infrastructure
             modelBuilder.ApplyConfiguration(new PlaceEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration<Guid>());
             
-            modelBuilder.Entity<Place>().HasQueryFilter(p => p.TenantId == _tenant.GetTenantId());
+            modelBuilder.Entity<Place>().HasQueryFilter(p => p.TenantId == _tenantProvider.GetTenantId());
             modelBuilder.Entity<ClientRequest<Guid>>();
         }  
     }
