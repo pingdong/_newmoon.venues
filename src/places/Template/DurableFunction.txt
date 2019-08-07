@@ -1,0 +1,2 @@
+﻿More durable function patterns:
+https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-concepts
