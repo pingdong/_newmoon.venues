@@ -19,6 +19,7 @@ namespace PingDong.Newmoon.Places.Functions
         {
             var tid = request.HttpContext.User.FindFirst("tid")?.Value;
 
+            // In production, tenant Id should only get from toke
             if (string.IsNullOrWhiteSpace(tid))
                 tid = request.Headers["x-tenant-id"];
 

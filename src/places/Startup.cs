@@ -19,7 +19,7 @@ namespace PingDong.Newmoon.Places
                                  .AddEnvironmentVariables()
                                  .Build();
             builder.Services.AddSingleton<IConfiguration>(config);
-            // Multiple tenant
+            // Multiple tenant support
             builder.Services.AddTransient<ITenantProvider<string>, TenantProvider>();
 
             // Core

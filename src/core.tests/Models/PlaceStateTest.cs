@@ -16,7 +16,7 @@ namespace PingDong.Newmoon.Places.Core.Test
         [Fact]
         public void FromString_Invalid()
         {
-            Assert.Throws<DomainException>(() => PlaceState.From("Test"));
+            Assert.Throws<EntityException>(() => PlaceState.From("Test"));
         }
 
         [Fact]

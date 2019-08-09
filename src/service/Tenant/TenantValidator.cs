@@ -8,7 +8,7 @@ namespace PingDong.Newmoon.Places.Service
         public Task<bool> IsValidAsync(string tenantId)
         {
             // Demo purpose only
-            // In real world, TenantId should check against DB
+            // In real world, TenantId should check against real data
             return Task.FromResult(!string.IsNullOrWhiteSpace(tenantId));
         }
     }

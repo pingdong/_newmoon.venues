@@ -7,7 +7,30 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Template\Eternal\OrchestrationFunctionOrchestrator.cs" />
+    <Compile Remove="Template\Orchestration\Activities\LoopWriteActivity.cs" />
+    <Compile Remove="Template\Orchestration\Activities\LoopWriteRollbackActivity.cs" />
+    <Compile Remove="Template\Orchestration\Activities\ReadonlyActivity.cs" />
+    <Compile Remove="Template\Orchestration\Activities\WriteActivity.cs" />
+    <Compile Remove="Template\Orchestration\Activities\WriteRollbackActivity.cs" />
+    <Compile Remove="Template\Orchestration\OrchestrationFunction.cs" />
+    <Compile Remove="Template\Orchestration\OrchestrationFunctionOrchestrator.cs" />
+    <Compile Remove="Template\Singleton\OrchestrationFunction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Template\Eternal\OrchestrationFunctionOrchestrator.cs" />
+    <None Include="Template\Orchestration\Activities\LoopWriteActivity.cs" />
+    <None Include="Template\Orchestration\Activities\LoopWriteRollbackActivity.cs" />
+    <None Include="Template\Orchestration\Activities\ReadonlyActivity.cs" />
+    <None Include="Template\Orchestration\Activities\WriteActivity.cs" />
+    <None Include="Template\Orchestration\Activities\WriteRollbackActivity.cs" />
+    <None Include="Template\Orchestration\OrchestrationFunction.cs" />
+    <None Include="Template\Orchestration\OrchestrationFunctionOrchestrator.cs" />
+    <None Include="Template\Singleton\OrchestrationFunction.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="1.8.2" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="3.0.6" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.29" />
   </ItemGroup>

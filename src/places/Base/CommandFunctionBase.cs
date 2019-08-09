@@ -35,9 +35,11 @@ namespace PingDong.Newmoon.Places.Functions
             logger.LogInformation($"Time triggered function - '{functionName}' processing a request from {start} (UTC)");
 
             #endregion
-
+            
             #region Pre-process
 
+            #region Http
+            
             // Extract RequestId
             _requestId = request.GetRequestId();
             // Extract correlationId
@@ -63,6 +65,8 @@ namespace PingDong.Newmoon.Places.Functions
 
                 return new BadRequestErrorMessageResult("Missing tenantId or tenantId is invalid");
             }
+
+            #endregion
 
             #endregion
 
