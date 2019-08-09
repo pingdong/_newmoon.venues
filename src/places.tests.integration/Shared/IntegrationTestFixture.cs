@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using Microsoft.Extensions.Configuration;
 using PingDong.Azure.Functions.Testing;
 
@@ -22,9 +21,7 @@ namespace PingDong.Newmoon.Places.IntegrationTests
             var funcAppExePath = configuration["host:funcAppExePath"];
             var port = Convert.ToInt32(configuration["host:port"]);
 
-            Initialize(dotnetExePath, funcHostExePath, funcAppExePath, port);
-
-            Thread.Sleep(2000);
+            Initialize(dotnetExePath, funcHostExePath, funcAppExePath, port); 
         }
     }
 }
