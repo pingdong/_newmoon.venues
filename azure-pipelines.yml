@@ -40,6 +40,11 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
+- task: DotNetCoreCLI@2
+  displayName: 'Build for Integration Test'
+  inputs:
+    projects: Newmoon.Places.sln
+
 - task: Npm@1
   displayName: 'Install Azure Functions Core Tools'
   inputs:
@@ -58,10 +63,6 @@ steps:
     host__funcHostExePath: $(IntegrationTest_FuncHostExePath)
     host__funcAppExePath: $(IntegrationTest_FuncAppExePath)
     host__port: $(IntegrationTest_Port)
-    Values__EventBus_ConnectionString: $(Place-EventBus-ConnectionString)
-    EventBus__ConnectionString: $(Place-EventBus-ConnectionString)
-    EventBus__Topic: $(Place-EventBus-Topic)
-    ConnectionStrings__Default: $(Place-Db-ConnectionString)
 
 - task: pekspro.pekspro-efcore-migration-script-generator.efcore-migration-script-generator.efcore-migration-script-generator-task@0
   displayName: 'Generate Migration Scripts'
