@@ -9,7 +9,7 @@ trigger:
   - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Hosted Windows 2019 with VS2019
 
 workspace:
     clean: all
@@ -38,7 +38,7 @@ steps:
   inputs:
     command: custom
     verbose: false
-    customCommand: 'install -g azure-functions-core-tools'
+    customCommand: 'i -g azure-functions-core-tools --unsafe-perm true'
 
 - task: DotNetCoreCLI@2
   displayName: Test
@@ -46,6 +46,11 @@ steps:
     command: test
     projects: '**/*Tests.Integration/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+  env:
+    host__dotnetExePath: $(IntegrationTest_DotnetExePath)
+    host__funcHostExePath: $(IntegrationTest_FuncHostExePath)
+    host__funcAppExePath: $(IntegrationTest_FuncAppExePath)
+    host__port: $(IntegrationTest_Port)
 
 - task: DotNetCoreCLI@2
   displayName: 'Integration Test'
