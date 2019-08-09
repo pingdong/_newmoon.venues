@@ -33,6 +33,13 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
 - task: Npm@1
   displayName: 'Install Azure Functions Core Tools'
   inputs:
@@ -41,7 +48,7 @@ steps:
     customCommand: 'i -g azure-functions-core-tools --unsafe-perm true'
 
 - task: DotNetCoreCLI@2
-  displayName: Test
+  displayName: 'Integration Test'
   inputs:
     command: test
     projects: '**/*Tests.Integration/*.csproj'
@@ -51,13 +58,6 @@ steps:
     host__funcHostExePath: $(IntegrationTest_FuncHostExePath)
     host__funcAppExePath: $(IntegrationTest_FuncAppExePath)
     host__port: $(IntegrationTest_Port)
-
-- task: DotNetCoreCLI@2
-  displayName: 'Integration Test'
-  inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
 - task: pekspro.pekspro-efcore-migration-script-generator.efcore-migration-script-generator.efcore-migration-script-generator-task@0
   displayName: 'Generate Migration Scripts'
