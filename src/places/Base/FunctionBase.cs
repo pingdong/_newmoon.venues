@@ -8,7 +8,7 @@ namespace PingDong.Newmoon.Places.Functions
 {
     public class FunctionBase
     {
-        public async Task ExecuteAsync(ExecutionContext context, ILogger logger, Func<Task> func)
+        protected async Task ExecuteAsync(ExecutionContext context, ILogger logger, Func<Task> func)
         {
             var functionName = context.FunctionName;
 
@@ -40,6 +40,44 @@ namespace PingDong.Newmoon.Places.Functions
             logger.LogInformation($"Time triggered function - '{functionName}' processed from {start} to {end}, took {(end - start).ToString()}");
 
             #endregion
+        }
+
+        protected async Task<T> ExecuteAsync<T>(ExecutionContext context, ILogger logger, Func<Task<T>> func)
+        {
+            var functionName = context.FunctionName;
+
+            #region Start
+
+            var start = DateTime.UtcNow;
+            
+            logger.LogInformation($"Time triggered function - '{functionName}' processing a request from {start} (UTC)");
+            
+            #endregion
+
+            T result;
+
+            try
+            {
+                // Execute function
+                result = await func();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(EventIds.Failure, ex, ex.Message);
+
+                throw;
+            }
+
+            #region End
+
+            var end = DateTime.UtcNow;
+            
+            logger.LogInformation($"Time triggered function - '{functionName}' processed a request at {end} (UTC)");
+            logger.LogInformation($"Time triggered function - '{functionName}' processed from {start} to {end}, took {(end - start).ToString()}");
+
+            #endregion
+
+            return result;
         }
     }
 }
