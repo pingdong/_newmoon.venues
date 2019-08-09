@@ -1,8 +1,0 @@
-{
-  "host": {
-    "dotnetExePath": "%ProgramFiles%\\dotnet\\dotnet.exe",
-    "funcHostExePath": "%APPDATA%\\npm\\node_modules\\azure-functions-core-tools\\bin\\func.dll",
-    "funcAppExePath": "..\\..\\..\\..\\Places\\bin\\debug\\netcoreapp2.2",
-    "port": 7071
-  } 
-}
