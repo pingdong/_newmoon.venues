@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Infrastructure.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Service.Tests", "src\service.tests\Places.Service.Tests.csproj", "{3540AD8C-C8E3-4872-B52B-D23247AD96DD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Places.Tests.Integration", "src\places.tests.integration\Places.Tests.Integration.csproj", "{B3CB278E-C5EE-41B4-BA0D-BA0F5AF7CEB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3540AD8C-C8E3-4872-B52B-D23247AD96DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3CB278E-C5EE-41B4-BA0D-BA0F5AF7CEB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3CB278E-C5EE-41B4-BA0D-BA0F5AF7CEB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3CB278E-C5EE-41B4-BA0D-BA0F5AF7CEB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3CB278E-C5EE-41B4-BA0D-BA0F5AF7CEB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
