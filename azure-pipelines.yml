@@ -57,7 +57,7 @@ steps:
   inputs:
     command: test
     projects: '**/*Tests.Integration/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: '--no-build'
   env:
     host__dotnetExePath: $(IntegrationTest_DotnetExePath)
     host__funcHostExePath: $(IntegrationTest_FuncHostExePath)
