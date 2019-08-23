@@ -50,7 +50,7 @@ steps:
   inputs:
     command: custom
     verbose: false
-    customCommand: 'i -g azure-functions-core-tools --unsafe-perm true'
+    customCommand: 'install -g azure-functions-core-tools --unsafe-perm true'
 
 - task: DotNetCoreCLI@2
   displayName: 'Integration Test'
