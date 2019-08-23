@@ -15,7 +15,7 @@ namespace PingDong.Newmoon.Places
 {
     public class PlaceDisengage : CommandFunctionBase
     {
-        public PlaceDisengage(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator tenantValidator) 
+        public PlaceDisengage(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator<string> tenantValidator) 
             : base(accessor, mediator, tenantValidator)
         {
 

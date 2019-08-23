@@ -15,7 +15,7 @@ namespace PingDong.Newmoon.Places
 {
     public class PlaceOccupy : CommandFunctionBase
     {
-        public PlaceOccupy(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator tenantValidator) 
+        public PlaceOccupy(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator<string> tenantValidator) 
             : base(accessor, mediator, tenantValidator)
         {
 

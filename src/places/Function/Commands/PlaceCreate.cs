@@ -15,7 +15,7 @@ namespace PingDong.Newmoon.Places
 {
     public class PlaceCreate : CommandFunctionBase
     {
-        public PlaceCreate(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator tenantValidator) 
+        public PlaceCreate(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator<string> tenantValidator) 
             : base(accessor, mediator, tenantValidator)
         {
 

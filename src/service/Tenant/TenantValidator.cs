@@ -1,15 +1,14 @@
-﻿using System.Threading.Tasks;
-using PingDong.CleanArchitect.Service;
+﻿using PingDong.CleanArchitect.Service;
 
 namespace PingDong.Newmoon.Places.Service
 {
-    public class TenantValidator : ITenantValidator
+    public class TenantValidator : ITenantValidator<string>
     {
-        public Task<bool> IsValidAsync(string tenantId)
+        public bool IsValid(string tenantId)
         {
             // Demo purpose only
             // In real world, TenantId should check against real data
-            return Task.FromResult(!string.IsNullOrWhiteSpace(tenantId));
+            return !string.IsNullOrWhiteSpace(tenantId);
         }
     }
 }

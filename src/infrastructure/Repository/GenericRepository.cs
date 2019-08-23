@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,16 @@ namespace PingDong.Newmoon.Places.Infrastructure
         public async Task<TEntity> FindByIdAsync(TId id)
         {
             return await _context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
+        }
+
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<IList<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _context.Set<TEntity>().Where(predicate).ToListAsync();
         }
 
         public async Task<IList<TEntity>> ListAsync()
