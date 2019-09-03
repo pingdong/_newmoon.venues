@@ -21,7 +21,7 @@ namespace PingDong.Newmoon.Places.IntegrationTests
             var funcAppExePath = configuration["host:funcAppExePath"];
             var port = Convert.ToInt32(configuration["host:port"]);
 
-            Initialize(dotnetExePath, funcHostExePath, funcAppExePath, port);
+            Initialize(dotnetExePath, funcHostExePath, funcAppExePath, port); 
         }
     }
 }

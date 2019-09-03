@@ -15,9 +15,9 @@
     <PackageReference Include="FluentValidation" Version="8.4.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="PingDong.CleanArchitect.Service" Version="0.0.1.13" />
-    <PackageReference Include="PingDong.EventBus.Azure" Version="0.0.1.12" />
-    <PackageReference Include="Scrutor" Version="3.0.2" />
+    <PackageReference Include="PingDong.CleanArchitect.Service" Version="0.0.1.14" />
+    <PackageReference Include="PingDong.EventBus.Azure" Version="0.0.1.14" />
+    <PackageReference Include="Scrutor" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>

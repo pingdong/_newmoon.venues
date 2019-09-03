@@ -15,9 +15,9 @@ namespace PingDong.Newmoon.Places.Functions
     {
         private readonly IMediator _mediator;
         private readonly IHttpContextAccessor _accessor;
-        private readonly ITenantValidator _tenantValidator;
+        private readonly ITenantValidator<string> _tenantValidator;
 
-        public CommandFunctionBase(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator tenantValidator)
+        public CommandFunctionBase(IHttpContextAccessor accessor, IMediator mediator, ITenantValidator<string> tenantValidator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
@@ -59,7 +59,7 @@ namespace PingDong.Newmoon.Places.Functions
 
             #region Tenant
             
-            if (!await _tenantValidator.IsValidAsync(_tenantId))
+            if (!_tenantValidator.IsValid(_tenantId))
             {
                 logger.LogWarning("Missing tenantId or tenantId is invalid");
 

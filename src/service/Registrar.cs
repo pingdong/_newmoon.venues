@@ -34,7 +34,7 @@ namespace PingDong.Newmoon.Places.Service
             });
             
             // Multiple tenant
-            services.AddScoped<ITenantValidator, TenantValidator>();
+            services.AddScoped<ITenantValidator<string>, TenantValidator>();
             
             // ServiceBus
             //    Register Publisher
