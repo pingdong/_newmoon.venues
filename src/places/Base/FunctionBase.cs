@@ -25,7 +25,7 @@ namespace PingDong.Newmoon.Places.Functions
                 // Execute function
                 await func();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 logger.LogError(EventIds.Failure, ex, ex.Message);
 
@@ -61,7 +61,7 @@ namespace PingDong.Newmoon.Places.Functions
                 // Execute function
                 result = await func();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 logger.LogError(EventIds.Failure, ex, ex.Message);
 

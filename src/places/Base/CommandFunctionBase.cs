@@ -91,7 +91,7 @@ namespace PingDong.Newmoon.Places.Functions
 
                 result = new BadRequestErrorMessageResult(ex.Message);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 logger.LogError(EventIds.Failure, ex, ex.Message);
 
