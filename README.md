@@ -8,11 +8,9 @@ Master Branch:<br />
 <br />
 
 Deployment to QA<br />
-[![Deployment Status](https://pingdong.vsrm.visualstudio.com/_apis/public/Release/badge/e91eaf4f-be05-424d-b72e-fc1d8aab16fc/2/5)](https://pingdong.visualstudio.com/Newmoon/_release?definitionId=2)<br />
-Deployment to Stagging<br />
-[![Deployment Status](https://pingdong.vsrm.visualstudio.com/_apis/public/Release/badge/e91eaf4f-be05-424d-b72e-fc1d8aab16fc/2/6)](https://pingdong.visualstudio.com/Newmoon/_release?definitionId=2)<br />
+[![Deployment Status](https://pingdong.vsrm.visualstudio.com/_apis/public/Release/badge/e91eaf4f-be05-424d-b72e-fc1d8aab16fc/4/10)](https://pingdong.visualstudio.com/Newmoon/_release?definitionId=4)<br />
 Deployment to Production<br />
-[![Deployment Status](https://pingdong.vsrm.visualstudio.com/_apis/public/Release/badge/e91eaf4f-be05-424d-b72e-fc1d8aab16fc/2/7)](https://pingdong.visualstudio.com/Newmoon/_release?definitionId=2)<br />
+[![Deployment Status](https://pingdong.vsrm.visualstudio.com/_apis/public/Release/badge/e91eaf4f-be05-424d-b72e-fc1d8aab16fc/4/11)](https://pingdong.visualstudio.com/Newmoon/_release?definitionId=4)<br />
 <br />
 
 The place service requires a local.setting.json with the following configuration under \src\places
