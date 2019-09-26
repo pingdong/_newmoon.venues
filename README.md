@@ -1,5 +1,9 @@
+The project is a Azure implementation of the [Newmoon](https://github.com/pingdong/newmoon) project. 
+
 # newmoon.places
 Place management service
+
+If you want to check the authentication service, check [newmoon.authentication](https://github.com/pingdong/newmoon.authentication)
 
 Develop Branch:<br />
 [![Build Status](https://pingdong.visualstudio.com/Newmoon/_apis/build/status/places?branchName=develop)](https://pingdong.visualstudio.com/Newmoon/_build/latest?definitionId=29&branchName=develop)<br />
