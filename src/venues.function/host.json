@@ -1,0 +1,35 @@
+{
+  "version": "2.0",
+
+  "logging": {
+    "applicationInsights": {
+      "samplingExcludedTypes": "Request",
+      "samplingSettings": {
+        "isEnabled": true
+      }
+    }
+  },
+
+  "extensions": {
+    "http": {
+      "routePrefix": "api",
+      "maxConcurrentRequests": 5,
+      "maxOutstandingRequests": 30
+    },
+    "serviceBus": {
+      "prefetchCount": 100,
+      "messageHandlerOptions": {
+        "maxConcurrentCalls": 32,
+        "maxAutoRenewDuration": "00:55:00"
+      }
+    }
+  },
+
+  "healthMonitor": {
+    "enabled": true,
+    "healthCheckInterval": "00:00:10",
+    "healthCheckWindow": "00:02:00",
+    "healthCheckThreshold": 6,
+    "counterThreshold": 0.80
+  }
+}
