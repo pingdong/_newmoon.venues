@@ -17,7 +17,7 @@ namespace PingDong.Newmoon.Venues.Infrastructure
             _mediator = mediator.EnsureNotNull(nameof(mediator));
         }
 
-        public ICollection<Venue> Venues { get; } = new List<Venue>();
+        public IList<Venue> Venues { get; } = new List<Venue>();
 
         public async Task<bool> SaveAsync(CancellationToken cancellationToken = default)
         {

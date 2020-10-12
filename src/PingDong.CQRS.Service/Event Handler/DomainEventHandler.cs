@@ -10,7 +10,7 @@ namespace PingDong.CQRS.Services
     /// </summary>
     public class DomainEventHandler
     {
-        private readonly IPublisher _publisher;
+        private readonly Messages.IPublisher _publisher;
         private readonly IMediator _mediator;
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace PingDong.CQRS.Services
         /// </summary>
         /// <param name="publisher">The publisher to send a IntegrationEvent.</param>
         /// <param name="mediator">The mediator to send a Command</param>
-        public DomainEventHandler(IPublisher publisher, IMediator mediator)
+        public DomainEventHandler(Messages.IPublisher publisher, IMediator mediator)
         {
             _publisher = publisher.EnsureNotNull(nameof(publisher));
             _mediator = mediator.EnsureNotNull(nameof(mediator));

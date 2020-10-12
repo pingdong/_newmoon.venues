@@ -87,6 +87,67 @@ namespace PingDong.Azure.Function
             }).ConfigureAwait(false);
         }
 
+        protected async Task<HttpResponseMessage> GetAllAsync<TResult>(
+            ExecutionContext context
+            , Func<Task<TResult>> func)
+        {
+            return await ProcessAsync(context, async () =>
+            {
+                var value = await func().ConfigureAwait(false);
+
+                // Prepare response
+                HttpResponseMessage response;
+
+                if (value == null)
+                {
+                    response = new HttpResponseMessage(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    var result = new SuccessResult(value);
+
+                    response = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new JsonContent(result, JsonSerializerProfile.Default)
+
+                    };
+                }
+
+                return response;
+            }).ConfigureAwait(false);
+        }
+
+        protected async Task<HttpResponseMessage> GetByIdAsync<TResult>(
+            ExecutionContext context
+            , string id
+            , Func<string, Task<TResult>> func)
+        {
+            return await ProcessAsync(context, async () =>
+            {
+                var value = await func(id).ConfigureAwait(false);
+
+                // Prepare response
+                HttpResponseMessage response;
+
+                if (value == null)
+                {
+                    response = new HttpResponseMessage(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    var result = new SuccessResult(value);
+
+                    response = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new JsonContent(result, JsonSerializerProfile.Default)
+
+                    };
+                }
+
+                return response;
+            }).ConfigureAwait(false);
+        }
+
         protected async Task<HttpResponseMessage> QueryAsync<TRequest, TResult>(
             ExecutionContext context
             , HttpRequest request
@@ -171,6 +232,10 @@ namespace PingDong.Azure.Function
                     {
                         Content = new JsonContent(failure, JsonSerializerProfile.Default)
                     };
+                }
+                catch (FormatException)
+                {
+                    result = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 }
                 catch (NotFoundException)
                 {

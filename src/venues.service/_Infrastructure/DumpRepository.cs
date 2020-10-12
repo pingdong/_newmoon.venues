@@ -19,7 +19,7 @@ namespace PingDong.Newmoon.Venues.Infrastructure
 
         public Task<IList<Venue>> ListAsync()
         {
-            return Task.FromResult((IList<Venue>)_context.Venues);
+            return Task.FromResult(_context.Venues);
         }
 
         public Task AddAsync(Venue entity)

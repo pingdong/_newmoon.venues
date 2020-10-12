@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using PingDong.CQRS.Services;
-using PingDong.Messages;
 using PingDong.Newmoon.Venues.DomainEvents;
 using PingDong.Newmoon.Venues.Services.IntegrationEvents;
 using System.Threading;
@@ -10,7 +9,7 @@ namespace PingDong.Newmoon.Venues.Services.DomainEvents
 {
     public class VenueOccupiedDomainEventHandler : DomainEventHandler, INotificationHandler<VenueOccupiedDomainEvent>
     {
-        public VenueOccupiedDomainEventHandler(IPublisher publisher, IMediator mediator)
+        public VenueOccupiedDomainEventHandler(Messages.IPublisher publisher, IMediator mediator)
             : base(publisher, mediator)
         {
         }

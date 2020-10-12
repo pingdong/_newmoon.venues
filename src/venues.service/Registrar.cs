@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using PingDong.CQRS.Infrastructure;
 using PingDong.CQRS.Services;
-using PingDong.Messages;
 using PingDong.Newmoon.Venues.Infrastructure;
 using PingDong.Services;
 using System;
@@ -30,11 +29,13 @@ namespace PingDong.Newmoon.Venues.Services
                 Assembly.GetExecutingAssembly()
             });
 
+            // Venue Services
+            services.AddSingleton<IVenueQueryService, VenueQueryService>();
 
             // Dump
             services.AddSingleton<IRepository<Guid, Venue>, DumpRepository>();
             services.AddSingleton<DumpContext>();
-            services.AddSingleton<IPublisher, DumpPublisher>();
+            services.AddSingleton<Messages.IPublisher, DumpPublisher>(); // TODO: IPublish name conflicts
         }
     }
 }
