@@ -13,7 +13,7 @@ namespace PingDong.Newmoon.Venues.Services.IntegrationEvents
 {
     public class EventCanceledIntegrationEventHandlerTest
     {
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public async void Handle_Should_Success(
             [Frozen] Mock<IMediator> mediator
             , [Frozen] EventCanceledIntegrationEvent @event
@@ -31,7 +31,7 @@ namespace PingDong.Newmoon.Venues.Services.IntegrationEvents
             mediator.VerifyNoOtherCalls();
         }
 
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public async void Null_Should_ThrowException(
             [Frozen] Mock<IMediator> mediator
             , EventCanceledIntegrationEventHandler handler
@@ -44,7 +44,7 @@ namespace PingDong.Newmoon.Venues.Services.IntegrationEvents
             mediator.VerifyNoOtherCalls();
         }
 
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public async void Empty_Should_ThrowException(
             [Frozen] Mock<IMediator> mediator
             , EventCanceledIntegrationEventHandler handler
@@ -60,7 +60,7 @@ namespace PingDong.Newmoon.Venues.Services.IntegrationEvents
             mediator.VerifyNoOtherCalls();
         }
 
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public void EmptyCtor_Should_ThrowException(
             IOptionsMonitor<AppSettings> settings)
         {

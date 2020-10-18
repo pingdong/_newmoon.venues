@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace PingDong.Newmoon.Venues.Infrastructure
 {
-    public class DumpPublisher : IPublisher
+    public class DumpPublisher : IMessagePublisher
     {
         public Task PublishAsync<T>(T message) where T : IntegrationEvent
         {

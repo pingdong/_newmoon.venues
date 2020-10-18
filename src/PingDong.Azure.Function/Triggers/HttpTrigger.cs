@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights.Extensibility;
 using PingDong.Validations;
 
 namespace PingDong.Azure.Function
@@ -24,11 +25,12 @@ namespace PingDong.Azure.Function
         #region ctor
 
         protected HttpTrigger(
-            IHttpContextAccessor accessor
+            TelemetryConfiguration telemetryConfiguration
+            , IHttpContextAccessor accessor
             , IHttpRequestHelper requestHelper
             , ILogger logger
             , IValidatorFactory validatorFactory
-            ) : base(logger, validatorFactory)
+            ) : base(telemetryConfiguration, logger, validatorFactory)
         {
             _accessor = accessor.EnsureNotNull(nameof(accessor));
 

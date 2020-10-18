@@ -10,6 +10,7 @@ using PingDong.Json;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PingDong.Azure.Function
 {
@@ -18,12 +19,13 @@ namespace PingDong.Azure.Function
         private readonly IMediator _mediator;
 
         protected HttpCommandTrigger(
-            IHttpContextAccessor accessor
+            TelemetryConfiguration telemetryConfiguration
+            , IHttpContextAccessor accessor
             , IHttpRequestHelper requestHelper
             , IMediator mediator
             , ILogger logger
             , IValidatorFactory validatorFactory
-            ) : base(accessor, requestHelper, logger, validatorFactory)
+            ) : base(telemetryConfiguration, accessor, requestHelper, logger, validatorFactory)
         {
             _mediator = mediator.EnsureNotNull(nameof(mediator));
         }

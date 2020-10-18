@@ -22,6 +22,8 @@ namespace PingDong.Newmoon.Venues.Services
 
         public async Task<Venue> GetByIdAsync(Guid venueId)
         {
+            venueId.EnsureNotNullOrDefault(nameof(venueId));
+
             return await _repository.FindByIdAsync(venueId, false);
         }
     }

@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Logging;
 
 namespace PingDong.Azure.Function
 {
     public class TimedTrigger : TriggerBase
     {
-        protected TimedTrigger(ILogger logger) : base(logger, null)
+        protected TimedTrigger(
+            TelemetryConfiguration telemetryConfiguration
+            , ILogger logger
+            ) : base(telemetryConfiguration, logger, null)
         {
         }
         // TODO: Refine error handling

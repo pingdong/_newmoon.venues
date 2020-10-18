@@ -9,7 +9,7 @@ namespace PingDong.Newmoon.Venues.Services.DomainEvents
 {
     public class VenueClosedDomainEventHandler : DomainEventHandler, INotificationHandler<VenueClosedDomainEvent>
     {
-        public VenueClosedDomainEventHandler(Messages.IPublisher publisher, IMediator mediator)
+        public VenueClosedDomainEventHandler(Messages.IMessagePublisher publisher, IMediator mediator)
             : base(publisher, mediator)
         {
         }

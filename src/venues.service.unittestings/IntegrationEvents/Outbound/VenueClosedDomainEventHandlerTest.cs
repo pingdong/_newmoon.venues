@@ -11,9 +11,9 @@ namespace PingDong.Newmoon.Venues.Services.DomainEvents
 {
     public class VenueClosedDomainEventHandlerTest
     {
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public async void Command_Should_BeHandled(
-            [Frozen] Mock<IPublisher> publisher
+            [Frozen] Mock<IMessagePublisher> publisher
             , [Frozen] Mock<IMediator> mediator
             , [Frozen] VenueClosedDomainEvent evt
             , VenueClosedDomainEventHandler handler
@@ -33,7 +33,7 @@ namespace PingDong.Newmoon.Venues.Services.DomainEvents
             publisher.VerifyNoOtherCalls();
         }
 
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public async void Null_Should_ThrowException(
             [Frozen] Mock<IPublisher> publisher
             , [Frozen] Mock<IMediator> mediator

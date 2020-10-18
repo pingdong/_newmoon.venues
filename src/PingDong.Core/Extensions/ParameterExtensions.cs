@@ -76,7 +76,7 @@ namespace PingDong
         /// <returns>Guid value</returns>
         /// <exception cref="ArgumentNullException">The parameter is null</exception>
         /// <exception cref="ArgumentException">The parameter was unable to convert to Guid</exception>
-        public static Guid EnsureGuidAndConvert(this string parameter, string parameterName = null)
+        public static Guid EnsureAndConvertToGuid(this string parameter, string parameterName = null)
         {
             parameter.EnsureNotNullOrWhitespace(parameterName);
 

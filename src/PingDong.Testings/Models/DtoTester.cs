@@ -6,7 +6,7 @@ namespace PingDong.Testings
 {
     public class DtoClassTester<T> where T : class
     {
-        public bool VerifyPropertiesAssignedFromConstructor(IList<string> exclusion = null, Dictionary<string, Func<object>> valueGenerator = null)
+        public bool VerifyPropertiesAssignedFromConstructor(IList<string> exclusion = null, Dictionary<string, string> propertyMapping = null, Dictionary<string, Func<object>> valueGenerator = null)
         {
             var type = typeof(T);
             var constructor = type.GetConstructors()[0];
@@ -19,14 +19,17 @@ namespace PingDong.Testings
                     exclusion.Contains(parameter.Name, StringComparer.InvariantCultureIgnoreCase))
                     continue;
 
-                var key = parameter.Name.FirstCharToUpper();
+                var propertyName = parameter.Name.FirstCharToUpper();
+                if (propertyMapping != null && propertyMapping.ContainsKey(propertyName))
+                    propertyName = propertyMapping[propertyName];
+
                 object value;
                 if (valueGenerator != null && valueGenerator.ContainsKey(parameter.Name))
                     value = valueGenerator[parameter.Name]();
                 else
                     value = ModelGenerator.Generate(parameter.ParameterType);
 
-                parameters.Add(key, value);
+                parameters.Add(propertyName, value);
             }
 
             // Initial Object

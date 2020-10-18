@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using PingDong.Collections;
 using PingDong.Services;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PingDong.Azure.Function
 {
@@ -14,10 +15,11 @@ namespace PingDong.Azure.Function
         private readonly IProcessor<TData> _processor;
 
         protected EventHubTrigger(
-            IProcessor<TData> processor
+            TelemetryConfiguration telemetryConfiguration
+            , IProcessor<TData> processor
             , ILogger logger
             , IValidatorFactory validatorFactory
-            ) : base(logger, validatorFactory)
+            ) : base(telemetryConfiguration, logger, validatorFactory)
         {
             _processor = processor.EnsureNotNull(nameof(processor));
         }

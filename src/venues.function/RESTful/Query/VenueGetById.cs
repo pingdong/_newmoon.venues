@@ -8,6 +8,7 @@ using PingDong.Http;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PingDong.Newmoon.Venues.Endpoints
 {
@@ -16,12 +17,14 @@ namespace PingDong.Newmoon.Venues.Endpoints
         private readonly IVenueQueryService _query;
 
         public VenueList(
-            IHttpContextAccessor accessor
+            TelemetryConfiguration telemetryConfiguration
+            , IHttpContextAccessor accessor
             , IHttpRequestHelper requestHelper
             , ILogger<VenueClose> logger
             , IValidatorFactory validatorFactory
             , IVenueQueryService query
-        ) : base(accessor, requestHelper, logger, validatorFactory)
+        ) : base(telemetryConfiguration, accessor, requestHelper
+            , logger, validatorFactory)
         {
             _query = query;
         }

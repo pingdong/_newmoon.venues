@@ -11,6 +11,7 @@ using PingDong.Newmoon.Venues.Services.Commands;
 using PingDong.Newmoon.Venues.Settings;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PingDong.Newmoon.Venues.Endpoints
 {
@@ -19,13 +20,15 @@ namespace PingDong.Newmoon.Venues.Endpoints
         private readonly IOptionsMonitor<AppSettings> _settings;
 
         public VenueRegister(
-            IMediator mediator
+            TelemetryConfiguration telemetryConfiguration
+            , IMediator mediator
             , IHttpContextAccessor accessor
             , IHttpRequestHelper requestHelper
             , ILogger<VenueClose> logger
             , IValidatorFactory validatorFactory
             , IOptionsMonitor<AppSettings> settings
-        ) : base(accessor, requestHelper, mediator, logger, validatorFactory)
+        ) : base(telemetryConfiguration, accessor, requestHelper
+            , mediator, logger, validatorFactory)
         {
             _settings = settings;
         }

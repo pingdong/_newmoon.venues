@@ -10,7 +10,7 @@ namespace PingDong.Newmoon.Venues.Services.Commands
 {
     public class VenueCloseCommandHandlerTest
     {
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public async void Handle_Should_Persist(
             [Frozen] Mock<IRepository<Guid, Venue>> repository
             , [Frozen] Venue venue
@@ -41,7 +41,7 @@ namespace PingDong.Newmoon.Venues.Services.Commands
             repository.VerifyNoOtherCalls();
         }
         
-        [Theory, ServiceMockInjectionAttribute]
+        [Theory, ServiceInjection]
         public async void CloseNotExisted_Should_ThrowException(
             [Frozen]Mock<IRepository<Guid, Venue>> repository
             , VenueCloseCommand command

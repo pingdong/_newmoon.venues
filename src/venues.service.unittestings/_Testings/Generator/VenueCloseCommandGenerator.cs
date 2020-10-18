@@ -7,8 +7,7 @@ namespace PingDong.Newmoon.Venues.Testings
     {
         public static VenueCloseCommand Create()
         {
-            var cmd = new VenueCloseCommand();
-            cmd.Id = NextGuid();
+            var cmd = new VenueCloseCommand { Id = NextGuid() };
             cmd.AppendTraceMetadata("tenantId", "correlationId");
 
             return cmd;

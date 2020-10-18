@@ -2,7 +2,7 @@
 
 namespace PingDong.Messages
 {
-    public interface IPublisher
+    public interface IMessagePublisher
     {
         Task PublishAsync<T>(T message) where T : IntegrationEvent;
     }

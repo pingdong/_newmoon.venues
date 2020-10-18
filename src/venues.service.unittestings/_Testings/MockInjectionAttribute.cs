@@ -1,12 +1,11 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
-using PingDong.Newmoon.Venues.Testings.Generator;
 
 namespace PingDong.Newmoon.Venues.Testings
 {
-    public class ServiceMockInjectionAttribute : AutoDataAttribute
+    public class ServiceInjectionAttribute : AutoDataAttribute
     {
-        public ServiceMockInjectionAttribute() : base(Build)
+        public ServiceInjectionAttribute() : base(Build)
         {
 
         }

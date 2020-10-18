@@ -4,6 +4,9 @@ using Microsoft.Extensions.Logging;
 using PingDong.Validations;
 using System;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PingDong.Azure.Function
 {
@@ -12,10 +15,12 @@ namespace PingDong.Azure.Function
         #region ctor
 
         protected TriggerBase(
-            ILogger logger
+            TelemetryConfiguration telemetryConfiguration
+            , ILogger logger
             , IValidatorFactory validatorFactory)
         {
             Logger = logger.EnsureNotNull(nameof(logger));
+            TelemetryClient = new TelemetryClient(telemetryConfiguration);
 
             _validatorFactory = validatorFactory;
         }
@@ -74,13 +79,17 @@ namespace PingDong.Azure.Function
 
         protected ILogger Logger { get; }
 
+        protected TelemetryClient TelemetryClient { get; }
+
         #endregion
 
         #region Private Methods
         
         private void PreProcess(string functionName, DateTime start)
         {
-            Logger.LogInformation($"Function - '{functionName}' started on {start}");
+            // Track an Event
+            var evt = new EventTelemetry($"Function - '{functionName}' started on {start}");
+            TelemetryClient.TrackEvent(evt);
 
             PreProcess();
         }
@@ -91,8 +100,16 @@ namespace PingDong.Azure.Function
 
             var elapse = end - start;
 
-            Logger.LogInformation($"Function - '{functionName}' ended on {end}");
-            Logger.LogInformation($"Function - '{functionName}' spent {elapse.TotalSeconds} seconds");
+            // Track an Event
+            var evt = new EventTelemetry($"Function - '{functionName}' ended on {end}");
+            TelemetryClient.TrackEvent(evt);
+
+            // Track a Metric
+            var metric = new MetricTelemetry($"Function - '{functionName}' spent", elapse.TotalMilliseconds)
+            {
+                MetricNamespace = $"{functionName}.ProcessedTime"
+            };
+            TelemetryClient.TrackMetric(metric);
 
             Logger.LogMetric($"Function - '{functionName}'", elapse.TotalMilliseconds);
         }

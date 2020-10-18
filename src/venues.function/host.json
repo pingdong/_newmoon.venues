@@ -1,11 +1,22 @@
 {
   "version": "2.0",
 
+  "aggregator": {
+    "batchSize": 1000,
+    "flushTimeout": "00:00:30"
+  },
   "logging": {
+    "logLevel": {
+      "default": "Information",
+      "Host": "Error",
+      "Function": "Error",
+      "Host.Aggregator": "Information"
+    },
     "applicationInsights": {
-      "samplingExcludedTypes": "Request",
       "samplingSettings": {
-        "isEnabled": true
+        "isEnabled": true,
+        "maxTelemetryItemsPerSecond": 20,
+        "excludedTypes": "Request"
       }
     }
   },
