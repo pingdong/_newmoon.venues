@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -8,7 +9,6 @@ using PingDong.Http;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PingDong.Newmoon.Venues.Endpoints
 {

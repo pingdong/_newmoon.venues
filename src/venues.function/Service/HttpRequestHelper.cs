@@ -7,9 +7,9 @@ namespace PingDong.Newmoon.Venues.Http
 {
     internal class HttpRequestHelper : IHttpRequestHelper
     {
-        private const string RequestIdKey = "x-request-id";
-        private const string CorrelationIdKey = "x-correlation-id";
-        private const string TenantIdKey = "tid";
+        public const string RequestIdKey = "x-request-id";
+        public const string CorrelationIdKey = "x-correlation-id";
+        public const string TenantIdKey = "tid";
 
         private readonly IHttpContextAccessor _accessor;
         private readonly IRequestManager _requestManager;

@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediatR;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -11,7 +12,6 @@ using PingDong.Newmoon.Venues.Services.Commands;
 using PingDong.Newmoon.Venues.Settings;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PingDong.Newmoon.Venues.Endpoints
 {
