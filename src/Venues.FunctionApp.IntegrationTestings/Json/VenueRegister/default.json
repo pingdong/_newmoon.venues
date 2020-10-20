@@ -1,0 +1,8 @@
+{
+  "name": "test",
+  "address": {
+    "no": "1",
+    "street": "166 Queen St",
+    "city": "Auckland"
+  }
+}

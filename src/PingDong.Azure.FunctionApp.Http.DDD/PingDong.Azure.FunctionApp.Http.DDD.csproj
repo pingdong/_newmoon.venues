@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PingDong.Azure.FunctionApp\PingDong.Azure.FunctionApp.csproj" />
+    <ProjectReference Include="..\PingDong.DDD.Core\PingDong.DDD.Core.csproj" />
+    <ProjectReference Include="..\PingDong.DDD.Services\PingDong.DDD.Services.csproj" />
+  </ItemGroup>
+
+</Project>

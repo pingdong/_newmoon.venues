@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PingDong.DDD.Core\PingDong.DDD.Core.csproj" />
+    <ProjectReference Include="..\PingDong.Messages\PingDong.Messages.csproj" />
+    <ProjectReference Include="..\PingDong.Validations\PingDong.Validations.csproj" />
+  </ItemGroup>
+
+</Project>
