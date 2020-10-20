@@ -38,7 +38,7 @@ namespace PingDong.Newmoon.Venues.Endpoints
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "venue/register")] HttpRequest request
             , ExecutionContext context)
         {
-            return await ProcessAsync<VenueCreateCommand>(context, request, _settings.CurrentValue.SupportIdempotencyCheck).ConfigureAwait(false);
+            return await ProcessAsync<VenueRegisterCommand>(context, request, _settings.CurrentValue.SupportIdempotencyCheck).ConfigureAwait(false);
         }
     }
 }

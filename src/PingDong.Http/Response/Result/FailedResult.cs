@@ -6,10 +6,11 @@ namespace PingDong.Http
     public class FailedResult : HttpResult
     {
         public FailedResult(string message)
-            : this(message, null)
+            : base(false)
         {
             Message = message;
         }
+
         public FailedResult(string message, IEnumerable<ValidationError> validationErrors)
             : base(false)
         {

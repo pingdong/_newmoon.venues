@@ -2,7 +2,7 @@
 
 namespace PingDong.Newmoon.Venues.Services.Commands
 {
-    public class VenueCreateCommand : Command<bool>
+    public class VenueRegisterCommand : Command<bool>
     {
         public string Name { get; set; }
 

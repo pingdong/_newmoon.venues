@@ -36,6 +36,9 @@ namespace PingDong.Newmoon.Venues.Http
 
         public string GetRequestId()
         {
+            if (!_accessor.HttpContext.Request.Headers.ContainsKey(RequestIdKey))
+                throw new InvalidRequestException($"Cannot find the header: {RequestIdKey}");
+
             return _accessor.HttpContext.Request.Headers[RequestIdKey];
         }
 
@@ -46,6 +49,9 @@ namespace PingDong.Newmoon.Venues.Http
 
         public string GetCorrelationId()
         {
+            if (!_accessor.HttpContext.Request.Headers.ContainsKey(CorrelationIdKey))
+                throw new InvalidRequestException($"Cannot find the header: {CorrelationIdKey}");
+
             return _accessor.HttpContext.Request.Headers[CorrelationIdKey];
         }
 

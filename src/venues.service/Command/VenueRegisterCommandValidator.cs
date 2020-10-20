@@ -3,9 +3,9 @@ using PingDong.Newmoon.Venues.Validations;
 
 namespace PingDong.Newmoon.Venues.Services.Commands
 {
-    public class VenueCreateCommandValidator : AbstractValidator<VenueCreateCommand>
+    public class VenueRegisterCommandValidator : AbstractValidator<VenueRegisterCommand>
     {
-        public VenueCreateCommandValidator()
+        public VenueRegisterCommandValidator()
         {
             CascadeMode = CascadeMode.Continue;
 

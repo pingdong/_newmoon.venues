@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace PingDong.Newmoon.Venues.Services.Commands
 {
-    public class VenueCreateCommandHandler : CommandHandler, IRequestHandler<VenueCreateCommand, bool>
+    public class VenueRegisterCommandHandler : CommandHandler, IRequestHandler<VenueRegisterCommand, bool>
     {
         private readonly IRepository<Guid, Venue> _repository;
 
-        public VenueCreateCommandHandler(
+        public VenueRegisterCommandHandler(
             IRepository<Guid, Venue> repository)
             : base(repository)
         {
             _repository = repository.EnsureNotNull(nameof(repository));
         }
 
-        public async Task<bool> Handle(VenueCreateCommand command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(VenueRegisterCommand command, CancellationToken cancellationToken)
         {
             var venue = CreateVenue(command.Name, command.Address, command);
 
@@ -29,9 +29,9 @@ namespace PingDong.Newmoon.Venues.Services.Commands
         }
     }
 
-    public class VenueCreateIdentifiedCommandHandler : IdentifiedCommandHandler<bool, VenueCreateCommand>
+    public class VenueRegisterIdentifiedCommandHandler : IdentifiedCommandHandler<bool, VenueRegisterCommand>
     {
-        public VenueCreateIdentifiedCommandHandler(IMediator mediator, IRequestManager requestManager)
+        public VenueRegisterIdentifiedCommandHandler(IMediator mediator, IRequestManager requestManager)
             : base(mediator, requestManager, true)
         {
         }

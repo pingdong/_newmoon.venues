@@ -1,5 +1,5 @@
 using PingDong.CQRS;
-using PingDong.CQRS.Core.Testing;
+using PingDong.CQRS.Core.Testings;
 using PingDong.Newmoon.Venues.DomainEvents;
 using PingDong.Newmoon.Venues.Testings;
 using PingDong.Validations;

@@ -143,7 +143,7 @@ namespace PingDong.Newmoon.Venues.Services.Commands
         }
 
         [Theory, ServiceInjection]
-        public async void CreateVenue_ShouldReturn_WithMetadata(
+        public void CreateVenue_ShouldReturn_WithMetadata(
             Mock<IRequestMetadata> metadata
             , Address address
             , string venueName

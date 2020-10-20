@@ -21,7 +21,8 @@ namespace PingDong.Newmoon.Venues
             builder.Services.AddScoped<IValidatorFactory, ValidatorFactory>();
 
             // Logging
-            builder.Services.AddLogging();
+            builder.Services.AddLogging(); 
+            builder.Services.AddApplicationInsightsTelemetry();
 
             // Http
             builder.Services.AddTransient<IHttpRequestHelper, HttpRequestHelper>();

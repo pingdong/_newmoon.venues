@@ -21,10 +21,17 @@ namespace PingDong.Testings.TestFixtures
             if (disposing)
                 DisposeManagedResource();
 
+            DisposeUnmanagedResource();
+
             _disposed = true;
         }
 
         protected virtual void DisposeManagedResource()
+        {
+
+        }
+
+        protected virtual void DisposeUnmanagedResource()
         {
 
         }

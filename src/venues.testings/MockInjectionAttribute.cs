@@ -4,7 +4,7 @@ using AutoFixture.Xunit2;
 using Microsoft.Extensions.Options;
 using Moq;
 using PingDong.Newmoon.Venues.Settings;
-using PingDong.Newmoon.Venues.Testings.Generator;
+using PingDong.Newmoon.Venues.Testings.Generators;
 using PingDong.Testings.Helper;
 
 namespace PingDong.Newmoon.Venues.Testings

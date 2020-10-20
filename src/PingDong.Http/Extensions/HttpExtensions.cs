@@ -21,5 +21,39 @@ namespace PingDong.Http
 
             return body.Deserialize<T>(options);
         }
+
+        public static string Combine(this string url, string endpoint)
+        {
+            url.EnsureNotNullOrWhitespace(nameof(url));
+            endpoint.EnsureNotNullOrWhitespace(nameof(endpoint));
+
+            if (url.EndsWith("/"))
+                url = url.Substring(0, url.Length - 1);
+
+            if (!endpoint.StartsWith("/"))
+                endpoint = "/" + endpoint;
+
+            return url + endpoint;
+        }
+
+        public static string RemoveEndingForwardSlash(this string url)
+        {
+            url.EnsureNotNullOrWhitespace(nameof(url));
+
+            if (url.EndsWith("/"))
+                url = url.Substring(0, url.Length - 1);
+
+            return url;
+        }
+
+        public static string EnsureBeginningForwardSlash(this string endpoint)
+        {
+            endpoint.EnsureNotNullOrWhitespace(nameof(endpoint));
+
+            if (!endpoint.StartsWith("/"))
+                endpoint = "/" + endpoint;
+
+            return endpoint;
+        }
     }
 }

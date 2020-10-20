@@ -5,6 +5,7 @@
     "batchSize": 1000,
     "flushTimeout": "00:00:30"
   },
+
   "logging": {
     "logLevel": {
       "default": "Information",

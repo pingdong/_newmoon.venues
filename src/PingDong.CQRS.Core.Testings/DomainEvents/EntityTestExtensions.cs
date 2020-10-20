@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace PingDong.CQRS.Core.Testing
+namespace PingDong.CQRS.Core.Testings
 {
     public static class EntityTestExtensions
     {

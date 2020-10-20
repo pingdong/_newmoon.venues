@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PingDong.CQRS.Core\PingDong.CQRS.Core.csproj" />
+    <ProjectReference Include="..\PingDong.Testings\PingDong.Testings.csproj" />
   </ItemGroup>
 
 </Project>
