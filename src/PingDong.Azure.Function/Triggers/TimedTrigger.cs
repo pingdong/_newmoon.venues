@@ -11,6 +11,5 @@ namespace PingDong.Azure.Function
             ) : base(telemetryConfiguration, logger, null)
         {
         }
-        // TODO: Refine error handling
     }
 }
