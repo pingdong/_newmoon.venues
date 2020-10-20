@@ -24,9 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PingDong.CQRS.Core.Testings\PingDong.CQRS.Core.Testings.csproj" />
-    <ProjectReference Include="..\venues.core\Venues.Core.csproj" />
-    <ProjectReference Include="..\venues.testings\Venue.Testings.csproj" />
+    <ProjectReference Include="..\PingDong.DDD.Core.Testings\PingDong.DDD.Core.Testings.csproj" />
+    <ProjectReference Include="..\Venues.Core\Venues.Core.csproj" />
+    <ProjectReference Include="..\Venues.Testings\Venue.Testings.csproj" />
   </ItemGroup>
 
 </Project>

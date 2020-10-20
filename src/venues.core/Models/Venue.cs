@@ -1,4 +1,4 @@
-﻿using PingDong.CQRS;
+﻿using PingDong.DDD;
 using PingDong.Newmoon.Venues.DomainEvents;
 using PingDong.Newmoon.Venues.Validations;
 using System;

@@ -1,4 +1,4 @@
-﻿using PingDong.CQRS;
+﻿using PingDong.DDD;
 using Xunit;
 
 namespace PingDong.Newmoon.Venues

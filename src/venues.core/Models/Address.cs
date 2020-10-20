@@ -1,4 +1,4 @@
-﻿using PingDong.CQRS;
+﻿using PingDong.DDD;
 using System.Collections.Generic;
 
 namespace PingDong.Newmoon.Venues
