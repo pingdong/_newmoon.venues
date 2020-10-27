@@ -191,7 +191,7 @@ stages:
       displayName: 'Release Build'
       condition: succeeded()
       inputs:
-        projects: '**/$(local#app.name).csproj'
+        projects: '**/*.csproj'
         arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: DotNetCoreCLI@2
