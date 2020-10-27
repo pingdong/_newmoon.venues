@@ -245,20 +245,7 @@ stages:
   jobs:
   - deployment: Deploy
     pool:
-      vmImage: $(build#pool)    
-    environment: dev
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - task: InvokeRESTAPI@1
-              displayName: Verification
-              inputs:
-                connectionType: 'connectedServiceName'
-                serviceConnection: Newmoon.Venues
-                method: 'GET'
-                urlSuffix: 'api/venues'
-                waitForCompletion: true
+      vmImage: $(build#pool)
     strategy:
       runOnce:
         deploy:
