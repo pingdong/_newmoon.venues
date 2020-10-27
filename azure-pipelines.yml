@@ -242,6 +242,7 @@ stages:
         deploy:
           steps:
           - download: current
+            displayName: Getting Artifact
             artifact: drop
 
           - task: AzureWebApp@1
