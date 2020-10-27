@@ -1,71 +1,307 @@
-# ASP.NET Core
-
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-trigger:
-  - develop
-  - master
-
-pool:
-  name: Hosted Windows 2019 with VS2019
-
-workspace:
-    clean: all
+# resources:
+#   repositories:
+#   - repository: templates
+#     type: github
+#     name: pingdong/azure.devops.templates
+#     ref: refs/heads/master
+#     endpoint: GitHub
 
 variables:
-  buildConfiguration: 'Debug'
-  BuildConfiguration.Release: 'Release'
+- group: Build            # the name of the Library
+- name: local#app.name
+  value: 'Venues.FunctionApp'
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: 'Restore'
-  inputs:
-    command: restore
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+trigger:
+  batch: true
 
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+pr:
+  autoCancel: true   # Cancel previous build if check in multiple times
 
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+schedules:
+- cron: '0 1 * * *' # Every day at 1 A.M.
+  displayName: 'Night Build'
+  branches:
+    include: 
+    - master
+  always: true      # Even no code change
 
-- task: pekspro.pekspro-efcore-migration-script-generator.efcore-migration-script-generator.efcore-migration-script-generator-task@0
-  displayName: 'Generate Migration Scripts'
-  inputs:
-    projectpath: src/infrastructure/Places.Infrastructure.csproj
-    databasecontexts: DefaultDbContext
-    targetfolder: '$(Build.ArtifactStagingDirectory)'
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-  env:
-    ConnectionStrings__Default: $(Place-Db-ConnectionString)
+stages:
+# Quality
+# TODO: Extract to QualityControl Template
+- stage: QualityControl
+  displayName: Quality Control
+  jobs: 
+  - job: StaticTesting
+    displayName: Static Testing
+    pool:
+      vmImage: $(build#pool)
+    workspace:
+      clean: all 
+    steps:
+    - task: WhiteSource Bolt@20
+      displayName: 'Run WhiteSource Bolt' 
+      condition: |
+        or 
+        (
+          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+          eq(variables['Build.Reason'], 'PullRequest')
+        )
+        
+  - job: UnitTesting
+    displayName: Testing
+    pool:
+      vmImage: $(build#pool)
+    workspace:
+      clean: all 
+    variables:
+    - group : Build.UnitTest
+    - name  : local.unittesting#codecoveragehistory.directory
+      value : '$(Build.ArtifactStagingDirectory)/history'
+    - name  : local.unittesting#codecoveragehistory.directory
+      value : ${{ lower(variables['local#app.name']) }}.$(Build.SourceBranchName)
+    - name  : 'disable.coverage.autogenerate'
+      value : 'true'
+    steps:
+    # Preparing
+    - task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
+      displayName: Preparing SonarCloud Analysis
+      condition: |
+        or 
+        (
+          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+          eq(variables['Build.Reason'], 'PullRequest')
+        )
+      inputs:
+        SonarCloud: SonarCloud
+        organization: $(build.unittest#sonarcloud.organization)
+        projectKey: ${{ lower(variables['local#app.name']) }}
+        projectName: ${{ lower(variables['local#app.name']) }}
+        extraProperties: |
+          sonar.coverage.exclusions=**/*[Uu]nit[Tt]ests*/**/*
+          sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
 
-- task: DotNetCoreCLI@2
-  displayName: 'Release Build'
-  inputs:
-    projects: '**/*.csproj'
-    arguments: '--configuration $(BuildConfiguration.Release) --output $(Build.ArtifactStagingDirectory)'
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    - task: UniversalPackages@0
+      displayName: Getting Test Coverage History
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      continueOnError: true
+      inputs:
+        command: download
+        downloadDirectory: $(local.unittesting#codecoveragehistory.directory)
+        feedsToUse: internal
+        vstsFeed: $(build.unittest#coverage.history.feed)
+        vstsFeedPackage: $(local.unittesting#codecoveragehistory.directory)
+        vstsPackageVersion: '0.*'
 
-- task: DotNetCoreCLI@2
-  displayName: Publish
-  inputs:
-    command: publish
-    publishWebProjects: false
-    projects: '**/*.csproj'
-    arguments: '--configuration $(BuildConfiguration.Release) --output $(Build.ArtifactStagingDirectory)'
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    # Building
+    - task: DotNetCoreCLI@2
+      displayName: Building
+      inputs:
+        projects: '**/*.sln'    # The <ProjectGuid> element is not required if you build a solution (sln) containing that project.
+                                # for SonarQube
+        arguments: '--configuration $(build#configuration.release)'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    # Testing
+    - task: DotNetCoreCLI@2
+      displayName: Running Unit Tests
+      inputs:
+        command: test
+        arguments: '--no-build --configuration $(build#configuration.release) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
+        publishTestResults: true
+        projects: '**/*.[Uu]nit[Tt]ests/*.csproj'
+
+    # Coverage Report
+    - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+      displayName: Generating Test Coverage Report
+      condition: ne(variables['Build.Reason'], 'PullRequest')
+      inputs:
+        reports: '$(Build.SourcesDirectory)/**/coverage.opencover.xml'
+        targetdir: $(Build.SourcesDirectory)/Coverage
+        reporttypes: Html;HtmlInline_AzurePipelines_Dark;Cobertura;Badges
+        historydir: $(local.unittesting#codecoveragehistory.directory)
+
+    - task: UniversalPackages@0
+      displayName: Persisting Test Coverage History
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      inputs:
+        command: publish
+        publishDirectory: $(local.unittesting#codecoveragehistory.directory)
+        feedsToUsePublish: internal
+        vstsFeedPublish: $(build.unittest#coverage.history.feed)
+        vstsFeedPackagePublish: $(local.unittesting#codecoveragehistory.directory)
+        versionOption: patch
+        packagePublishDescription: Code Coverage History for repository $(Build.Repository.Name) on branch $(Build.SourceBranchName)
+        verbosity: Information
+
+    - task: PublishCodeCoverageResults@1
+      displayName: Publishing Test Coverage Report
+      condition: ne(variables['Build.Reason'], 'PullRequest')
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: $(Build.SourcesDirectory)/Coverage/Cobertura.xml
+        reportDirectory: $(Build.SourcesDirectory)/Coverage
+
+    # Code Analysis
+    - task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
+      displayName: Run Code Analysis
+      condition: |
+        or 
+        (
+          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+          eq(variables['Build.Reason'], 'PullRequest')
+        )
+
+    - task: SonarSource.sonarcloud.38b27399-a642-40af-bb7d-9971f69712e8.SonarCloudPublish@1
+      displayName: Publish Quality Gate Result
+      condition: |
+        or 
+        (
+          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+          eq(variables['Build.Reason'], 'PullRequest')
+        )
+
+# Build
+# TODO: Extract to Build Template
+- stage: Build
+  displayName: Building
+  dependsOn: QualityControl
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  jobs:
+  - job: Build
+    displayName: Building
+    pool:
+      vmImage: $(build#pool)
+    workspace:
+      clean: all 
+    variables:
+    - group: Build
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore'
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+        arguments: '--configuration $(build#configuration.release)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Release Build'
+      condition: succeeded()
+      inputs:
+        projects: '**/$(local#app.name).csproj'
+        arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
+
+    - task: DotNetCoreCLI@2
+      displayName: Publish
+      condition: succeeded()
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: '**/$(local#app.name).csproj'
+        arguments: '--no-restore --no-build --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+
+  # - job: BuildDBMigrationScript
+  #   displayName: Building Database Migration Script
+  #   pool:
+  #     vmImage: $(build#pool)
+  #   workspace:
+  #     clean: all 
+  #   variables:
+  #   - group: Build
+  #   steps:
+  #   - task: pekspro.pekspro-efcore-migration-script-generator.efcore-migration-script-generator.efcore-migration-script-generator-task@0
+  #     displayName: 'Generate Migration Scripts'
+  #     inputs:
+  #       projectpath: src/infrastructure/Places.Infrastructure.csproj
+  #       databasecontexts: DefaultDbContext
+  #       targetfolder: '$(Build.ArtifactStagingDirectory)'
+  #     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  #     env:
+  #       ConnectionStrings__Default: $(Place-Db-ConnectionString)
+
+
+      
+
+# Deployment
+# TODO: Extract a FunctionApp Template
+- stage: DeployToDev
+  displayName: 'Deploy to the dev environment'
+  dependsOn: Build
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  variables:
+  - group: Deploy
+  - group: Deploy.Venue
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: $(build#pool)
+    environment: dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+
+          - task: AzureWebApp@1
+            displayName: Deploying
+            inputs:
+              azureSubscription: Azure
+              appType: functionApp
+              appName: $(deploy.venue#app.name)
+              package: '$(Pipeline.Workspace)/drop/*.zip'
+
+
+
+# TODO: Extract a FunctionApp Template with Slot swapping
+
+          #TODO: Approval
+
+          #TODO: Deploy to PROD with Slot
+          # - task: AzureWebApp@1
+          #   displayName: Deploying
+          #   inputs:
+          #     azureSubscription: $(deploy#azure.subscription)
+          #     appType: functionApp
+          #     appName: deploy.venue#app.name
+          #     package: '$(Pipeline.Workspace)/drop/*.zip'
+          #     #Uncomment the next lines to deploy to a deployment slot
+          #     #deployToSlotOrASE: true
+          #     #resourceGroupName: '<Resource Group Name>'
+          #     #slotName: '<Slot name>'
+
+
+          # - task: AzureAppServiceSettings@1
+          #   displayName: 'Update web app settings'
+          #   inputs:
+          #     azureSubscription: 'Resource Manager - Tailspin - Space Game'
+          #     appName: $(WebAppName)
+          #     resourceGroupName: $(ResourceGroupName)
+          #     appSettings: |
+          #       [
+          #         {
+          #           "name": "AppSettings:LeaderboardFunctionUrl",
+          #           "value": "http://$(LeaderboardAppName).azurewebsites.net/api/LeaderboardFunction",
+          #           "slotSetting": false
+          #         }
+          #       ]
+
+          #TODO: Swap slots
+          # - task: AzureAppServiceManage@0
+          #   inputs:
+          #     azureSubscription: <Azure service connection>
+          #     WebAppName: <name of the Function app>
+          #     ResourceGroupName: <name of resource group>
+          #     SourceSlot: staging
+          #     SwapWithProduction: true
