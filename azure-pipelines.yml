@@ -21,7 +21,8 @@ schedules:
 - cron: '0 0 1 * * *' # Every day at 1 A.M.
   displayName: 'Night Build'
   branches:
-    include: master
+    include: 
+    - master
   always: true      # Even no code change
 
 stages:
