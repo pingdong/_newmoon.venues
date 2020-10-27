@@ -255,7 +255,7 @@ stages:
           - task: AzureWebApp@1
             displayName: Deploying
             inputs:
-              azureSubscription: $(deploy#azure.subscription)
+              azureSubscription: Azure
               appType: functionApp
               appName: $(deploy.venue#app.name)
               package: '$(Pipeline.Workspace)/drop/*.zip'
