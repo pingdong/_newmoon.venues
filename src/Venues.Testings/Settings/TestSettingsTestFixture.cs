@@ -1,6 +1,6 @@
 ﻿using PingDong.Testings.TestFixtures;
 
-namespace PingDong.Newmoon.Venues.Testings.TestFixtures
+namespace PingDong.Newmoon.Venues.Tests.TestFixtures
 {
     public class TestSettingsTestFixture : TestFixtureBase
     {

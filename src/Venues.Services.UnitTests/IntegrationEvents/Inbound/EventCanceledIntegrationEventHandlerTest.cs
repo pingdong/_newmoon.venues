@@ -2,7 +2,7 @@
 using MediatR;
 using Moq;
 using PingDong.DDD.Services;
-using PingDong.Newmoon.Venues.Testings;
+using PingDong.Newmoon.Venues.Tests;
 using System;
 using System.Threading;
 using Microsoft.Extensions.Options;

@@ -1,6 +1,6 @@
 ﻿using PingDong.Testings;
 
-namespace PingDong.Newmoon.Venues.Testings.Generators
+namespace PingDong.Newmoon.Venues.Tests.Generators
 {
     internal class VenueGenerator : ModelGenerator
     {

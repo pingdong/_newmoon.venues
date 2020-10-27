@@ -1,7 +1,7 @@
 ﻿using PingDong.Newmoon.Venues.Services.Commands;
 using PingDong.Testings;
 
-namespace PingDong.Newmoon.Venues.Testings
+namespace PingDong.Newmoon.Venues.Tests
 {
     internal class VenueCloseCommandGenerator : ModelGenerator
     {

@@ -1,7 +1,7 @@
 using PingDong.DDD;
 using PingDong.DDD.Core.Testings;
 using PingDong.Newmoon.Venues.DomainEvents;
-using PingDong.Newmoon.Venues.Testings;
+using PingDong.Newmoon.Venues.Tests;
 using PingDong.Validations;
 using System;
 using Xunit;

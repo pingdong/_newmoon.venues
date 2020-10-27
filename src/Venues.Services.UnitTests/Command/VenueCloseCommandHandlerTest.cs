@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Moq;
 using PingDong.DDD.Infrastructure;
-using PingDong.Newmoon.Venues.Testings;
+using PingDong.Newmoon.Venues.Tests;
 using System;
 using System.Threading;
 using Xunit;

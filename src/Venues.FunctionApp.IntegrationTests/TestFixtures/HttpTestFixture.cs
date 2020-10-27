@@ -2,7 +2,7 @@
 using PingDong.Testings.TestFixtures;
 using System.IO;
 
-namespace PingDong.Newmoon.Venues.IntegrationTestings
+namespace PingDong.Newmoon.Venues.IntegrationTests
 {
     public class HttpTestFixture : HttpTestFixtureBase
     {

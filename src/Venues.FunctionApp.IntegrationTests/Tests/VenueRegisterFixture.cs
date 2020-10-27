@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace PingDong.Newmoon.Venues.IntegrationTestings
+namespace PingDong.Newmoon.Venues.IntegrationTests
 {
     [Collection(nameof(IntegrationTestFixtures))]
     public class VenueRegisterFixture

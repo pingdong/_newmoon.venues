@@ -3,7 +3,7 @@ using MediatR;
 using Moq;
 using PingDong.Messages;
 using PingDong.Newmoon.Venues.DomainEvents;
-using PingDong.Newmoon.Venues.Testings;
+using PingDong.Newmoon.Venues.Tests;
 using System;
 using Xunit;
 

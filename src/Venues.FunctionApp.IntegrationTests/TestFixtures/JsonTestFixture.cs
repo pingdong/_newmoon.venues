@@ -1,6 +1,6 @@
 ﻿using PingDong.Testings.TestFixtures;
 
-namespace PingDong.Newmoon.Venues.IntegrationTestings
+namespace PingDong.Newmoon.Venues.IntegrationTests
 {
     public class JsonTestFixture : JsonTestFixtureBase
     {
