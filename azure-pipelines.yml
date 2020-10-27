@@ -9,7 +9,7 @@
 variables:
 - group: Build            # the name of the Library
 - name: local#app.name
-  value: 'Venues.FunctionApp'
+  value: Venues.FunctionApp
 
 trigger:
   batch: true
@@ -19,7 +19,7 @@ pr:
 
 schedules:
 - cron: '0 1 * * *' # Every day at 1 A.M.
-  displayName: 'Night Build'
+  displayName: Nightly Build
   branches:
     include: 
     - master
@@ -142,7 +142,7 @@ stages:
 
     # Code Analysis
     - task: SonarCloudAnalyze@1
-      displayName: Run SonarCloud Code Analysis
+      displayName: Running SonarCloud Code Analysis
       condition: |
         or 
         (
@@ -151,7 +151,7 @@ stages:
         )
 
     - task: SonarCloudPublish@1
-      displayName: Publish SonarCloud Analysis Result
+      displayName: Publishing SonarCloud Analysis Result
       condition: |
         or 
         (
@@ -181,18 +181,11 @@ stages:
     - group: Build
     steps:
     - task: DotNetCoreCLI@2
-      displayName: Restoreing dependencies
+      displayName: Restoring dependencies
       inputs:
         command: restore
         projects: '**/*.csproj'
         arguments: '--configuration $(build#configuration.release)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Building
-      condition: succeeded()
-      inputs:
-        projects: '**/*.csproj'
-        arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: DotNetCoreCLI@2
       displayName: Publishing
@@ -201,10 +194,10 @@ stages:
         command: publish
         publishWebProjects: false
         projects: '**/$(local#app.name).csproj'
-        arguments: '--no-restore --no-build --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
+        arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
+      displayName: Publishing Artifact
 
   # - job: BuildDBMigrationScript
   #   displayName: Building Database Migration Script
