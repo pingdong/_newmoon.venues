@@ -8,7 +8,7 @@
 
 variables:
 - group: Build            # the name of the Library
--  name: local#app.name
+- name: local#app.name
   value: 'Venues.FunctionApp'
 
 trigger:
