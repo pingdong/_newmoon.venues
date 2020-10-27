@@ -48,7 +48,7 @@ stages:
         )
         
   - job: UnitTesting
-    displayName: Testing
+    displayName: Unit Testing
     pool:
       vmImage: $(build#pool)
     workspace:
@@ -102,7 +102,7 @@ stages:
 
     # Testing
     - task: DotNetCoreCLI@2
-      displayName: Running Unit Tests
+      displayName: Running Unit Testings
       inputs:
         command: test
         arguments: '--no-build --configuration $(build#configuration.release) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
@@ -142,7 +142,7 @@ stages:
 
     # Code Analysis
     - task: SonarCloudAnalyze@1
-      displayName: Run Code Analysis
+      displayName: Run SonarCloud Code Analysis
       condition: |
         or 
         (
@@ -151,7 +151,7 @@ stages:
         )
 
     - task: SonarCloudPublish@1
-      displayName: Publish Quality Gate Result
+      displayName: Publish SonarCloud Analysis Result
       condition: |
         or 
         (
@@ -181,21 +181,21 @@ stages:
     - group: Build
     steps:
     - task: DotNetCoreCLI@2
-      displayName: 'Restore'
+      displayName: Restoreing dependencies
       inputs:
         command: restore
         projects: '**/*.csproj'
         arguments: '--configuration $(build#configuration.release)'
 
     - task: DotNetCoreCLI@2
-      displayName: 'Release Build'
+      displayName: Building
       condition: succeeded()
       inputs:
         projects: '**/*.csproj'
         arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: DotNetCoreCLI@2
-      displayName: Publish
+      displayName: Publishing
       condition: succeeded()
       inputs:
         command: publish
@@ -223,10 +223,7 @@ stages:
   #       targetfolder: '$(Build.ArtifactStagingDirectory)'
   #     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   #     env:
-  #       ConnectionStrings__Default: $(Place-Db-ConnectionString)
-
-
-      
+  #       ConnectionStrings__Default: $(Place-Db-ConnectionString)      
 
 # Deployment
 # TODO: Extract a FunctionApp Template
