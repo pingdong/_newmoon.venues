@@ -188,7 +188,7 @@ stages:
       displayName: 'Release Build'
       condition: succeeded()
       inputs:
-        projects: '**/variables['local#app.name'].csproj'
+        projects: '**/$('local#app.name').csproj'
         arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: DotNetCoreCLI@2
@@ -197,7 +197,7 @@ stages:
       inputs:
         command: publish
         publishWebProjects: false
-        projects: '**/variables['local#app.name'].csproj'
+        projects: '**/$('local#app.name').csproj'
         arguments: '--no-restore --no-build --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
