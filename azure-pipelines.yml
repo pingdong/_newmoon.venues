@@ -55,7 +55,7 @@ stages:
     - name  : local.unittesting#codecoveragehistory.directory
       value : '$(Build.ArtifactStagingDirectory)/history'
     - name  : local.unittesting#codecoveragehistory.directory
-      value : ${{ lower(variables['local#app.name']) }}.$(Build.SourceBranchName)
+      value : ${{ lower($(local#app.name)) }}.$(Build.SourceBranchName)
     - name  : 'disable.coverage.autogenerate'
       value : 'true'
     steps:
@@ -188,7 +188,7 @@ stages:
       displayName: 'Release Build'
       condition: succeeded()
       inputs:
-        projects: '**/$('local#app.name').csproj'
+        projects: '**/$(local#app.name).csproj'
         arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: DotNetCoreCLI@2
@@ -197,7 +197,7 @@ stages:
       inputs:
         command: publish
         publishWebProjects: false
-        projects: '**/$('local#app.name').csproj'
+        projects: '**/$(local#app.name).csproj'
         arguments: '--no-restore --no-build --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
