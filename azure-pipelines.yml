@@ -55,7 +55,7 @@ stages:
     - name  : local.unittesting#codecoveragehistory.directory
       value : '$(Build.ArtifactStagingDirectory)/history'
     - name  : local.unittesting#codecoveragehistory.directory
-      value : ${{ lower(local#app.name) }}.$(Build.SourceBranchName)
+      value : ${{ lower(variables['local#app.name']) }}.$(Build.SourceBranchName)
     - name  : 'disable.coverage.autogenerate'
       value : 'true'
     steps:
