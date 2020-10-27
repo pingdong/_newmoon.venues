@@ -225,19 +225,7 @@ stages:
   #     env:
   #       ConnectionStrings__Default: $(Place-Db-ConnectionString)
 
-environment: dev
-strategy:
-  runOnce:
-    deploy:
-      steps:
-      - task: InvokeRESTAPI@1
-        displayName: Verification
-        inputs:
-          connectionType: 'connectedServiceName'
-          serviceConnection: Newmoon.Venues
-          method: 'GET'
-          urlSuffix: 'api/venues'
-          waitForCompletion: true
+
       
 
 # Deployment
@@ -257,9 +245,20 @@ strategy:
   jobs:
   - deployment: Deploy
     pool:
-      vmImage: $(build#pool)
-    environment:
-      name: dev
+      vmImage: $(build#pool)    
+    environment: dev
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: InvokeRESTAPI@1
+              displayName: Verification
+              inputs:
+                connectionType: 'connectedServiceName'
+                serviceConnection: Newmoon.Venues
+                method: 'GET'
+                urlSuffix: 'api/venues'
+                waitForCompletion: true
     strategy:
       runOnce:
         deploy:
