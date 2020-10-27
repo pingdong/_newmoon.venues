@@ -2,7 +2,7 @@
 using System.IO;
 using PingDong.Newmoon.Venues.Settings;
 
-namespace PingDong.Newmoon.Venues.Testings
+namespace PingDong.Newmoon.Venues.Tests
 {
     internal class SettingsHelper
     {

@@ -4,10 +4,10 @@ using AutoFixture.Xunit2;
 using Microsoft.Extensions.Options;
 using Moq;
 using PingDong.Newmoon.Venues.Settings;
-using PingDong.Newmoon.Venues.Testings.Generators;
+using PingDong.Newmoon.Venues.Tests.Generators;
 using PingDong.Testings.Helper;
 
-namespace PingDong.Newmoon.Venues.Testings
+namespace PingDong.Newmoon.Venues.Tests
 {
     public class MockInjectionAttribute : AutoDataAttribute
     {

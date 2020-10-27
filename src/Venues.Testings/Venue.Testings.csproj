@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>PingDong.Newmoon.Venues.Testings</AssemblyName>
-    <RootNamespace>PingDong.Newmoon.Venues.Testings</RootNamespace>
+    <AssemblyName>PingDong.Newmoon.Venues.Tests</AssemblyName>
+    <RootNamespace>PingDong.Newmoon.Venues.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

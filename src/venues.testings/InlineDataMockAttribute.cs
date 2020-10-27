@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 
-namespace PingDong.Newmoon.Venues.Testings
+namespace PingDong.Newmoon.Venues.Tests
 {
     public class InlineDataAutoMockAttribute : InlineAutoDataAttribute
     {
