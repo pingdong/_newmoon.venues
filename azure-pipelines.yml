@@ -243,7 +243,7 @@ stages:
   - deployment: Deploy
     pool:
       vmImage: $(build#pool)
-    environment: variables['deploy#env.dev']
+    environment: dev
     strategy:
       runOnce:
         deploy:
