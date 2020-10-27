@@ -12,18 +12,7 @@ variables:
   value: 'Venues.FunctionApp'
 
 trigger:
-  branchies:
-    include:
-      - *
-  #    - master
-  #    - feature/*
-  #  exclude:
-  #    - backup
-  # path:
-  #   include:
-  #     - docs/*
-  #   exclude:
-  #     - docs/README.md
+  - *
   
 pr:
   branches:
