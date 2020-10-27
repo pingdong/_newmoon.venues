@@ -246,6 +246,7 @@ stages:
   - deployment: Deploy
     pool:
       vmImage: $(build#pool)
+    environment: dev
     strategy:
       runOnce:
         deploy:
