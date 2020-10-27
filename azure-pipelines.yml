@@ -225,6 +225,21 @@ stages:
   #     env:
   #       ConnectionStrings__Default: $(Place-Db-ConnectionString)
 
+environment: dev
+strategy:
+  runOnce:
+    deploy:
+      steps:
+      - task: InvokeRESTAPI@1
+        displayName: Verification
+        inputs:
+          connectionType: 'connectedServiceName'
+          serviceConnection: Newmoon.Venues
+          method: 'GET'
+          urlSuffix: 'api/venues'
+          waitForCompletion: true
+      
+
 # Deployment
 # TODO: Extract a FunctionApp Template
 - stage: DeployToDev
@@ -259,10 +274,6 @@ stages:
               appType: functionApp
               appName: $(deploy.venue#app.name)
               package: '$(Pipeline.Workspace)/drop/*.zip'
-
-          # Extract to a separate template
-          # TODO: Verify
-          # TODO: Pre-warm
 
 
 
