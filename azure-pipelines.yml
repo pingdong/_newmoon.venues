@@ -18,7 +18,7 @@ pr:
   autoCancel: true   # Cancel previous build if check in multiple times
 
 schedules:
-- cron: '0 0 1 * * *' # Every day at 1 A.M.
+- cron: '0 1 * * *' # Every day at 1 A.M.
   displayName: 'Night Build'
   branches:
     include: 
