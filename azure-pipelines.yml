@@ -188,7 +188,7 @@ stages:
         arguments: '--configuration $(build#configuration.release)'
 
     - task: DotNetCoreCLI@2
-      displayName: Publishing
+      displayName: Building Artifact
       condition: succeeded()
       inputs:
         command: publish
