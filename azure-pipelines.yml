@@ -12,20 +12,14 @@ variables:
   value: 'Venues.FunctionApp'
 
 trigger:
-  - *
-  
+  batch: true
+
 pr:
-  branches:
-    include:
-      - master
   autoCancel: true   # Cancel previous build if check in multiple times
 
 schedules:
 - cron: '0 1 * * *' # Every day at 1 A.M.
   displayName: 'Night Build'
-  branches:
-    include:
-    - master
   always: true      # Even no code change
 
 stages:
