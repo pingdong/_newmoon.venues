@@ -30,7 +30,7 @@ stages:
 # TODO: Extract to QualityControl Template
 - stage: QualityControl
   displayName: Quality Control
-  jobs: 
+  jobs:
   - job: StaticTesting
     displayName: Static Testing
     pool:
@@ -168,7 +168,8 @@ stages:
     and
     (
       succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['Build.Reason'], 'Schedule')
     )
   jobs:
   - job: Build
@@ -221,17 +222,17 @@ stages:
 # Deployment
 # TODO: Extract a FunctionApp Template
 - stage: DeployToDev
-  displayName: 'Deploy to the dev environment'
+  displayName: 'Deploy to the DEV environment'
   dependsOn: Build
   condition: |
     and
     (
       succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['Build.Reason'], 'Schedule')
     )
   variables:
-  - group: Deploy
-  - group: Deploy.Venue
+  - group: Deploy.Dev
   jobs:
   - deployment: Deploy
     pool:
@@ -250,28 +251,51 @@ stages:
             inputs:
               azureSubscription: Azure
               appType: functionApp
-              appName: $(deploy.venue#app.name)
+              appName: $(deploy#venue.app)
               package: '$(Pipeline.Workspace)/drop/*.zip'
 
+- stage: DeployToProd
+  displayName: 'Deploy to the PROD environment'
+  dependsOn: DeployToDev
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  variables:
+  - group: Deploy.Prod
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: $(build#pool)
+    environment: prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            displayName: Getting Artifact
+            artifact: drop
 
+          - task: AzureWebApp@1
+            displayName: Deploying
+            inputs:
+              azureSubscription: Azure
+              appType: functionApp
+              appName: $(deploy#venue.app)
+              package: '$(Pipeline.Workspace)/drop/*.zip'
+              deployToSlotOrASE: true
+              resourceGroupName: $(deploy#venue.resourcegroup)
+              slotName: $(deploy#venue.app.slot)
 
-# TODO: Extract a FunctionApp Template with Slot swapping
-
-          #TODO: Approval
-
-          #TODO: Deploy to PROD with Slot
-          # - task: AzureWebApp@1
-          #   displayName: Deploying
-          #   inputs:
-          #     azureSubscription: $(deploy#azure.subscription)
-          #     appType: functionApp
-          #     appName: deploy.venue#app.name
-          #     package: '$(Pipeline.Workspace)/drop/*.zip'
-          #     #Uncomment the next lines to deploy to a deployment slot
-          #     #deployToSlotOrASE: true
-          #     #resourceGroupName: '<Resource Group Name>'
-          #     #slotName: '<Slot name>'
-
+          - task: AzureAppServiceManage@0
+            inputs:
+              azureSubscription: Azure
+              WebAppName: $(deploy#venue.app)
+              ResourceGroupName: $(deploy#venue.resourcegroup)
+              SourceSlot: $(deploy#venue.app.slot)
+              SwapWithProduction: true
 
           # - task: AzureAppServiceSettings@1
           #   displayName: 'Update web app settings'
@@ -288,11 +312,3 @@ stages:
           #         }
           #       ]
 
-          #TODO: Swap slots
-          # - task: AzureAppServiceManage@0
-          #   inputs:
-          #     azureSubscription: <Azure service connection>
-          #     WebAppName: <name of the Function app>
-          #     ResourceGroupName: <name of resource group>
-          #     SourceSlot: staging
-          #     SwapWithProduction: true
