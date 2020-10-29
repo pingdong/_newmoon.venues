@@ -281,7 +281,7 @@ stages:
           - task: AzureWebApp@1
             displayName: Deploying
             inputs:
-              azureSubscription: $(deploy#azure.subscription)
+              azureSubscription: Azure
               appType: functionApp
               appName: $(deploy#venue.app)
               package: '$(Pipeline.Workspace)/drop/*.zip'
@@ -291,7 +291,7 @@ stages:
 
           - task: AzureAppServiceManage@0
             inputs:
-              azureSubscription: $(deploy#azure.subscription)
+              azureSubscription: Azure
               WebAppName: $(deploy#venue.app)
               ResourceGroupName: $(deploy#venue.resourcegroup)
               SourceSlot: $(deploy#venue.app.slot)
