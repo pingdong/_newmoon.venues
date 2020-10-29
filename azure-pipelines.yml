@@ -222,7 +222,7 @@ stages:
 # Deployment
 # TODO: Extract a FunctionApp Template
 - stage: DeployToDev
-  displayName: 'Deploy to the DEV environment'
+  displayName: 'Deploying: DEV'
   dependsOn: Build
   condition: |
     and
@@ -234,7 +234,7 @@ stages:
   variables:
   - group: Deploy.Dev
   jobs:
-  - deployment: Deploy
+  - deployment: Deploying
     pool:
       vmImage: $(build#pool)
     environment: dev
@@ -255,7 +255,7 @@ stages:
               package: '$(Pipeline.Workspace)/drop/*.zip'
 
 - stage: DeployToProd
-  displayName: 'Deploy to the PROD environment'
+  displayName: 'Deploying: PROD'
   dependsOn: DeployToDev
   condition: |
     and
@@ -266,7 +266,7 @@ stages:
   variables:
   - group: Deploy.Prod
   jobs:
-  - deployment: Deploy
+  - deployment: Deploying
     pool:
       vmImage: $(build#pool)
     environment: prod
@@ -290,8 +290,10 @@ stages:
               slotName: $(deploy#venue.app.slot)
 
           - task: AzureAppServiceManage@0
+            displayName: Swapping slot
             inputs:
               azureSubscription: Azure
+              action: 'Swap Slots'
               WebAppName: $(deploy#venue.app)
               ResourceGroupName: $(deploy#venue.resourcegroup)
               SourceSlot: $(deploy#venue.app.slot)
