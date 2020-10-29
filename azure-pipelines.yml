@@ -291,7 +291,7 @@ stages:
             displayName: Swapping Slot $(deploy#venue.app.slot) with Production
             inputs:
               azureSubscription: Azure
-              action: 'Swapping Slots'
+              action: 'Swap Slots'
               WebAppName: $(deploy#venue.app)
               ResourceGroupName: $(deploy#venue.resourcegroup)
               SourceSlot: $(deploy#venue.app.slot)
