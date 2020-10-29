@@ -26,8 +26,7 @@ schedules:
   always: true      # Even no code change
 
 stages:
-# Quality
-# TODO: Extract to QualityControl Template
+# Quality Control
 - stage: QualityControl
   displayName: Quality Control
   jobs:
@@ -39,7 +38,7 @@ stages:
       clean: all 
     steps:
     - task: WhiteSource Bolt@20
-      displayName: 'Run WhiteSource Bolt' 
+      displayName: Running WhiteSource Bolt
       condition: |
         or 
         (
@@ -64,7 +63,7 @@ stages:
     steps:
     # Preparing
     - task: SonarCloudPrepare@1
-      displayName: Preparing SonarCloud Analysis
+      displayName: Preparing SonarCloud Code Analysis
       condition: |
         or 
         (
@@ -94,7 +93,7 @@ stages:
 
     # Building
     - task: DotNetCoreCLI@2
-      displayName: Building
+      displayName: 'Building with Configuration: $(build#configuration.release)'
       inputs:
         projects: '**/*.sln'    # The <ProjectGuid> element is not required if you build a solution (sln) containing that project.
                                 # for SonarQube
@@ -120,7 +119,7 @@ stages:
         historydir: $(local.unittesting#codecoveragehistory.directory)
 
     - task: UniversalPackages@0
-      displayName: Persisting Test Coverage History
+      displayName: Saving Test Coverage History
       condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
       inputs:
         command: publish
@@ -160,7 +159,6 @@ stages:
         )
 
 # Build
-# TODO: Extract to Build Template
 - stage: Build
   displayName: Building
   dependsOn: QualityControl
@@ -189,7 +187,7 @@ stages:
         arguments: '--configuration $(build#configuration.release)'
 
     - task: DotNetCoreCLI@2
-      displayName: Building Artifact
+      displayName: 'Building with Configuration: $(build#configuration.release)'
       condition: succeeded()
       inputs:
         command: publish
@@ -220,7 +218,6 @@ stages:
   #       ConnectionStrings__Default: $(Place-Db-ConnectionString)      
 
 # Deployment
-# TODO: Extract a FunctionApp Template
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
   dependsOn: Build
@@ -235,6 +232,7 @@ stages:
   - group: Deploy.Dev
   jobs:
   - deployment: Deploying
+    displayName: Deploying
     pool:
       vmImage: $(build#pool)
     environment: dev
@@ -247,7 +245,7 @@ stages:
             artifact: drop
 
           - task: AzureWebApp@1
-            displayName: Deploying
+            displayName: Deploying $(deploy#venue.app)
             inputs:
               azureSubscription: Azure
               appType: functionApp
@@ -279,7 +277,7 @@ stages:
             artifact: drop
 
           - task: AzureWebApp@1
-            displayName: Deploying
+            displayName: Deploying $(deploy#venue.app) to Slot $(deploy#venue.app.slot)
             inputs:
               azureSubscription: Azure
               appType: functionApp
@@ -290,7 +288,7 @@ stages:
               slotName: $(deploy#venue.app.slot)
 
           - task: AzureAppServiceManage@0
-            displayName: Swapping slot
+            displayName: Swapping Slot $(deploy#venue.app.slot) with Production
             inputs:
               azureSubscription: Azure
               action: 'Swapping Slots'
@@ -298,19 +296,3 @@ stages:
               ResourceGroupName: $(deploy#venue.resourcegroup)
               SourceSlot: $(deploy#venue.app.slot)
               SwapWithProduction: true
-
-          # - task: AzureAppServiceSettings@1
-          #   displayName: 'Update web app settings'
-          #   inputs:
-          #     azureSubscription: 'Resource Manager - Tailspin - Space Game'
-          #     appName: $(WebAppName)
-          #     resourceGroupName: $(ResourceGroupName)
-          #     appSettings: |
-          #       [
-          #         {
-          #           "name": "AppSettings:LeaderboardFunctionUrl",
-          #           "value": "http://$(LeaderboardAppName).azurewebsites.net/api/LeaderboardFunction",
-          #           "slotSetting": false
-          #         }
-          #       ]
-
