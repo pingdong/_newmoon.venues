@@ -21,7 +21,7 @@ schedules:
 - cron: '0 1 * * *' # Every day at 1 A.M.
   displayName: Nightly Build
   branches:
-    include: 
+    include:
     - master
   always: true      # Even no code change
 
@@ -37,21 +37,48 @@ stages:
     workspace:
       clean: all 
     steps:
+    # WhiteSource Bolt
     - task: WhiteSource Bolt@20
       displayName: Running WhiteSource Bolt
+      # Free License 5 Run / Day
       condition: |
         or 
         (
           eq(variables['Build.SourceBranch'], 'refs/heads/master'),
           eq(variables['Build.Reason'], 'PullRequest')
         )
+    
+    # SonarCloud
+    - task: SonarCloudPrepare@1
+      displayName: Preparing SonarCloud Code Analysis
+      inputs:
+        SonarCloud: SonarCloud
+        organization: $(build.unittest#sonarcloud.organization)
+        projectKey: ${{ lower(variables['local#app.name']) }}
+        projectName: ${{ lower(variables['local#app.name']) }}
+        extraProperties: |
+          sonar.coverage.exclusions=**/*[Uu]nit[Tt]ests*/**/*
+          sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Building with Configuration: $(build#configuration.release)'
+      inputs:
+        projects: '**/*.sln'    # The <ProjectGuid> element is not required if you build a solution (sln) containing that project.
+                                # for SonarQube
+        arguments: '--configuration $(build#configuration.release)'
+
+    - task: SonarCloudAnalyze@1
+      displayName: Running SonarCloud Code Analysis
+
+    - task: SonarCloudPublish@1
+      displayName: Publishing SonarCloud Analysis Result
         
   - job: UnitTesting
     displayName: Unit Testing
     pool:
       vmImage: $(build#pool)
     workspace:
-      clean: all 
+      clean: all
     variables:
     - group : Build.UnitTest
     - name  : local.unittesting#codecoveragehistory.directory
@@ -62,23 +89,6 @@ stages:
       value : 'true'
     steps:
     # Preparing
-    - task: SonarCloudPrepare@1
-      displayName: Preparing SonarCloud Code Analysis
-      condition: |
-        or 
-        (
-          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-          eq(variables['Build.Reason'], 'PullRequest')
-        )
-      inputs:
-        SonarCloud: SonarCloud
-        organization: $(build.unittest#sonarcloud.organization)
-        projectKey: ${{ lower(variables['local#app.name']) }}
-        projectName: ${{ lower(variables['local#app.name']) }}
-        extraProperties: |
-          sonar.coverage.exclusions=**/*[Uu]nit[Tt]ests*/**/*
-          sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
-
     - task: UniversalPackages@0
       displayName: Getting Test Coverage History
       condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
@@ -95,8 +105,7 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: 'Building with Configuration: $(build#configuration.release)'
       inputs:
-        projects: '**/*.sln'    # The <ProjectGuid> element is not required if you build a solution (sln) containing that project.
-                                # for SonarQube
+        projects: '**/*.sln'
         arguments: '--configuration $(build#configuration.release)'
 
     # Testing
@@ -108,7 +117,7 @@ stages:
         publishTestResults: true
         projects: '**/*.[Uu]nit[Tt]ests/*.csproj'
 
-    # Coverage Report
+    # Generating Coverage Report
     - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
       displayName: Generating Test Coverage Report
       condition: ne(variables['Build.Reason'], 'PullRequest')
@@ -139,24 +148,15 @@ stages:
         summaryFileLocation: $(Build.SourcesDirectory)/Coverage/Cobertura.xml
         reportDirectory: $(Build.SourcesDirectory)/Coverage
 
-    # Code Analysis
-    - task: SonarCloudAnalyze@1
-      displayName: Running SonarCloud Code Analysis
-      condition: |
-        or 
-        (
-          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-          eq(variables['Build.Reason'], 'PullRequest')
-        )
-
-    - task: SonarCloudPublish@1
-      displayName: Publishing SonarCloud Analysis Result
-      condition: |
-        or 
-        (
-          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-          eq(variables['Build.Reason'], 'PullRequest')
-        )
+  - job: IntegrationTesting
+    displayName: Integration Testing
+    pool:
+      vmImage: $(build#pool)
+    workspace:
+      clean: all
+    variables:
+    - group : Build
+    steps:
 
 # Build
 - stage: Build
@@ -259,7 +259,8 @@ stages:
     and
     (
       succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['Build.Reason'], 'Schedule')
     )
   variables:
   - group: Deploy.Prod
@@ -277,12 +278,13 @@ stages:
             artifact: drop
 
           - task: AzureWebApp@1
-            displayName: Deploying $(deploy#venue.app) to Slot $(deploy#venue.app.slot)
+            displayName: Deploying to Slot $(deploy#venue.app.slot)
             inputs:
               azureSubscription: Azure
               appType: functionApp
               appName: $(deploy#venue.app)
               package: '$(Pipeline.Workspace)/drop/*.zip'
+              # Slot
               deployToSlotOrASE: true
               resourceGroupName: $(deploy#venue.resourcegroup)
               slotName: $(deploy#venue.app.slot)
