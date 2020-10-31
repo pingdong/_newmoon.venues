@@ -35,7 +35,10 @@ stages:
     pool:
       vmImage: $(build#pool)
     workspace:
-      clean: all 
+      clean: all
+    variable:
+    - group: Build
+    - group: Test.Static
     steps:
     # WhiteSource Bolt
     - task: WhiteSource Bolt@20
@@ -53,7 +56,7 @@ stages:
       displayName: Preparing SonarCloud Code Analysis
       inputs:
         SonarCloud: SonarCloud
-        organization: $(build.unittest#sonarcloud.organization)
+        organization: $(test.static#sonarcloud.organization)
         projectKey: ${{ lower(variables['local#app.name']) }}
         projectName: ${{ lower(variables['local#app.name']) }}
         extraProperties: |
@@ -80,7 +83,8 @@ stages:
     workspace:
       clean: all
     variables:
-    - group : Build.UnitTest
+    - group : Build
+    - group : Test.Unit
     - name  : local.unittesting#codecoveragehistory.directory
       value : '$(Build.ArtifactStagingDirectory)/history'
     - name  : local.unittesting#codecoveragehistory.directory
@@ -97,7 +101,7 @@ stages:
         command: download
         downloadDirectory: $(local.unittesting#codecoveragehistory.directory)
         feedsToUse: internal
-        vstsFeed: $(build.unittest#coverage.history.feed)
+        vstsFeed: $(test.unit#coverage.history.feed)
         vstsFeedPackage: $(local.unittesting#codecoveragehistory.directory)
         vstsPackageVersion: '0.*'
 
@@ -134,7 +138,7 @@ stages:
         command: publish
         publishDirectory: $(local.unittesting#codecoveragehistory.directory)
         feedsToUsePublish: internal
-        vstsFeedPublish: $(build.unittest#coverage.history.feed)
+        vstsFeedPublish: $(test.unit#coverage.history.feed)
         vstsFeedPackagePublish: $(local.unittesting#codecoveragehistory.directory)
         versionOption: patch
         packagePublishDescription: Code Coverage History for repository $(Build.Repository.Name) on branch $(Build.SourceBranchName)
@@ -156,6 +160,7 @@ stages:
       clean: all
     variables:
     - group : Build
+    - group : Test.Integration
     steps:    
     # Building
     - task: DotNetCoreCLI@2
@@ -163,7 +168,7 @@ stages:
       inputs:
         projects: '**/*.sln'
         arguments: '--configuration $(build#configuration.release)'
-        
+
 # Build
 - stage: Build
   displayName: Building
