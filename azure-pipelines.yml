@@ -36,7 +36,7 @@ stages:
       vmImage: $(build#pool)
     workspace:
       clean: all
-    variable:
+    variables:
     - group: Build
     - group: Test.Static
     steps:
