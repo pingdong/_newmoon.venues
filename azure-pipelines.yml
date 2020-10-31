@@ -158,6 +158,13 @@ stages:
       vmImage: $(build#pool)
     workspace:
       clean: all
+    condition: |
+      or
+      (
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        eq(variables['Build.Reason'], 'PullRequest'),
+        eq(variables['Build.Reason'], 'Schedule')
+      )
     variables:
     - group : Build
     - group : Test.Integration
