@@ -156,8 +156,14 @@ stages:
       clean: all
     variables:
     - group : Build
-    steps:
-
+    steps:    
+    # Building
+    - task: DotNetCoreCLI@2
+      displayName: 'Building with Configuration: $(build#configuration.release)'
+      inputs:
+        projects: '**/*.sln'
+        arguments: '--configuration $(build#configuration.release)'
+        
 # Build
 - stage: Build
   displayName: Building
