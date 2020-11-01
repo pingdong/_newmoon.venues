@@ -63,7 +63,7 @@ stages:
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
-      funcName: func-newmoon #${{ variables['deploy#venue.app'] }}
+      funcName: $(deploy#venue.app) # func-newmoon #${{ variables['deploy#venue.app'] }}
       vmImage: ubuntu-latest #${{ variables['pipeline#vmImage'] }}
       environment: dev_deploy
       azureSubscription: Azure
