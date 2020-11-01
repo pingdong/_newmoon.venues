@@ -2,7 +2,7 @@ parameters:
 - name: environment
   type: string
   default: ''
-- name: appName
+- name: funcName
   type: string
   default: ''
 - name: enableSlot
@@ -37,7 +37,7 @@ jobs:
             inputs:
               azureSubscription: Azure
               appType: functionApp
-              appName: $(parameters.appName)
+              appName: $(parameters.funcName)
               package: '$(Pipeline.Workspace)/drop/*.zip'
         
         ${{ if eq(parameters.enableSlot, true) }}:
@@ -46,7 +46,7 @@ jobs:
             inputs:
               azureSubscription: Azure
               appType: functionApp
-              appName: $(parameters.appName)
+              appName: $(parameters.funcName)
               package: '$(Pipeline.Workspace)/drop/*.zip'
               deployToSlotOrASE: true
               resourceGroupName: $(parameters.resourcegroupName)
@@ -57,7 +57,7 @@ jobs:
             inputs:
               azureSubscription: Azure
               action: 'Swap Slots'
-              WebAppName: $(parameters.appName)
+              WebAppName: $(parameters.funcName)
               ResourceGroupName: $(parameters.resourcegroupName)
               SourceSlot: $(parameters.slotName)
               SwapWithProduction: true
