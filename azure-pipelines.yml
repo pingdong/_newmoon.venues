@@ -63,7 +63,7 @@ stages:
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
-      funcName: ${{ variables['deploy#venue.app'] }}
+      funcName: func-newmoon #${{ variables['deploy#venue.app'] }}
       vmImage: ubuntu-latest #${{ variables['pipeline#vmImage'] }}
       environment: dev_deploy
       azureSubscription: Azure
@@ -77,11 +77,11 @@ stages:
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
-      funcName: ${{ variables['deploy#venue.app'] }}
+      funcName: func-newmoon-prod #${{ variables['deploy#venue.app'] }}
       vmImage: ubuntu-latest #${{ variables['pipeline#vmImage'] }}
       environment: dev_deploy
       azureSubscription: Azure
       enableSlot: true
-      resourceGroupName: ${{ variables['deploy#venue.resourcegroup'] }}
-      slotName: ${{ variables['deploy#venue.app.slot'] }}
+      resourceGroupName: rg-newmoon-prod #${{ variables['deploy#venue.resourcegroup'] }}
+      slotName: stage #${{ variables['deploy#venue.app.slot'] }}
       
