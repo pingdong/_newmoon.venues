@@ -66,7 +66,7 @@ stages:
       vmImage: ubuntu-latest #$(pipeline#vmImage)
       environment: dev_deploy #$(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: Azure #$(deploy#azure.subscription)
+      azureSubscription: $(deploy#azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
