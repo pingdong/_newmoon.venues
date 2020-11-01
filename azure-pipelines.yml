@@ -1,12 +1,13 @@
-resources:
-  repositories:
-  - repository: templates
-    type: github
-    name: pingdong/azure.devops.templates
-    ref: refs/heads/master
-    endpoint: GitHub
+# resources:
+#   repositories:
+#   - repository: templates
+#     type: github
+#     name: pingdong/azure.devops.templates
+#     ref: refs/heads/master
+#     endpoint: GitHub
 
 variables:
+- group: Pipeline            # the name of the Library
 - name: local#app.name
   value: Venues.FunctionApp
 
@@ -25,22 +26,9 @@ schedules:
   always: true      # Even no code change
 
 stages:
-# Quality Control
-- stage: QualityControl
-  displayName: Quality Control
-  jobs:
-  - template: templates\test_static.yml@templates
-
-  - template: templates\test_unit.yml@templates
-    parameters:
-      appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
-     
-  - template: templates\test_integration.yml@templates
-
 # Build
 - stage: Build
   displayName: Building
-  dependsOn: QualityControl
   condition: |
     and
     (
@@ -49,72 +37,131 @@ stages:
       ne(variables['Build.Reason'], 'Schedule')
     )
   jobs:
-  - template: templates\build.yml@templates
-    parameters:
-      appName: ${{ variables['local#app.name'] }}
-  
-# Deployment
-# - stage: DeployToDev
-#   displayName: 'Deploying: DEV'
-#   dependsOn: Build
-#   jobs:
-#   - deployment: Deploying
-#     displayName: Deploying
-#     environment: dev_deploy
-#     pool:
-#       vmImage: $(pipeline#vmImage)
-#     variables:
-#     - group : Pipeline
-#     - group: Deploy.Dev
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           #- template: templates\deploy_functionapp.yml@templates
-#           - template: deploy_functionapp.yml
-#             parameters:
-#               funcName: ${{ variables['deploy#venue.app'] }}
+  - job: Build
+    displayName: Building
+    pool:
+      vmImage: $(pipeline#vmImage)
+    workspace:
+      clean: all 
+    variables:
+    - group: Build
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Restoring dependencies
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+        arguments: '--configuration $(build#configuration.release)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Building with Configuration: $(build#configuration.release)'
+      condition: succeeded()
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: '**/$(local#app.name).csproj'
+        arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Publishing Artifact
+
+  # - job: BuildDBMigrationScript
+  #   displayName: Building Database Migration Script
+  #   pool:
+  #     vmImage: $(pipeline#vmImage)
+  #   workspace:
+  #     clean: all 
+  #   variables:
+  #   - group: Build
+  #   steps:
+  #   - task: pekspro.pekspro-efcore-migration-script-generator.efcore-migration-script-generator.efcore-migration-script-generator-task@0
+  #     displayName: 'Generate Migration Scripts'
+  #     inputs:
+  #       projectpath: src/infrastructure/Places.Infrastructure.csproj
+  #       databasecontexts: DefaultDbContext
+  #       targetfolder: '$(Build.ArtifactStagingDirectory)'
+  #     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  #     env:
+  #       ConnectionStrings__Default: $(Place-Db-ConnectionString)      
 
 # Deployment
-- stage: DeployToDev	
-  displayName: 'Deploying: DEV'	
+- stage: DeployToDev
+  displayName: 'Deploying: DEV'
   dependsOn: Build
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['Build.Reason'], 'Schedule')
+    )
   variables:
-  - group: Pipeline
   - group: Deploy.Dev
   jobs:
   - deployment: Deploying
     displayName: Deploying
     pool:
       vmImage: $(pipeline#vmImage)
-    environment: dev_deploy	
-    strategy:	
-      runOnce:	
-        deploy:	
-          steps:	
-          - download: current	
-            displayName: Getting Artifact	
-            artifact: drop	
+    environment: dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            displayName: Getting Artifact
+            artifact: drop
 
-          - task: AzureWebApp@1	
-            displayName: Deploying $(deploy#venue.app)	
-            inputs:	
-              azureSubscription: Azure	
-              appType: functionApp	
-              appName: $(deploy#venue.app)	
+          - task: AzureWebApp@1
+            displayName: Deploying $(deploy#venue.app)
+            inputs:
+              azureSubscription: Azure
+              appType: functionApp
+              appName: $(deploy#venue.app)
               package: '$(Pipeline.Workspace)/drop/*.zip'
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
   dependsOn: DeployToDev
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['Build.Reason'], 'Schedule')
+    )
   variables:
   - group: Deploy.Prod
   jobs:
-  - template: templates\deploy_functionapp.yml@templates
-    parameters:
-      environment: dev_prod
-      funcName: ${{ variables['deploy#venue.app'] }}
-      enableSlot: true
-      resourceGroupName: ${{ variables['deploy#venue.resourcegroup'] }}
-      slotName: ${{ variables['deploy#venue.app.slot'] }}
-      
+  - deployment: Deploying
+    pool:
+      vmImage: $(pipeline#vmImage)
+    environment: prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            displayName: Getting Artifact
+            artifact: drop
+
+          - task: AzureWebApp@1
+            displayName: Deploying to Slot $(deploy#venue.app.slot)
+            inputs:
+              azureSubscription: Azure
+              appType: functionApp
+              appName: $(deploy#venue.app)
+              package: '$(Pipeline.Workspace)/drop/*.zip'
+              # Slot
+              deployToSlotOrASE: true
+              resourceGroupName: $(deploy#venue.resourcegroup)
+              slotName: $(deploy#venue.app.slot)
+
+          - task: AzureAppServiceManage@0
+            displayName: Swapping Slot $(deploy#venue.app.slot) with Production
+            inputs:
+              azureSubscription: Azure
+              action: 'Swap Slots'
+              WebAppName: $(deploy#venue.app)
+              ResourceGroupName: $(deploy#venue.resourcegroup)
+              SourceSlot: $(deploy#venue.app.slot)
+              SwapWithProduction: true
