@@ -63,7 +63,7 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       funcName: ${{ variables['deploy#venue.app'] }}
-      vmImage: ${{ variables['pipeline#vmImage']  }}
+      vmImage: ubuntu-latest #${{ variables['pipeline#vmImage'] }}
       environment: dev_deploy
       azureSubscription: Azure
 
