@@ -67,53 +67,21 @@ stages:
       vmImage: ubuntu-latest #${{ variables['pipeline#vmImage'] }}
       environment: dev_deploy
       azureSubscription: Azure
-
-# # Deployment
-# - stage: DeployToDev
-#   displayName: 'Deploying: DEV'
-#   dependsOn: Build
-#   condition: |
-#     and
-#     (
-#       succeeded(),
-#       eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-#       ne(variables['Build.Reason'], 'Schedule')
-#     )
-#   jobs:
-#   - deployment: Deploying
-#     displayName: Deploying
-#     pool:
-#       vmImage: $(pipeline#vmImage)
-#     variables:
-#     - group: Deploy.Dev
-#     environment: dev
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - download: current
-#             displayName: Getting Artifact
-#             artifact: drop
-
-#           - task: AzureWebApp@1
-#             displayName: Deploying $(deploy#venue.app)
-#             inputs:
-#               azureSubscription: Azure
-#               appType: functionApp
-#               appName: $(deploy#venue.app)
-#               package: '$(Pipeline.Workspace)/drop/*.zip'
-
-# - stage: DeployToProd
-#   displayName: 'Deploying: PROD'
-#   dependsOn: DeployToDev
-#   variables:
-#   - group: Deploy.Prod
-#   jobs:
-#   - template: templates\deploy_functionapp.yml@templates
-#     parameters:
-#       environment: dev_prod
-#       funcName: ${{ variables['deploy#venue.app'] }}
-#       enableSlot: true
-#       resourceGroupName: ${{ variables['deploy#venue.resourcegroup'] }}
-#       slotName: ${{ variables['deploy#venue.app.slot'] }}
+ 
+- stage: DeployToProd
+  displayName: 'Deploying: PROD'
+  dependsOn: DeployToDev
+  variables:
+  - group : Pipeline
+  - group : Deploy.Prod
+  jobs:
+  - template: templates\deploy_functionapp.yml@templates
+    parameters:
+      funcName: ${{ variables['deploy#venue.app'] }}
+      vmImage: ubuntu-latest #${{ variables['pipeline#vmImage'] }}
+      environment: dev_deploy
+      azureSubscription: Azure
+      enableSlot: true
+      resourceGroupName: ${{ variables['deploy#venue.resourcegroup'] }}
+      slotName: ${{ variables['deploy#venue.app.slot'] }}
       
