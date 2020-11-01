@@ -29,13 +29,13 @@ stages:
 - stage: QualityControl
   displayName: Quality Control
   jobs:
-  - template: templates\static_test.yml
+  - template: templates\static_test.yml@templates
 
-  - template: templates\unit_test.yml
+  - template: templates\unit_test.yml@templates
     parameters:
-      appName: ${{ variables['local#app.name'] }}
+      appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
      
-  - template: templates\integration_test.yml
+  - template: templates\integration_test.yml@templates
 
 # Build
 - stage: Build
@@ -49,7 +49,7 @@ stages:
       ne(variables['Build.Reason'], 'Schedule')
     )
   jobs:
-  - template: templates\build.yml
+  - template: templates\build.yml@templates
     parameters:
       appName: $(local#app.name)
   
@@ -60,7 +60,7 @@ stages:
   variables:
   - group: Deploy.Dev
   jobs:
-  - template: templates\deploy_functionapp.yml
+  - template: templates\deploy_functionapp.yml@templates
     parameters:
       environment: dev_deploy
       funcName: $(deploy#venue.app)
@@ -71,7 +71,7 @@ stages:
   variables:
   - group: Deploy.Prod
   jobs:
-  - template: templates\deploy_functionapp.yml
+  - template: templates\deploy_functionapp.yml@templates
     parameters:
       environment: dev_prod
       funcName: $(deploy#venue.app)
@@ -79,4 +79,3 @@ stages:
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
       
-
