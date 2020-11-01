@@ -12,6 +12,28 @@ parameters:
   type: string
   default: ''
 
+jobs:
+- deployment: Deploying
+  displayName: Deploying
+  pool:
+    vmImage: $(pipeline#vmImage)
+  environment: dev
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - download: current
+          displayName: Getting Artifact
+          artifact: drop
+
+        - task: AzureWebApp@1
+          displayName: Deploying $(deploy#venue.app)
+          inputs:
+            azureSubscription: Azure
+            appType: functionApp
+            appName: $(deploy#venue.app)
+            package: '$(Pipeline.Workspace)/drop/*.zip'
+
 steps:
 - download: current
   displayName: Getting Artifact
