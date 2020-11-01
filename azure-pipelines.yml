@@ -7,7 +7,6 @@ resources:
     endpoint: GitHub
 
 variables:
-- group: Pipeline
 - name: local#app.name
   value: Venues.FunctionApp
 
@@ -88,6 +87,7 @@ stages:
       ne(variables['Build.Reason'], 'Schedule')
     )
   variables:
+  - group: Pipeline
   - group: Deploy.Dev
   jobs:
   - deployment: Deploying
