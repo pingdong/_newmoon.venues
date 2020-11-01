@@ -77,10 +77,10 @@ stages:
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
-      vmImage: $(pipeline#vmImage)
+      vmImage: ubuntu-latest #$(pipeline#vmImage)
       environment: $(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: ${{ variables['deploy#azure.subscription'] }} # Azure #$(deploy#azure.subscription)
+      azureSubscription: $(deploy#azure.subscription)
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
