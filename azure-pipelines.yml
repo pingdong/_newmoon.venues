@@ -1,13 +1,12 @@
 # resources:
 #   repositories:
-#   - repository: templates
+#   - repository: infrastructure
 #     type: github
-#     name: pingdong/azure.devops.templates
+#     name: pingdong/newmoon.infrastructure
 #     ref: refs/heads/master
 #     endpoint: GitHub
 
 variables:
-- group: Build            # the name of the Library
 - name: local#app.name
   value: Venues.FunctionApp
 
@@ -30,151 +29,13 @@ stages:
 - stage: QualityControl
   displayName: Quality Control
   jobs:
-  - job: StaticTesting
-    displayName: Static Testing
-    pool:
-      vmImage: $(build#pool)
-    workspace:
-      clean: all
-    variables:
-    - group: Build
-    - group: Test.Static
-    steps:
-    # WhiteSource Bolt
-    - task: WhiteSource Bolt@20
-      displayName: Running WhiteSource Bolt
-      # Free License 5 Run / Day
-      condition: |
-        or 
-        (
-          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-          eq(variables['Build.Reason'], 'PullRequest')
-        )
-    
-    # SonarCloud
-    - task: SonarCloudPrepare@1
-      displayName: Preparing SonarCloud Code Analysis
-      inputs:
-        SonarCloud: SonarCloud
-        organization: $(test.static#sonarcloud.organization)
-        projectKey: ${{ lower(variables['local#app.name']) }}
-        projectName: ${{ lower(variables['local#app.name']) }}
-        extraProperties: |
-          sonar.coverage.exclusions=**/*[Uu]nit[Tt]ests*/**/*
-          sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
+  - template: templates\static_test.yml
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Building with Configuration: $(build#configuration.release)'
-      inputs:
-        projects: '**/*.sln'    # The <ProjectGuid> element is not required if you build a solution (sln) containing that project.
-                                # for SonarQube
-        arguments: '--configuration $(build#configuration.release)'
-
-    - task: SonarCloudAnalyze@1
-      displayName: Running SonarCloud Code Analysis
-
-    - task: SonarCloudPublish@1
-      displayName: Publishing SonarCloud Analysis Result
-        
-  - job: UnitTesting
-    displayName: Unit Testing
-    pool:
-      vmImage: $(build#pool)
-    workspace:
-      clean: all
-    variables:
-    - group : Build
-    - group : Test.Unit
-    - name  : local.unittesting#codecoveragehistory.directory
-      value : '$(Build.ArtifactStagingDirectory)/history'
-    - name  : local.unittesting#codecoveragehistory.directory
-      value : ${{ lower(variables['local#app.name']) }}.$(Build.SourceBranchName)
-    - name  : 'disable.coverage.autogenerate'
-      value : 'true'
-    steps:
-    # Preparing
-    - task: UniversalPackages@0
-      displayName: Getting Test Coverage History
-      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      continueOnError: true
-      inputs:
-        command: download
-        downloadDirectory: $(local.unittesting#codecoveragehistory.directory)
-        feedsToUse: internal
-        vstsFeed: $(test.unit#coverage.history.feed)
-        vstsFeedPackage: $(local.unittesting#codecoveragehistory.directory)
-        vstsPackageVersion: '0.*'
-
-    # Building
-    - task: DotNetCoreCLI@2
-      displayName: 'Building with Configuration: $(build#configuration.release)'
-      inputs:
-        projects: '**/*.sln'
-        arguments: '--configuration $(build#configuration.release)'
-
-    # Testing
-    - task: DotNetCoreCLI@2
-      displayName: Running Unit Testings
-      inputs:
-        command: test
-        arguments: '--no-build --configuration $(build#configuration.release) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
-        publishTestResults: true
-        projects: '**/*.[Uu]nit[Tt]ests/*.csproj'
-
-    # Generating Coverage Report
-    - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
-      displayName: Generating Test Coverage Report
-      condition: ne(variables['Build.Reason'], 'PullRequest')
-      inputs:
-        reports: '$(Build.SourcesDirectory)/**/coverage.opencover.xml'
-        targetdir: $(Build.SourcesDirectory)/Coverage
-        reporttypes: Html;HtmlInline_AzurePipelines_Dark;Cobertura;Badges
-        historydir: $(local.unittesting#codecoveragehistory.directory)
-
-    - task: UniversalPackages@0
-      displayName: Saving Test Coverage History
-      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      inputs:
-        command: publish
-        publishDirectory: $(local.unittesting#codecoveragehistory.directory)
-        feedsToUsePublish: internal
-        vstsFeedPublish: $(test.unit#coverage.history.feed)
-        vstsFeedPackagePublish: $(local.unittesting#codecoveragehistory.directory)
-        versionOption: patch
-        packagePublishDescription: Code Coverage History for repository $(Build.Repository.Name) on branch $(Build.SourceBranchName)
-        verbosity: Information
-
-    - task: PublishCodeCoverageResults@1
-      displayName: Publishing Test Coverage Report
-      condition: ne(variables['Build.Reason'], 'PullRequest')
-      inputs:
-        codeCoverageTool: Cobertura
-        summaryFileLocation: $(Build.SourcesDirectory)/Coverage/Cobertura.xml
-        reportDirectory: $(Build.SourcesDirectory)/Coverage
-
-  - job: IntegrationTesting
-    displayName: Integration Testing
-    pool:
-      vmImage: $(build#pool)
-    workspace:
-      clean: all
-    condition: |
-      or
-      (
-        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-        eq(variables['Build.Reason'], 'PullRequest'),
-        eq(variables['Build.Reason'], 'Schedule')
-      )
-    variables:
-    - group : Build
-    - group : Test.Integration
-    steps:    
-    # Building
-    - task: DotNetCoreCLI@2
-      displayName: 'Building with Configuration: $(build#configuration.release)'
-      inputs:
-        projects: '**/*.sln'
-        arguments: '--configuration $(build#configuration.release)'
+  - template: templates\unit_test.yml
+    parameters:
+      appName: $(local#app.name)
+     
+  - template: templates\integration_test.yml  
 
 # Build
 - stage: Build
@@ -188,131 +49,34 @@ stages:
       ne(variables['Build.Reason'], 'Schedule')
     )
   jobs:
-  - job: Build
-    displayName: Building
-    pool:
-      vmImage: $(build#pool)
-    workspace:
-      clean: all 
-    variables:
-    - group: Build
-    steps:
-    - task: DotNetCoreCLI@2
-      displayName: Restoring dependencies
-      inputs:
-        command: restore
-        projects: '**/*.csproj'
-        arguments: '--configuration $(build#configuration.release)'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Building with Configuration: $(build#configuration.release)'
-      condition: succeeded()
-      inputs:
-        command: publish
-        publishWebProjects: false
-        projects: '**/$(local#app.name).csproj'
-        arguments: '--no-restore --configuration $(build#configuration.release) --output $(Build.ArtifactStagingDirectory)'
-
-    - task: PublishBuildArtifacts@1
-      displayName: Publishing Artifact
-
-  # - job: BuildDBMigrationScript
-  #   displayName: Building Database Migration Script
-  #   pool:
-  #     vmImage: $(build#pool)
-  #   workspace:
-  #     clean: all 
-  #   variables:
-  #   - group: Build
-  #   steps:
-  #   - task: pekspro.pekspro-efcore-migration-script-generator.efcore-migration-script-generator.efcore-migration-script-generator-task@0
-  #     displayName: 'Generate Migration Scripts'
-  #     inputs:
-  #       projectpath: src/infrastructure/Places.Infrastructure.csproj
-  #       databasecontexts: DefaultDbContext
-  #       targetfolder: '$(Build.ArtifactStagingDirectory)'
-  #     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-  #     env:
-  #       ConnectionStrings__Default: $(Place-Db-ConnectionString)      
-
+  - template: templates\build.yml
+    parameters:
+      appName: $(local#app.name)
+  
 # Deployment
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
   dependsOn: Build
-  condition: |
-    and
-    (
-      succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['Build.Reason'], 'Schedule')
-    )
   variables:
   - group: Deploy.Dev
   jobs:
-  - deployment: Deploying
-    displayName: Deploying
-    pool:
-      vmImage: $(build#pool)
-    environment: dev
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            displayName: Getting Artifact
-            artifact: drop
-
-          - task: AzureWebApp@1
-            displayName: Deploying $(deploy#venue.app)
-            inputs:
-              azureSubscription: Azure
-              appType: functionApp
-              appName: $(deploy#venue.app)
-              package: '$(Pipeline.Workspace)/drop/*.zip'
+  - template: templates\deploy_functionapp.yml
+    parameters:
+      environment: dev_deploy
+      funcName: $(deploy#venue.app)
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
   dependsOn: DeployToDev
-  condition: |
-    and
-    (
-      succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['Build.Reason'], 'Schedule')
-    )
   variables:
   - group: Deploy.Prod
   jobs:
-  - deployment: Deploying
-    pool:
-      vmImage: $(build#pool)
-    environment: prod
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            displayName: Getting Artifact
-            artifact: drop
+  - template: templates\deploy_functionapp.yml
+    parameters:
+      environment: dev_prod
+      funcName: $(deploy#venue.app)
+      enableSlot: true
+      resourceGroupName: $(deploy#venue.resourcegroup)
+      slotName: $(deploy#venue.app.slot)
+      
 
-          - task: AzureWebApp@1
-            displayName: Deploying to Slot $(deploy#venue.app.slot)
-            inputs:
-              azureSubscription: Azure
-              appType: functionApp
-              appName: $(deploy#venue.app)
-              package: '$(Pipeline.Workspace)/drop/*.zip'
-              # Slot
-              deployToSlotOrASE: true
-              resourceGroupName: $(deploy#venue.resourcegroup)
-              slotName: $(deploy#venue.app.slot)
-
-          - task: AzureAppServiceManage@0
-            displayName: Swapping Slot $(deploy#venue.app.slot) with Production
-            inputs:
-              azureSubscription: Azure
-              action: 'Swap Slots'
-              WebAppName: $(deploy#venue.app)
-              ResourceGroupName: $(deploy#venue.resourcegroup)
-              SourceSlot: $(deploy#venue.app.slot)
-              SwapWithProduction: true

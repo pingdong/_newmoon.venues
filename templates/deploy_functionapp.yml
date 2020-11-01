@@ -1,0 +1,27 @@
+parameters:
+  funcName: ''
+  environmentName: ''
+
+jobs:
+- deployment: Deploying
+  displayName: Deploying
+  environment: ${{ parameters.environmentName }}
+  variables:
+  - group: Pipeline
+  pool:
+    vmImage: $(pipeline#pool)
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - download: current
+          displayName: Getting Artifact
+          artifact: drop
+
+        - task: AzureWebApp@1
+          displayName: Deploying $(parameters.funcName)
+          inputs:
+            azureSubscription: Azure
+            appType: functionApp
+            appName: $(parameters.funcName)
+            package: '$(Pipeline.Workspace)/drop/*.zip'

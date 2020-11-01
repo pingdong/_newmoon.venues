@@ -1,0 +1,22 @@
+jobs:
+- job: StaticTesting
+  displayName: Static Testing
+  pool:
+    vmImage: $(pipeline#pool)
+  workspace:
+    clean: all
+  variables:
+  - group : Pipeline
+  - group : Test.Static
+  steps:
+  # WhiteSource Bolt
+  - task: WhiteSource Bolt@20
+    displayName: Running WhiteSource Bolt
+    # Free License 5 Run / Day
+    condition: |
+      or 
+      (
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        eq(variables['Build.Reason'], 'PullRequest')
+      )
+        

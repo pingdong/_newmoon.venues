@@ -1,0 +1,26 @@
+jobs: 
+- job: IntegrationTesting
+  displayName: Integration Testing
+  pool:
+    vmImage: $(pipeline#pool)
+  workspace:
+    clean: all
+  variables:
+  - group : Pipeline
+  - group : Build
+  - group : Test.Integration
+  condition: |
+    or
+    (
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      eq(variables['Build.Reason'], 'PullRequest'),
+      eq(variables['Build.Reason'], 'Schedule')
+    )
+  steps:    
+  # Building
+  - task: DotNetCoreCLI@2
+    displayName: 'Building with Configuration: $(build#configuration.release)'
+    inputs:
+      projects: '**/*.sln'
+      arguments: '--configuration $(build#configuration.release)'
+      
