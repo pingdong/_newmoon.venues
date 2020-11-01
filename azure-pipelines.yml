@@ -7,9 +7,10 @@ resources:
     endpoint: GitHub
 
 variables:
-- group : Pipeline
-- name: local#app.name
-  value: Venues.FunctionApp
+- group : Pipeline   # deployment Task requires the variable of Pool:vmImage on the pipeline level
+- group : Dev.Deploy
+- name  : local#app.name
+  value : Venues.FunctionApp
 
 trigger:
   batch: true
@@ -59,14 +60,13 @@ stages:
   displayName: 'Deploying: DEV'
   dependsOn: Build
   variables:
-  - group : Dev.Deploy
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
       environment: dev_deploy #$(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: Azure #$(deploy#azure.subscription)
+      azureSubscription: $(deploy#azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
