@@ -8,7 +8,6 @@ resources:
 
 variables:
 - group : Pipeline   # deployment Task requires the variable of Pool:vmImage on the pipeline level
-- group : Dev.Deploy
 - name  : local#app.name
   value : Venues.FunctionApp
 
@@ -66,7 +65,7 @@ stages:
       vmImage: $(pipeline#vmImage)
       environment: dev_deploy #$(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(deploy#azure.subscription)
+      azureSubscription: Azure #$(deploy#azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
