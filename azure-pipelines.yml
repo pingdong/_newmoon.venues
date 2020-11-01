@@ -51,7 +51,7 @@ stages:
   jobs:
   - template: templates\build.yml@templates
     parameters:
-      appName: $(local#app.name)
+      appName: ${{ variables['local#app.name'] }}
   
 # Deployment
 - stage: DeployToDev
