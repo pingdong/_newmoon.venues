@@ -33,7 +33,7 @@ stages:
 
   - template: templates\unit_test.yml
     parameters:
-      appName: $(local#app.name)
+      appName: ${{ variables['local#app.name'] }}
      
   - template: templates\integration_test.yml
 
