@@ -63,7 +63,7 @@ stages:
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
-      vmImage: $(pipeline#vmImage)
+      vmImage: ubuntu-latest #$(pipeline#vmImage)
       environment: $(deploy#environment)
       funcName: $(deploy#venue.app)
       azureSubscription: Azure #$(deploy#azure.subscription)
