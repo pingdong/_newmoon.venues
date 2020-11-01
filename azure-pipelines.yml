@@ -80,7 +80,7 @@ stages:
       vmImage: $(pipeline#vmImage)
       environment: $(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: Azure #$(deploy#azure.subscription)
+      azureSubscription: ${{ variables['deploy#azure.subscription'] }} # Azure #$(deploy#azure.subscription)
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
