@@ -64,7 +64,7 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: ubuntu-latest #$(pipeline#vmImage)
-      environment: $(deploy#environment)
+      environment: dev_deploy #$(deploy#environment)
       funcName: $(deploy#venue.app)
       azureSubscription: Azure #$(deploy#azure.subscription)
  
@@ -78,7 +78,7 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: ubuntu-latest #$(pipeline#vmImage)
-      environment: $(deploy#environment)
+      environment: prod_deploy #$(deploy#environment)
       funcName: $(deploy#venue.app)
       azureSubscription: Azure #$(deploy#azure.subscription)
       enableSlot: true
