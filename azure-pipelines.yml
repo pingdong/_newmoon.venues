@@ -94,7 +94,7 @@ stages:
     displayName: Deploying
     pool:
       vmImage: $(pipeline#vmImage)
-    environment: dev_deploy
+    environment: dev
     strategy:
       runOnce:
         deploy:
