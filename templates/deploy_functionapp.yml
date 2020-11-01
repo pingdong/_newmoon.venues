@@ -1,63 +1,63 @@
 parameters:
-  - name: environment
-    type: string
-    default: ''
-  - name: appName
-    type: string
-    default: ''
-  - name: enableSlot
-    type: boolean
-    default: false
-  - name: resourceGroupName
-    type: string
-    default: ''
-  - name: slotName
-    type: string
-    default: ''
+- name: environment
+  type: string
+  default: ''
+- name: appName
+  type: string
+  default: ''
+- name: enableSlot
+  type: boolean
+  default: false
+- name: resourceGroupName
+  type: string
+  default: ''
+- name: slotName
+  type: string
+  default: ''
 
 jobs:
-  - deployment: Deploying
-    displayName: Deploying
-    environment: ${{ parameters.environment }}
-    pool:
-      vmImage: $(pipeline#pool)
-    variables:
-    - group: Pipeline
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            displayName: Getting Artifact
-            artifact: drop
+- deployment: Deploying
+  displayName: Deploying
+  environment: ${{ parameters.environment }}
+  pool:
+    vmImage: $(pipeline#pool)
+  variables:
+  - group: Pipeline
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - download: current
+          displayName: Getting Artifact
+          artifact: drop
 
-          ${{ if eq(parameters.enableSlot, false) }}:
-            - task: AzureWebApp@1
-              displayName: Deploying to Slot $(parameters.slotName)
-              inputs:
-                azureSubscription: Azure
-                appType: functionApp
-                appName: $(parameters.appName)
-                package: '$(Pipeline.Workspace)/drop/*.zip'
-          
-          ${{ if eq(parameters.enableSlot, true) }}:
-            - task: AzureWebApp@1
-              displayName: Deploying to Slot $(parameters.slotName)
-              inputs:
-                azureSubscription: Azure
-                appType: functionApp
-                appName: $(parameters.appName)
-                package: '$(Pipeline.Workspace)/drop/*.zip'
-                deployToSlotOrASE: true
-                resourceGroupName: $(parameters.resourcegroupName)
-                slotName: $(parameters.slotName)
+        ${{ if eq(parameters.enableSlot, false) }}:
+          - task: AzureWebApp@1
+            displayName: Deploying to Slot $(parameters.slotName)
+            inputs:
+              azureSubscription: Azure
+              appType: functionApp
+              appName: $(parameters.appName)
+              package: '$(Pipeline.Workspace)/drop/*.zip'
+        
+        ${{ if eq(parameters.enableSlot, true) }}:
+          - task: AzureWebApp@1
+            displayName: Deploying to Slot $(parameters.slotName)
+            inputs:
+              azureSubscription: Azure
+              appType: functionApp
+              appName: $(parameters.appName)
+              package: '$(Pipeline.Workspace)/drop/*.zip'
+              deployToSlotOrASE: true
+              resourceGroupName: $(parameters.resourcegroupName)
+              slotName: $(parameters.slotName)
 
-            - task: AzureAppServiceManage@0
-              displayName: Swapping Slot $(deploy#venue.app.slot) with Production
-              inputs:
-                azureSubscription: Azure
-                action: 'Swap Slots'
-                WebAppName: $(parameters.appName)
-                ResourceGroupName: $(parameters.resourcegroupName)
-                SourceSlot: $(parameters.slotName)
-                SwapWithProduction: true
+          - task: AzureAppServiceManage@0
+            displayName: Swapping Slot $(deploy#venue.app.slot) with Production
+            inputs:
+              azureSubscription: Azure
+              action: 'Swap Slots'
+              WebAppName: $(parameters.appName)
+              ResourceGroupName: $(parameters.resourcegroupName)
+              SourceSlot: $(parameters.slotName)
+              SwapWithProduction: true

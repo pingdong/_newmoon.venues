@@ -1,7 +1,7 @@
 parameters:
-  - name: appName
-    type: string
-    default: ''
+- name: appName
+  type: string
+  default: ''
 
 jobs:
 - job: Build
