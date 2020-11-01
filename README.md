@@ -1,6 +1,6 @@
 The project is a Azure implementation of the [Newmoon](https://github.com/pingdong/newmoon) project. 
 
-# newmoon.places
+# newmoon.venues
 Place management service
 
 If you want to check the authentication service, check [newmoon.authentication](https://github.com/pingdong/newmoon.authentication)
