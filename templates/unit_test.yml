@@ -3,10 +3,6 @@ parameters:
   type: string
   default: ''
 
-variables:
-- name  : appName
-  value : ${{ lower(parameters.appName) }}
-
 jobs:
 - job: UnitTesting
   displayName: Unit Testing
@@ -21,7 +17,7 @@ jobs:
   - name  : local#codecoveragehistory.directory
     value : '$(Build.ArtifactStagingDirectory)/history'
   - name  : local#codecoveragehistory.directory
-    value : $(variables.appName).$(Build.SourceBranchName)
+    value : ${{ lower(parameters['appName']) }}.$(Build.SourceBranchName)
   - name  : 'disable.coverage.autogenerate'
     value : 'true'
   steps:
@@ -43,8 +39,8 @@ jobs:
     inputs:
       SonarCloud: SonarCloud
       organization: $(test.unit#sonarcloud.organization)
-      projectKey: $(variables.appName)
-      projectName: $(variables.appName)
+      projectKey: ${{ lower(parameters['appName']) }}
+      projectName: ${{ lower(parameters['appName']) }}
       extraProperties: |
         sonar.coverage.exclusions=**/*[Uu]nit[Tt]ests*/**/*
         sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
