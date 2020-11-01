@@ -25,23 +25,23 @@ schedules:
     - master
   always: true      # Even no code change
 
-stages:
-# Quality Control
-- stage: QualityControl
-  displayName: Quality Control
-  jobs:
-  - template: templates\test_static.yml@templates
+# stages:
+# # Quality Control
+# - stage: QualityControl
+#   displayName: Quality Control
+#   jobs:
+#   - template: templates\test_static.yml@templates
 
-  - template: templates\test_unit.yml@templates
-    parameters:
-      appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
+#   - template: templates\test_unit.yml@templates
+#     parameters:
+#       appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
      
-  - template: templates\test_integration.yml@templates
+#   - template: templates\test_integration.yml@templates
 
 # Build
 - stage: Build
   displayName: Building
-  dependsOn: QualityControl
+  # dependsOn: QualityControl
   condition: |
     and
     (
@@ -77,9 +77,16 @@ stages:
 #               funcName: ${{ variables['deploy#venue.app'] }}
 
 # Deployment
-- stage: DeployToDev	
-  displayName: 'Deploying: DEV'	
+- stage: DeployToDev
+  displayName: 'Deploying: DEV'
   dependsOn: Build
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['Build.Reason'], 'Schedule')
+    )
   variables:
   - group: Deploy.Dev
   jobs:
@@ -88,20 +95,20 @@ stages:
     pool:
       vmImage: $(pipeline#vmImage)
     environment: dev
-    strategy:	
-      runOnce:	
-        deploy:	
-          steps:	
-          - download: current	
-            displayName: Getting Artifact	
-            artifact: drop	
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            displayName: Getting Artifact
+            artifact: drop
 
-          - task: AzureWebApp@1	
-            displayName: Deploying $(deploy#venue.app)	
-            inputs:	
-              azureSubscription: Azure	
-              appType: functionApp	
-              appName: $(deploy#venue.app)	
+          - task: AzureWebApp@1
+            displayName: Deploying $(deploy#venue.app)
+            inputs:
+              azureSubscription: Azure
+              appType: functionApp
+              appName: $(deploy#venue.app)
               package: '$(Pipeline.Workspace)/drop/*.zip'
 
 # - stage: DeployToProd
