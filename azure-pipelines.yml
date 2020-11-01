@@ -7,6 +7,7 @@ resources:
     endpoint: GitHub
 
 variables:
+- group: Pipeline
 - name: local#app.name
   value: Venues.FunctionApp
 
@@ -86,14 +87,13 @@ stages:
       eq(variables['Build.SourceBranch'], 'refs/heads/master'),
       ne(variables['Build.Reason'], 'Schedule')
     )
-  variables:
-  - group: Pipeline
-  - group: Deploy.Dev
   jobs:
   - deployment: Deploying
     displayName: Deploying
     pool:
       vmImage: $(pipeline#vmImage)
+    variables:
+    - group: Deploy.Dev
     environment: dev
     strategy:
       runOnce:
