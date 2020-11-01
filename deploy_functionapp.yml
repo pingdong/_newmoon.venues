@@ -17,6 +17,9 @@ jobs:
   displayName: Deploying
   pool:
     vmImage: $(pipeline#vmImage)
+  variables:
+  - group: Pipeline
+  - group: Deploy.Dev
   environment: dev
   strategy:
     runOnce:
@@ -34,38 +37,38 @@ jobs:
             appName: $(deploy#venue.app)
             package: '$(Pipeline.Workspace)/drop/*.zip'
 
-steps:
-- download: current
-  displayName: Getting Artifact
-  artifact: drop
+# steps:
+# - download: current
+#   displayName: Getting Artifact
+#   artifact: drop
 
-- ${{ if eq(parameters.enableSlot, false) }}:
-  - task: AzureWebApp@1
-    displayName: Deploying
-    inputs:
-      azureSubscription: Azure
-      appType: functionApp
-      appName: ${{ parameters.funcName }}
-      package: '$(Pipeline.Workspace)/drop/*.zip'
+# - ${{ if eq(parameters.enableSlot, false) }}:
+#   - task: AzureWebApp@1
+#     displayName: Deploying
+#     inputs:
+#       azureSubscription: Azure
+#       appType: functionApp
+#       appName: ${{ parameters.funcName }}
+#       package: '$(Pipeline.Workspace)/drop/*.zip'
 
-- ${{ if eq(parameters.enableSlot, true) }}:
-  - task: AzureWebApp@1
-    displayName: Deploying to Slot ${{ parameters.slotName }}
-    inputs:
-      azureSubscription: Azure
-      appType: functionApp
-      appName: ${{ parameters.funcName }}
-      package: '$(Pipeline.Workspace)/drop/*.zip'
-      deployToSlotOrASE: true
-      resourceGroupName: ${{ parameters.resourcegroupName }}
-      slotName: ${{ parameters.slotName }}
+# - ${{ if eq(parameters.enableSlot, true) }}:
+#   - task: AzureWebApp@1
+#     displayName: Deploying to Slot ${{ parameters.slotName }}
+#     inputs:
+#       azureSubscription: Azure
+#       appType: functionApp
+#       appName: ${{ parameters.funcName }}
+#       package: '$(Pipeline.Workspace)/drop/*.zip'
+#       deployToSlotOrASE: true
+#       resourceGroupName: ${{ parameters.resourcegroupName }}
+#       slotName: ${{ parameters.slotName }}
 
-  - task: AzureAppServiceManage@0
-    displayName: Swapping Slot $(deploy#venue.app.slot) with Production
-    inputs:
-      azureSubscription: Azure
-      action: 'Swap Slots'
-      WebAppName: ${{ parameters.funcName }}
-      ResourceGroupName: ${{ parameters.resourcegroupName }}
-      SourceSlot: ${{ parameters.slotName }}
-      SwapWithProduction: true
+#   - task: AzureAppServiceManage@0
+#     displayName: Swapping Slot $(deploy#venue.app.slot) with Production
+#     inputs:
+#       azureSubscription: Azure
+#       action: 'Swap Slots'
+#       WebAppName: ${{ parameters.funcName }}
+#       ResourceGroupName: ${{ parameters.resourcegroupName }}
+#       SourceSlot: ${{ parameters.slotName }}
+#       SwapWithProduction: true
