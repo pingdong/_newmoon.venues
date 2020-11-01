@@ -63,7 +63,7 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       environment: dev_deploy
-      funcName: $(deploy#venue.app)
+      funcName: ${{ variables['deploy#venue.app'] }}
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
@@ -74,8 +74,8 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       environment: dev_prod
-      funcName: $(deploy#venue.app)
+      funcName: ${{ variables['deploy#venue.app'] }}
       enableSlot: true
-      resourceGroupName: $(deploy#venue.resourcegroup)
-      slotName: $(deploy#venue.app.slot)
+      resourceGroupName: ${{ variables['deploy#venue.resourcegroup'] }}
+      slotName: ${{ variables['deploy#venue.app.slot'] }}
       
