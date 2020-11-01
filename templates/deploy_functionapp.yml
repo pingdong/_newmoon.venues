@@ -31,7 +31,7 @@ jobs:
           displayName: Getting Artifact
           artifact: drop
 
-        ${{ if eq(parameters.enableSlot, false) }}:
+        - ${{ if eq(parameters.enableSlot, false) }}:
           - task: AzureWebApp@1
             displayName: Deploying to Slot $(parameters.slotName)
             inputs:
@@ -40,7 +40,7 @@ jobs:
               appName: $(parameters.funcName)
               package: '$(Pipeline.Workspace)/drop/*.zip'
         
-        ${{ if eq(parameters.enableSlot, true) }}:
+        - ${{ if eq(parameters.enableSlot, true) }}:
           - task: AzureWebApp@1
             displayName: Deploying to Slot $(parameters.slotName)
             inputs:
