@@ -7,7 +7,6 @@ resources:
     endpoint: GitHub
 
 variables:
-- group: Pipeline
 - name: local#app.name
   value: Venues.FunctionApp
 
@@ -55,61 +54,54 @@ stages:
       appName: ${{ variables['local#app.name'] }}
   
 # Deployment
+- stage: DeployToDev
+  displayName: 'Deploying: DEV'
+  dependsOn: Build
+  variables:
+  - group : Pipeline
+  jobs:
+  - template: templates\deploy_functionapp.yml@templates
+    parameters:
+      funcName: ${{ variables['deploy#venue.app'] }}
+      vmImage: ${{ variables['pipeline#vmImage']  }}
+      environment: dev_deploy
+      azureSubscription: Azure
+      funcName: $(deploy#venue.app)
+
+# # Deployment
 # - stage: DeployToDev
 #   displayName: 'Deploying: DEV'
 #   dependsOn: Build
+#   condition: |
+#     and
+#     (
+#       succeeded(),
+#       eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+#       ne(variables['Build.Reason'], 'Schedule')
+#     )
 #   jobs:
 #   - deployment: Deploying
 #     displayName: Deploying
-#     environment: dev_deploy
 #     pool:
 #       vmImage: $(pipeline#vmImage)
 #     variables:
-#     - group : Pipeline
 #     - group: Deploy.Dev
+#     environment: dev
 #     strategy:
 #       runOnce:
 #         deploy:
 #           steps:
-#           #- template: templates\deploy_functionapp.yml@templates
-#           - template: deploy_functionapp.yml
-#             parameters:
-#               funcName: ${{ variables['deploy#venue.app'] }}
+#           - download: current
+#             displayName: Getting Artifact
+#             artifact: drop
 
-# Deployment
-- stage: DeployToDev
-  displayName: 'Deploying: DEV'
-  dependsOn: Build
-  condition: |
-    and
-    (
-      succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['Build.Reason'], 'Schedule')
-    )
-  jobs:
-  - deployment: Deploying
-    displayName: Deploying
-    pool:
-      vmImage: $(pipeline#vmImage)
-    variables:
-    - group: Deploy.Dev
-    environment: dev
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            displayName: Getting Artifact
-            artifact: drop
-
-          - task: AzureWebApp@1
-            displayName: Deploying $(deploy#venue.app)
-            inputs:
-              azureSubscription: Azure
-              appType: functionApp
-              appName: $(deploy#venue.app)
-              package: '$(Pipeline.Workspace)/drop/*.zip'
+#           - task: AzureWebApp@1
+#             displayName: Deploying $(deploy#venue.app)
+#             inputs:
+#               azureSubscription: Azure
+#               appType: functionApp
+#               appName: $(deploy#venue.app)
+#               package: '$(Pipeline.Workspace)/drop/*.zip'
 
 # - stage: DeployToProd
 #   displayName: 'Deploying: PROD'
