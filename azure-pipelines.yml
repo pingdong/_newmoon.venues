@@ -29,13 +29,13 @@ stages:
 - stage: QualityControl
   displayName: Quality Control
   jobs:
-  - template: templates\static_test.yml@templates
+  - template: templates\test_static.yml@templates
 
-  - template: templates\unit_test.yml@templates
+  - template: templates\test_unit.yml@templates
     parameters:
       appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
      
-  - template: templates\integration_test.yml@templates
+  - template: templates\test_integration.yml@templates
 
 # Build
 - stage: Build
