@@ -54,26 +54,55 @@ stages:
       appName: ${{ variables['local#app.name'] }}
   
 # Deployment
-- stage: DeployToDev
-  displayName: 'Deploying: DEV'
+# - stage: DeployToDev
+#   displayName: 'Deploying: DEV'
+#   dependsOn: Build
+#   jobs:
+#   - deployment: Deploying
+#     displayName: Deploying
+#     environment: dev_deploy
+#     pool:
+#       vmImage: $(pipeline#vmImage)
+#     variables:
+#     - group : Pipeline
+#     - group: Deploy.Dev
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           #- template: templates\deploy_functionapp.yml@templates
+#           - template: deploy_functionapp.yml
+#             parameters:
+#               funcName: ${{ variables['deploy#venue.app'] }}
+
+# Deployment
+- stage: DeployToDev	
+  displayName: 'Deploying: DEV'	
   dependsOn: Build
+  variables:
+  - group: Pipeline
+  - group: Deploy.Dev
   jobs:
   - deployment: Deploying
     displayName: Deploying
-    environment: dev_deploy
     pool:
       vmImage: $(pipeline#vmImage)
-    variables:
-    - group : Pipeline
-    - group: Deploy.Dev
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          #- template: templates\deploy_functionapp.yml@templates
-          - template: deploy_functionapp.yml
-            parameters:
-              funcName: ${{ variables['deploy#venue.app'] }}
+    environment: dev_deploy	
+    strategy:	
+      runOnce:	
+        deploy:	
+          steps:	
+          - download: current	
+            displayName: Getting Artifact	
+            artifact: drop	
+
+          - task: AzureWebApp@1	
+            displayName: Deploying $(deploy#venue.app)	
+            inputs:	
+              azureSubscription: Azure	
+              appType: functionApp	
+              appName: $(deploy#venue.app)	
+              package: '$(Pipeline.Workspace)/drop/*.zip'
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
