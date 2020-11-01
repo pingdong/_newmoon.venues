@@ -66,7 +66,6 @@ stages:
       vmImage: ${{ variables['pipeline#vmImage']  }}
       environment: dev_deploy
       azureSubscription: Azure
-      funcName: $(deploy#venue.app)
 
 # # Deployment
 # - stage: DeployToDev
