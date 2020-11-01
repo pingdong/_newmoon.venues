@@ -1,5 +1,7 @@
 parameters:
-  appName: ''
+  - name: appName
+    type: string
+    default: ''
 
 jobs:
 - job: UnitTesting
