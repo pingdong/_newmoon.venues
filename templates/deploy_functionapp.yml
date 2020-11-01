@@ -1,11 +1,11 @@
 parameters:
   funcName: ''
-  environmentName: ''
+  environment: ''
 
 jobs:
 - deployment: Deploying
   displayName: Deploying
-  environment: ${{ parameters.environmentName }}
+  environment: ${{ parameters.environment }}
   variables:
   - group: Pipeline
   pool:
