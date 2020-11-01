@@ -57,13 +57,23 @@ stages:
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
   dependsOn: Build
-  variables:
-  - group: Deploy.Dev
   jobs:
-  - template: templates\deploy_functionapp.yml@templates
-    parameters:
-      environment: dev_deploy
-      funcName: ${{ variables['deploy#venue.app'] }}
+  - deployment: Deploying
+    displayName: Deploying
+    environment: dev_deploy
+    pool:
+      vmImage: $(pipeline#vmImage)
+    variables:
+    - group : Pipeline
+    - group: Deploy.Dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          #- template: templates\deploy_functionapp.yml@templates
+          - template: deploy_functionapp.yml
+            parameters:
+              funcName: ${{ variables['deploy#venue.app'] }}
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
