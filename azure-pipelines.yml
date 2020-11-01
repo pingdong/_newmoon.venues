@@ -25,7 +25,7 @@ schedules:
     - master
   always: true      # Even no code change
 
-# stages:
+stages:
 # # Quality Control
 # - stage: QualityControl
 #   displayName: Quality Control
