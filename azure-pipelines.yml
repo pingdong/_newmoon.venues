@@ -79,7 +79,7 @@ stages:
     parameters:
       funcName: func-newmoon-prod #${{ variables['deploy#venue.app'] }}
       vmImage: ubuntu-latest #${{ variables['pipeline#vmImage'] }}
-      environment: dev_deploy
+      environment: prod_deploy
       azureSubscription: Azure
       enableSlot: true
       resourceGroupName: rg-newmoon-prod #${{ variables['deploy#venue.resourcegroup'] }}
