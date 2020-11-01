@@ -59,6 +59,7 @@ stages:
   dependsOn: Build
   variables:
   - group : Pipeline
+  - group : Deploy.Dev
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
