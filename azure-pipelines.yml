@@ -17,14 +17,15 @@ variables:
 # The root reason:
 #   Azure DevOps need to check all permissions 
 #   at the beginning of the run of the pipeline
-- name: local#dev.environment
-  value: dev_deploy
-- name: local#dev.azure.subscription
-  value: Azure
-- name: local#prod.environment
-  value: prod_deploy
-- name: local#prod.azure.subscription
-  value: Azure
+# - name: local#dev.environment
+#   value: dev_deploy
+# - name: local#dev.azure.subscription
+#   value: Azure
+# - name: local#prod.environment
+#   value: prod_deploy
+# - name: local#prod.azure.subscription
+#   value: Azure
+- group: Deploy
 
 trigger:
   batch: true
@@ -79,9 +80,9 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#dev.environment) #$(deploy#environment)
+      environment: $(local#dev.environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#dev.azure.subscription) #deploy#azure.subscription)
+      azureSubscription: $(local#dev.azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
@@ -92,9 +93,9 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#prod.environment) #$(deploy#environment)
+      environment: $(local#prod.environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#prod.azure.subscription) #$(deploy#azure.subscription)
+      azureSubscription: $(local#prod.azure.subscription)
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
