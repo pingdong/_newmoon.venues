@@ -13,16 +13,19 @@ variables:
 # A few value in deployment task, such as Pool:vmImage, environment, azureSubscription, 
 #   are only read from stage-level variables or variable groups
 #   https://github.com/microsoft/azure-pipelines-extensions/issues/832
-# The root reason:
+# The ultimate reason:
 #   Azure DevOps need to check all permissions 
 #   at the beginning of the run of the pipeline
-- group: Deploy
+- group : Deploy
 
 trigger:
-  batch: true
+  batch: false  # batch changes if true; 
+                #   start a new build for every push if false (default)
 
 pr:
-  autoCancel: true   # Cancel previous build if check in multiple times
+  autoCancel: true   # Indicates whether additional pushes to a PR 
+                     #   should cancel in-progress runs for the same PR.
+                     # Defaults to true
 
 schedules:
 - cron: '0 1 * * *' # Every day at 1 A.M.
@@ -30,25 +33,31 @@ schedules:
   branches:
     include:
     - master
-  always: true      # Even no code change
+  always: true      # Whether to always run the pipeline or only if 
+                    #   there have been source code changes 
+                    #   since the last successful scheduled run. 
+                    # The default is false.
 
 stages:
-# # Quality Control
-# - stage: QualityControl
-#   displayName: Quality Control
-#   jobs:
-#   - template: templates\test_static.yml@templates
+# Quality Control
+- stage: QualityControl
+  displayName: Quality Control
+  jobs:
+  # Static Testing
+  - template: templates\test_static.yml@templates
 
-#   - template: templates\test_unit.yml@templates
-#     parameters:
-#       appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
+  # Unit Testing
+  - template: templates\test_unit.yml@templates
+    parameters:
+      appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
      
-#   - template: templates\test_integration.yml@templates
+  # Integration Testing
+  - template: templates\test_integration.yml@templates
 
 # Build
 - stage: Build
   displayName: Building
-  # dependsOn: QualityControl
+  dependsOn: QualityControl
   condition: |
     and
     (
@@ -59,7 +68,7 @@ stages:
   jobs:
   - template: templates\build.yml@templates
     parameters:
-      appName: ${{ variables['local#app.name'] }}
+      appName: $(local#app.name)
   
 # Deployment
 - stage: DeployToDev
@@ -72,8 +81,8 @@ stages:
     parameters:
       vmImage: $(deploy#vmImage)
       environment: $(deploy#dev.environment)
-      funcName: $(deploy#venue.app)
       azureSubscription: $(deploy#dev.azure.subscription)
+      funcName: $(deploy#venue.app)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
@@ -85,8 +94,8 @@ stages:
     parameters:
       vmImage: $(deploy#vmImage)
       environment: $(deploy#prod.environment)
-      funcName: $(deploy#venue.app)
       azureSubscription: $(deploy#prod.azure.subscription)
+      funcName: $(deploy#venue.app)
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
