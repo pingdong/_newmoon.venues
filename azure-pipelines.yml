@@ -74,9 +74,9 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#dev.environment) 
+      environment: $(local#dev.environment)               #$(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#dev.azure.subscription)
+      azureSubscription: $(local#dev.azure.subscription)  #$(deploy#azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
@@ -87,9 +87,9 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#prod.environment)
+      environment: $(local#prod.environment)                #$(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#prod.azure.subscription)
+      azureSubscription: $(local#prod.azure.subscription)   #$(deploy#azure.subscription)
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
