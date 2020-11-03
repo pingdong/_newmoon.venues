@@ -60,26 +60,36 @@ stages:
   dependsOn: Build
   variables:
   - group: Dev.Deploy
+  # Existing error to read the variables from library
+  - name: local#environment
+    value: dev_deploy
+  - name: local#azure.subscription
+    value: Azure
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: dev_deploy #$(deploy#environment)
+      environment: $(local#environment) 
       funcName: $(deploy#venue.app)
-      azureSubscription: Azure #$(deploy#azure.subscription)
+      azureSubscription: $(local#azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
   dependsOn: DeployToDev
   variables:
   - group: Prod.Deploy
+  # Existing error to read the variables from library
+  - name: local#environment
+    value: dev_prod
+  - name: local#azure.subscription
+    value: Azure
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: prod_deploy #$(deploy#environment)
+      environment: $(local#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: Azure #$(deploy#azure.subscription)
+      azureSubscription: local#azure.subscription
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
