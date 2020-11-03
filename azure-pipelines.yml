@@ -10,8 +10,13 @@ variables:
 - group : Pipeline   # deployment Task requires the variable of Pool:vmImage on the pipeline level
 - name  : local#app.name
   value : Venues.FunctionApp
-# Existing issue to read some variables 
+# Existing issue:
+# The value of Environment, Subscription are only read 
 #   from library and stage-level variables
+#   https://github.com/microsoft/azure-pipelines-extensions/issues/832
+# The root reason:
+#   Azure DevOps need to check all permissions 
+#   at the beginning of the run of the pipeline
 - name: local#dev.environment
   value: dev_deploy
 - name: local#dev.azure.subscription
@@ -74,9 +79,9 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#dev.environment)               #$(deploy#environment)
+      environment: $(local#dev.environment) #$(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#dev.azure.subscription)  #$(deploy#azure.subscription)
+      azureSubscription: $(local#dev.azure.subscription) #deploy#azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
@@ -87,9 +92,9 @@ stages:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#prod.environment)                #$(deploy#environment)
+      environment: $(local#prod.environment) #$(deploy#environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#prod.azure.subscription)   #$(deploy#azure.subscription)
+      azureSubscription: $(local#prod.azure.subscription) #$(deploy#azure.subscription)
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
