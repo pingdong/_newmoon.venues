@@ -80,7 +80,7 @@ stages:
   - group: Prod.Deploy
   # Existing error to read the variables from library
   - name: local#environment
-    value: dev_prod
+    value: prod_deploy
   - name: local#azure.subscription
     value: Azure
   jobs:
