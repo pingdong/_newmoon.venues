@@ -10,6 +10,16 @@ variables:
 - group : Pipeline   # deployment Task requires the variable of Pool:vmImage on the pipeline level
 - name  : local#app.name
   value : Venues.FunctionApp
+# Existing issue to read some variables 
+#   from library and stage-level variables
+- name: local#dev.environment
+  value: dev_deploy
+- name: local#dev.azure.subscription
+  value: Azure
+- name: local#prod.environment
+  value: prod_deploy
+- name: local#prod.azure.subscription
+  value: Azure
 
 trigger:
   batch: true
@@ -60,36 +70,26 @@ stages:
   dependsOn: Build
   variables:
   - group: Dev.Deploy
-  # Existing error to read the variables from library
-  - name: local#environment
-    value: dev_deploy
-  - name: local#azure.subscription
-    value: Azure
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#environment) 
+      environment: $(local#dev.environment) 
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#azure.subscription)
+      azureSubscription: $(local#dev.azure.subscription)
  
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
   dependsOn: DeployToDev
   variables:
   - group: Prod.Deploy
-  # Existing error to read the variables from library
-  - name: local#environment
-    value: prod_deploy
-  - name: local#azure.subscription
-    value: Azure
   jobs:
   - template: templates\deploy_functionapp.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      environment: $(local#environment)
+      environment: $(local#prod.environment)
       funcName: $(deploy#venue.app)
-      azureSubscription: $(local#azure.subscription)
+      azureSubscription: $(local#prod.azure.subscription)
       enableSlot: true
       resourceGroupName: $(deploy#venue.resourcegroup)
       slotName: $(deploy#venue.app.slot)
