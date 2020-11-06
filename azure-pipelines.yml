@@ -4,6 +4,11 @@ resources:
     type: github
     name: pingdong/azure.devops.templates
     ref: refs/heads/master
+    endpoint: GitHub  
+  - repository: infrastructure
+    type: github
+    name: pingdong/newmoon.infrastructure
+    ref: refs/heads/master
     endpoint: GitHub
 
 variables:
@@ -16,7 +21,7 @@ variables:
 # The ultimate reason:
 #   Azure DevOps need to check all permissions 
 #   at the beginning of the run of the pipeline
-- group : Deploy
+- group : Pipeline
 
 trigger:
   batch: false  # batch changes if true; 
@@ -44,15 +49,29 @@ stages:
   displayName: Quality Control
   jobs:
   # Static Testing
-  - template: templates\test_static.yml@templates
+  - template: templates\test.static.yml@templates
+    variables:
+    - group: Test.Static
+    parameters:
+      poolImage: $(pipeline#vmImage)
 
   # Unit Testing
-  - template: templates\test_unit.yml@templates
+  - template: templates\test.unit.yml@templates
+    variables:
+    - group: Test.Unit
     parameters:
+      poolImage: $(pipeline#vmImage)
+      buildConfiguration: $(build#configuration.release)
       appName: ${{ variables['local#app.name'] }}  # Can't use $(local@app.name) here
+      coverageHistoryFeed: $(test.unit#coverage.history.feed)
+      sonarcloudOrganization: $(test.unit#sonarcloud.organization)
      
   # Integration Testing
-  - template: templates\test_integration.yml@templates
+  - template: templates\test.integration.yml@templates
+    variables:
+    - group: Test.Integration
+    parameters:
+      poolImage: $(pipeline#vmImage)
 
 # Build
 - stage: Build
@@ -65,38 +84,80 @@ stages:
       eq(variables['Build.SourceBranch'], 'refs/heads/master'),
       ne(variables['Build.Reason'], 'Schedule')
     )
+  variables:
+  - group: Build
   jobs:
   - template: templates\build.yml@templates
     parameters:
+      poolImage: $(pipeline#vmImage)
       appName: $(local#app.name)
+      buildConfiguration: $(build#configuration.release)
   
 # Deployment
-- stage: DeployToDev
-  displayName: 'Deploying: DEV'
+#   DEV
+- stage: InfrastructurePlanDev
+  displayName: 'Infrastructure Planning: DEV'
   dependsOn: Build
   variables:
-  - group: Dev.Deploy
+  - group: Dev.Infrastructure
+  - group: Dev.Infrastructure.Secret
   jobs:
-  - template: templates\deploy_functionapp.yml@templates
+  - template: templates\terraform.plan.yml@templates
     parameters:
-      vmImage: $(deploy#vmImage)
-      environment: $(deploy#dev.environment)
-      azureSubscription: $(deploy#dev.azure.subscription)
-      funcName: $(deploy#venue.app)
- 
+      poolImage: $(pipeline#vmImage)
+      workingDirectory: infrastructure\terraform@infrastructure
+      commandOptions: # parameter
+      azureSubscription: $(pipeline#azure.subscription.dev)
+      terraformVersion: $(deploy#terraform.version)
+      stateResourceGroup: $(infrastructure#state.resourceGroup)
+      stateStorageAccount: $(infrastructure#state.storageAccount)
+      stateStorageAccountContainer: $(infrastructure#state.storageAccount.container)
+      stateStorageAccountKey: $(infrastructure.secret#state.storageAccount.key)
+
+- stage: InfrastructureApplyDev
+  displayName: 'Infrastructure Applying: DEV'
+  dependsOn: InfrastructurePlanDev
+  variables:
+  - group: Dev.Infrastructure
+  - group: Dev.Infrastructure.Secret
+  jobs:
+  - template: templates\terraform.apply.yml@templates
+    parameters:
+      environment: $(pipeline#environment.dev.infrastructure)
+      poolImage: $(pipeline#vmImage)
+      workingDirectory: infrastructure\terraform@infrastructure
+      commandOptions: # parameter
+      azureSubscription: $(pipeline#azure.subscription.dev)
+      terraformVersion: $(deploy#terraform.version)
+      stateResourceGroup: $(infrastructure#state.resourceGroup)
+      stateStorageAccount: $(infrastructure#state.storageAccount)
+      stateStorageAccountContainer: $(infrastructure#state.storageAccount.container)
+      stateStorageAccountKey: $(infrastructure.secret#state.storageAccount.key)
+
+- stage: DeployToDev
+  displayName: 'Deploying: DEV'
+  dependsOn: InfrastructureApplyDev
+  jobs:
+  - template: templates\deploy.functionapp.yml@templates
+    parameters:
+      poolImage: $(pipeline#vmImage)
+      environment: $(pipeline#environment.deploy.dev)
+      azureSubscription: $(pipeline#azure.subscription.dev)
+      funcName: func-newmoon  # Should come from terraform output
+
+#   PROD
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
   dependsOn: DeployToDev
-  variables:
-  - group: Prod.Deploy
   jobs:
-  - template: templates\deploy_functionapp.yml@templates
+  - template: templates\deploy.functionapp.yml@templates
     parameters:
-      vmImage: $(deploy#vmImage)
-      environment: $(deploy#prod.environment)
-      azureSubscription: $(deploy#prod.azure.subscription)
-      funcName: $(deploy#venue.app)
+      poolImage: $(pipeline#vmImage)
+      environment: $(pipeline#environment.deploy.prod)
+      azureSubscription: $(pipeline#azure.subscription.prod)
+      funcName: func-newmoon-prod   # Should come from terraform output
+      # Slot
       enableSlot: true
-      resourceGroupName: $(deploy#venue.resourcegroup)
-      slotName: $(deploy#venue.app.slot)
+      resourceGroupName: rg-newmoon-prod    # Should come from terraform output
+      slotName: stage     # Should come from terraform output
       
