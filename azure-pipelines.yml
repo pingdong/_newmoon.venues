@@ -100,27 +100,27 @@ stages:
   displayName: 'Infrastructure Planning: DEV'
   dependsOn: Build
   variables:
-  - group: Dev.Infrastructure
-  - group: Dev.Infrastructure.Secret
+  - group: Pipeline.Terraform
+  - group: Pipeline.Terraform.Secret
   jobs:
   - template: templates\terraform.plan.yml@templates
     parameters:
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
       commandOptions: # parameter
-      azureSubscription: $(pipeline#azure.subscription.dev)
-      terraformVersion: $(deploy#terraform.version)
-      stateResourceGroup: $(infrastructure#state.resourceGroup)
-      stateStorageAccount: $(infrastructure#state.storageAccount)
-      stateStorageAccountContainer: $(infrastructure#state.storageAccount.container)
-      stateStorageAccountKey: $(infrastructure.secret#state.storageAccount.key)
+      azureSubscription: $(pipeline#azure.subscription)
+      terraformVersion: $(deploy.terraform#version)
+      stateResourceGroup: $(pipeline.terraform#resourceGroup)
+      stateStorageAccount: $(pipeline.terraform#storageAccount)
+      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
+      stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
 
 - stage: InfrastructureApplyDev
   displayName: 'Infrastructure Applying: DEV'
   dependsOn: InfrastructurePlanDev
   variables:
-  - group: Dev.Infrastructure
-  - group: Dev.Infrastructure.Secret
+  - group: Pipeline.Terraform
+  - group: Pipeline.Terraform.Secret
   jobs:
   - template: templates\terraform.apply.yml@templates
     parameters:
@@ -128,12 +128,12 @@ stages:
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
       commandOptions: # parameter
-      azureSubscription: $(pipeline#azure.subscription.dev)
+      azureSubscription: $(pipeline#azure.subscription)
       terraformVersion: $(deploy#terraform.version)
-      stateResourceGroup: $(infrastructure#state.resourceGroup)
-      stateStorageAccount: $(infrastructure#state.storageAccount)
-      stateStorageAccountContainer: $(infrastructure#state.storageAccount.container)
-      stateStorageAccountKey: $(infrastructure.secret#state.storageAccount.key)
+      stateResourceGroup: $(pipeline.terraform#resourceGroup)
+      stateStorageAccount: $(pipeline.terraform#storageAccount)
+      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
+      stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
 
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
@@ -144,34 +144,34 @@ stages:
       poolImage: $(pipeline#vmImage)
       environment: $(pipeline#environment.deploy.dev)
       azureSubscription: $(pipeline#azure.subscription.dev)
-      funcName: func-newmoon  # Should come from terraform output
+      funcName: func-newmoon  # TODO: Should come from terraform output
 
 #   PROD
 - stage: InfrastructurePlanProd
   displayName: 'Infrastructure Planning: Prod'
   dependsOn: DeployToDev
   variables:
-  - group: Prod.Infrastructure
-  - group: Prod.Infrastructure.Secret
+  - group: Pipeline.Terraform
+  - group: Pipeline.Terraform.Secret
   jobs:
   - template: templates\terraform.plan.yml@templates
     parameters:
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
       commandOptions: # parameter
-      azureSubscription: $(pipeline#azure.subscription.prod)
-      terraformVersion: $(deploy#terraform.version)
-      stateResourceGroup: $(infrastructure#state.resourceGroup)
-      stateStorageAccount: $(infrastructure#state.storageAccount)
-      stateStorageAccountContainer: $(infrastructure#state.storageAccount.container)
-      stateStorageAccountKey: $(infrastructure.secret#state.storageAccount.key)
+      azureSubscription: $(pipeline#azure.subscription)
+      terraformVersion: $(deploy.terraform#version)
+      stateResourceGroup: $(pipeline.terraform#resourceGroup)
+      stateStorageAccount: $(pipeline.terraform#storageAccount)
+      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
+      stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
 
 - stage: InfrastructureApplyProd
   displayName: 'Infrastructure Applying: Prod'
   dependsOn: InfrastructurePlanProd
   variables:
-  - group: Prod.Infrastructure
-  - group: Prod.Infrastructure.Secret
+  - group: Pipeline.Terraform
+  - group: Pipeline.Terraform.Secret
   jobs:
   - template: templates\terraform.apply.yml@templates
     parameters:
@@ -179,12 +179,12 @@ stages:
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
       commandOptions: # parameter
-      azureSubscription: $(pipeline#azure.subscription.dev)
-      terraformVersion: $(deploy#terraform.version)
-      stateResourceGroup: $(infrastructure#state.resourceGroup)
-      stateStorageAccount: $(infrastructure#state.storageAccount)
-      stateStorageAccountContainer: $(infrastructure#state.storageAccount.container)
-      stateStorageAccountKey: $(infrastructure.secret#state.storageAccount.key)
+      azureSubscription: $(pipeline#azure.subscription)
+      terraformVersion: $(deploy.terraform#version)
+      stateResourceGroup: $(pipeline.terraform#resourceGroup)
+      stateStorageAccount: $(pipeline.terraform#storageAccount)
+      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
+      stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
@@ -195,9 +195,9 @@ stages:
       poolImage: $(pipeline#vmImage)
       environment: $(pipeline#environment.deploy.prod)
       azureSubscription: $(pipeline#azure.subscription.prod)
-      funcName: func-newmoon-prod   # Should come from terraform output
+      funcName: func-newmoon-prod   # TODO: Should come from terraform output
       # Slot
       enableSlot: true
-      resourceGroupName: rg-newmoon-prod    # Should come from terraform output
-      slotName: stage     # Should come from terraform output
+      resourceGroupName: rg-newmoon-prod    # TODO: Should come from terraform output
+      slotName: stage     # TODO: Should come from terraform output
       
