@@ -107,7 +107,7 @@ stages:
     parameters:
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
-      commandOptions: # parameter
+      variablesFile: infrastructure\terraform\environment\dev.tfvars@infrastructure
       azureSubscription: $(pipeline#azure.subscription)
       terraformVersion: $(deploy.terraform#version)
       stateResourceGroup: $(pipeline.terraform#resourceGroup)
@@ -127,7 +127,7 @@ stages:
       environment: $(pipeline#environment.infrastructure.dev)
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
-      commandOptions: # parameter
+      variablesFile: infrastructure\terraform\environment\dev.tfvars@infrastructure
       azureSubscription: $(pipeline#azure.subscription)
       terraformVersion: $(deploy#terraform.version)
       stateResourceGroup: $(pipeline.terraform#resourceGroup)
@@ -158,7 +158,7 @@ stages:
     parameters:
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
-      commandOptions: # parameter
+      variablesFile: infrastructure\terraform\environment\prod.tfvars@infrastructure
       azureSubscription: $(pipeline#azure.subscription)
       terraformVersion: $(deploy.terraform#version)
       stateResourceGroup: $(pipeline.terraform#resourceGroup)
@@ -178,7 +178,7 @@ stages:
       environment: $(pipeline#environment.infrastructure.prod)
       poolImage: $(pipeline#vmImage)
       workingDirectory: infrastructure\terraform@infrastructure
-      commandOptions: # parameter
+      variablesFile: infrastructure\terraform\environment\prod.tfvars@infrastructure
       azureSubscription: $(pipeline#azure.subscription)
       terraformVersion: $(deploy.terraform#version)
       stateResourceGroup: $(pipeline.terraform#resourceGroup)
