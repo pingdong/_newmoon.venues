@@ -175,7 +175,7 @@ stages:
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
             parameters:
-              azureSubscription: ${{ variables['pipeline#azure.subscription.dev'] }}
+              azureSubscription: $(pipeline#azure.subscription)
               funcName: newmoon-dev-func-venues  # TODO: Should come from terraform output
 
   # TODO: PROD environment
