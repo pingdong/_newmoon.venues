@@ -107,8 +107,8 @@ stages:
   
 # Deployment
 #   DEV
-- stage: InfrastructurePlanDev
-  displayName: 'Infrastructure Planning: DEV'
+- stage: PrepareDev
+  displayName: 'Preparing: DEV'
   dependsOn: Build
   variables:
   - group: Infrastructure
