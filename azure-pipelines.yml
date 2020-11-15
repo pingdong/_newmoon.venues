@@ -62,12 +62,12 @@ stages:
   # Static Testing
   - template: templates\test.static.yml@templates
     parameters:
-      poolImage: $(pipeline#vmImage)
+      poolImage: ${{ variables['pipeline#vmImage'] }}
 
   # Unit Testing
   - template: templates\test.unit.yml@templates
     parameters:
-      poolImage: $(pipeline#vmImage)
+      poolImage: ${{ variables['pipeline#vmImage'] }}
       buildConfiguration: $(build#configuration.release)
       appName: $(local#app.name) # ${{ variables['local#app.name'] }}   # Can't use $(local@app.name) here
                                                     #  as parameter appName is used to build variable in compile time inside template.
@@ -77,12 +77,12 @@ stages:
   # Integration Testing
   - template: templates\test.integration.yml@templates
     parameters:
-      poolImage: $(pipeline#vmImage)
+      poolImage: ${{ variables['pipeline#vmImage'] }}
 
   # Validating Infrastructure
   - template: templates\terraform.validate.yml@templates
     parameters:
-      poolImage: $(pipeline#vmImage)
+      poolImage: ${{ variables['pipeline#vmImage'] }}
       workingDirectory: infrastructure\terraform@infrastructure
 
 # Build
