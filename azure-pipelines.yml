@@ -140,8 +140,7 @@ stages:
         stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
         stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        arguments: |
-          -var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(infrastructure#location)
+        arguments: '-var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(infrastructure#location)'
 
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
@@ -170,6 +169,7 @@ stages:
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
               stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
               workingDirectory: $(Build.SourcesDirectory)/terraform
+              arguments: '-auto-approve -var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(infrastructure#location)'
               
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
