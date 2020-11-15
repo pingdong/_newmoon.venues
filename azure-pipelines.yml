@@ -91,7 +91,6 @@ stages:
 
     - template: templates\terraform.validate.yml@templates
       parameters:
-        vmImage: $(pipeline#vmImage)
         workingDirectory: $(Build.SourcesDirectory)\infrastructure\terraform
 
 # Build
