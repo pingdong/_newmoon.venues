@@ -134,7 +134,6 @@ stages:
   
     - template: templates\terraform.plan.yml@templates
       parameters:
-        vmImage: 
         azureSubscription: $(pipeline#azure.subscription)
         stateResourceGroup: $(pipeline.terraform#resourceGroup)
         stateStorageAccount: $(pipeline.terraform#storageAccount)
