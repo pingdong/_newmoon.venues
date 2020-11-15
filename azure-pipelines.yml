@@ -123,19 +123,28 @@ stages:
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
-  - template: templates\terraform.plan.yml@templates
-    parameters:
+  - job: TerraformPlanning
+    displayName: Infrastructure Planning
+    pool:
       vmImage: $(pipeline#vmImage)
-      azureSubscription: $(pipeline#azure.subscription)
-      stateResourceGroup: $(pipeline.terraform#resourceGroup)
-      stateStorageAccount: $(pipeline.terraform#storageAccount)
-      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
-      stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
-      workingDirectory: infrastructure\terraform@infrastructure
-      arguments: |
-        -var service=$(local#service.name) \
-        -var environment=$(local#environment.dev) \
-        -var location=$(infrastructure#location)
+    workspace:
+      clean: all
+    steps:
+    - checkout: infrastructure
+  
+    - template: templates\terraform.plan.yml@templates
+      parameters:
+        vmImage: 
+        azureSubscription: $(pipeline#azure.subscription)
+        stateResourceGroup: $(pipeline.terraform#resourceGroup)
+        stateStorageAccount: $(pipeline.terraform#storageAccount)
+        stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
+        stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
+        workingDirectory: $(Build.SourcesDirectory)/terraform
+        arguments: |
+          -var service=$(local#service.name) \
+          -var environment=$(local#environment.dev) \
+          -var location=$(infrastructure#location)
 
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
@@ -154,6 +163,8 @@ stages:
         deploy:
           steps:
           # Deploy Infrastructure Change
+          - checkout: infrastructure
+
           - template: templates\terraform.apply.yml@templates
             parameters:
               azureSubscription: ${{ variables['pipeline#azure.subscription'] }}
@@ -161,7 +172,7 @@ stages:
               stateStorageAccount: $(pipeline.terraform#storageAccount)
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
               stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
-              workingDirectory: infrastructure\terraform@infrastructure
+              workingDirectory: $(Build.SourcesDirectory)/terraform
               
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
