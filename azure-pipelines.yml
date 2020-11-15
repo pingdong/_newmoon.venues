@@ -51,44 +51,44 @@ schedules:
 
 stages:
 # Quality Control
-- stage: QualityControl
-  displayName: Quality Control
-  variables:
-    - group: Build
-    - group: Test.Static
-    - group: Test.Unit
-    - group: Test.Integration
-  jobs:
-  # Static Testing
-  - template: templates\test.static.yml@templates
-    parameters:
-      poolImage: ubuntu-latest # ${{ variables['pipeline#vmImage'] }}
+# - stage: QualityControl
+#   displayName: Quality Control
+#   variables:
+#     - group: Build
+#     - group: Test.Static
+#     - group: Test.Unit
+#     - group: Test.Integration
+#   jobs:
+#   # Static Testing
+#   - template: templates\test.static.yml@templates
+#     parameters:
+#       poolImage: $(pipeline#vmImage)
 
-  # Unit Testing
-  - template: templates\test.unit.yml@templates
-    parameters:
-      poolImage: ${{ variables['pipeline#vmImage'] }}
-      buildConfiguration: $(build#configuration.release)
-      appName: $(local#app.name) # ${{ variables['local#app.name'] }}   # Can't use $(local@app.name) here
-                                                    #  as parameter appName is used to build variable in compile time inside template.
-      coverageHistoryFeed: $(test.unit#coverage.history.feed)
-      sonarcloudOrganization: $(test.unit#sonarcloud.organization)
+#   # Unit Testing
+#   - template: templates\test.unit.yml@templates
+#     parameters:
+#       poolImage: $(pipeline#vmImage)
+#       buildConfiguration: $(build#configuration.release)
+#       appName: $(local#app.name) # ${{ variables['local#app.name'] }}   # Can't use $(local@app.name) here
+#                                                     #  as parameter appName is used to build variable in compile time inside template.
+#       coverageHistoryFeed: $(test.unit#coverage.history.feed)
+#       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
      
-  # Integration Testing
-  - template: templates\test.integration.yml@templates
-    parameters:
-      poolImage: ${{ variables['pipeline#vmImage'] }}
+#   # Integration Testing
+#   - template: templates\test.integration.yml@templates
+#     parameters:
+#       poolImage: $(pipeline#vmImage)
 
-  # Validating Infrastructure
-  - template: templates\terraform.validate.yml@templates
-    parameters:
-      poolImage: ${{ variables['pipeline#vmImage'] }}
-      workingDirectory: infrastructure\terraform@infrastructure
+#   # Validating Infrastructure
+#   - template: templates\terraform.validate.yml@templates
+#     parameters:
+#       poolImage: $(pipeline#vmImage)
+#       workingDirectory: infrastructure\terraform@infrastructure
 
 # Build
 - stage: Build
   displayName: Building
-  dependsOn: QualityControl
+  # dependsOn: QualityControl
   condition: |
     and
     (
