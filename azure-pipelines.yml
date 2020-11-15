@@ -62,7 +62,7 @@ stages:
   # Static Testing
   - template: templates\test.static.yml@templates
     parameters:
-      vmImage: ubuntu-latest # ${{ variables['pipeline#vmImage'] }}
+      vmImage: ${{ variables['pipeline#vmImage'] }}
 
   # Unit Testing
   - template: templates\test.unit.yml@templates
@@ -77,7 +77,7 @@ stages:
   # Integration Testing
   - template: templates\test.integration.yml@templates
     parameters:
-      vmImage: $(pipeline#vmImage)
+      vmImage: $[ variables['pipeline#vmImage'] ]
 
   # Validating Infrastructure
   - template: templates\terraform.validate.yml@templates
