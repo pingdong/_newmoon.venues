@@ -80,10 +80,19 @@ stages:
       vmImage: $(pipeline#vmImage)
 
   # Validating Infrastructure
-  - template: templates\terraform.validate.yml@templates
-    parameters:
+  - job: TerraformValidating
+    displayName: Validating Terraform
+    pool:
       vmImage: $(pipeline#vmImage)
-      workingDirectory: infrastructure\terraform@infrastructure
+    workspace:
+      clean: all
+    steps:
+    - checkout: infrastructure
+
+    - template: templates\terraform.validate.yml@templates
+      parameters:
+        vmImage: $(pipeline#vmImage)
+        workingDirectory: $(Build.SourcesDirectory)\infrastructure\terraform
 
 # Build
 - stage: Build
