@@ -89,9 +89,9 @@ stages:
     steps:
     - checkout: infrastructure
 
-    - template: templates\terraform.validate.yml@templates
-      parameters:
-        workingDirectory: $(Build.SourcesDirectory)\infrastructure\terraform
+    # - template: templates\terraform.validate.yml@templates
+    #   parameters:
+    #     workingDirectory: $(Build.SourcesDirectory)\infrastructure\terraform
 
 # Build
 - stage: Build
