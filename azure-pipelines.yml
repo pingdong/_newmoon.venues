@@ -69,7 +69,7 @@ stages:
     parameters:
       poolImage: $(pipeline#vmImage)
       buildConfiguration: $(build#configuration.release)
-      appName: ${{ variables['local#app.name'] }}   # Can't use $(local@app.name) here
+      appName: $(local#app.name) # ${{ variables['local#app.name'] }}   # Can't use $(local@app.name) here
                                                     #  as parameter appName is used to build variable in compile time inside template.
       coverageHistoryFeed: $(test.unit#coverage.history.feed)
       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
