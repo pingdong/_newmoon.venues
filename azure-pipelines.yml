@@ -91,7 +91,7 @@ stages:
 
     - template: templates\terraform.validate.yml@templates
       parameters:
-        workingDirectory: $(Build.SourcesDirectory)\infrastructure\terraform
+        workingDirectory: $(Build.SourcesDirectory)/infrastructure/terraform
 
 # Build
 - stage: Build
