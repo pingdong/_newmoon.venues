@@ -51,44 +51,44 @@ schedules:
 
 stages:
 # Quality Control
-# - stage: QualityControl
-#   displayName: Quality Control
-#   variables:
-#     - group: Build
-#     - group: Test.Static
-#     - group: Test.Unit
-#     - group: Test.Integration
-#   jobs:
-#   # Static Testing
-#   - template: templates\test.static.yml@templates
-#     parameters:
-#       poolImage: $(pipeline#vmImage)
+- stage: QualityControl
+  displayName: Quality Control
+  variables:
+    - group: Build
+    - group: Test.Static
+    - group: Test.Unit
+    - group: Test.Integration
+  jobs:
+  # Static Testing
+  - template: templates\test.static.yml@templates
+    parameters:
+      vmImage: $(pipeline#vmImage)
 
-#   # Unit Testing
-#   - template: templates\test.unit.yml@templates
-#     parameters:
-#       poolImage: $(pipeline#vmImage)
-#       buildConfiguration: $(build#configuration.release)
-#       appName: $(local#app.name) # ${{ variables['local#app.name'] }}   # Can't use $(local@app.name) here
-#                                                     #  as parameter appName is used to build variable in compile time inside template.
-#       coverageHistoryFeed: $(test.unit#coverage.history.feed)
-#       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
+  # Unit Testing
+  - template: templates\test.unit.yml@templates
+    parameters:
+      vmImage: $(pipeline#vmImage)
+      buildConfiguration: $(build#configuration.release)
+      appName: $(local#app.name) # ${{ variables['local#app.name'] }}   # Can't use $(local@app.name) here
+                                                    #  as parameter appName is used to build variable in compile time inside template.
+      coverageHistoryFeed: $(test.unit#coverage.history.feed)
+      sonarcloudOrganization: $(test.unit#sonarcloud.organization)
      
-#   # Integration Testing
-#   - template: templates\test.integration.yml@templates
-#     parameters:
-#       poolImage: $(pipeline#vmImage)
+  # Integration Testing
+  - template: templates\test.integration.yml@templates
+    parameters:
+      vmImage: $(pipeline#vmImage)
 
-#   # Validating Infrastructure
-#   - template: templates\terraform.validate.yml@templates
-#     parameters:
-#       poolImage: $(pipeline#vmImage)
-#       workingDirectory: infrastructure\terraform@infrastructure
+  # Validating Infrastructure
+  - template: templates\terraform.validate.yml@templates
+    parameters:
+      vmImage: $(pipeline#vmImage)
+      workingDirectory: infrastructure\terraform@infrastructure
 
 # Build
 - stage: Build
   displayName: Building
-  # dependsOn: QualityControl
+  dependsOn: QualityControl
   condition: |
     and
     (
@@ -101,7 +101,7 @@ stages:
   jobs:
   - template: templates\build.yml@templates
     parameters:
-      poolImage: $(pipeline#vmImage)
+      vmImage: $(pipeline#vmImage)
       appName: $(local#app.name)
       buildConfiguration: $(build#configuration.release)
   
@@ -117,7 +117,7 @@ stages:
   jobs:
   - template: templates\terraform.plan.yml@templates
     parameters:
-      poolImage: $(pipeline#vmImage)
+      vmImage: $(pipeline#vmImage)
       azureSubscription: $(pipeline#azure.subscription)
       stateResourceGroup: $(pipeline.terraform#resourceGroup)
       stateStorageAccount: $(pipeline.terraform#storageAccount)
@@ -166,7 +166,7 @@ stages:
 
   # - template: templates\deploy.functionapp.yml@templates
   #   parameters:
-  #     poolImage: $(pipeline#vmImage)
+  #     vmImage: $(pipeline#vmImage)
   #     environment: $(pipeline#environment.deploy.prod)
   #     azureSubscription: $(pipeline#azure.subscription.prod)
   #     funcName: func-newmoon-prod   # TODO: Should come from terraform output
