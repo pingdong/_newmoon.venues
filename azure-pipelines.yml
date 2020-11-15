@@ -14,6 +14,12 @@ resources:
 variables:
 - name  : local#app.name
   value : Venues.FunctionApp
+- name  : local#service.name
+  value : Newmoon
+- name  : local#environment.dev
+  value : dev
+- name  : local#environment.prod
+  value : prod
 # Existing issue:
 # A few value in deployment task, such as Pool:vmImage, environment, azureSubscription, 
 #   are only read from stage-level variables or variable groups
@@ -74,6 +80,12 @@ stages:
     parameters:
       poolImage: $(pipeline#vmImage)
 
+  # Validating Infrastructure
+  - template: templates\terraform.validate.yml@templates
+    parameters:
+      poolImage: $(pipeline#vmImage)
+      workingDirectory: infrastructure\terraform@infrastructure
+
 # Build
 - stage: Build
   displayName: Building
@@ -100,104 +112,70 @@ stages:
   displayName: 'Infrastructure Planning: DEV'
   dependsOn: Build
   variables:
+  - group: Infrastructure
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
   - template: templates\terraform.plan.yml@templates
     parameters:
       poolImage: $(pipeline#vmImage)
-      workingDirectory: infrastructure\terraform@infrastructure
-      variablesFile: infrastructure\terraform\environment\dev.tfvars@infrastructure
       azureSubscription: $(pipeline#azure.subscription)
-      terraformVersion: $(deploy.terraform#version)
       stateResourceGroup: $(pipeline.terraform#resourceGroup)
       stateStorageAccount: $(pipeline.terraform#storageAccount)
       stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
       stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
+      workingDirectory: infrastructure\terraform@infrastructure
+      arguments: |
+        -var service=$(local#service.name) \
+        -var environment=$(local#environment.dev) \
+        -var location=$(infrastructure#location)
 
-- stage: InfrastructureApplyDev
-  displayName: 'Infrastructure Applying: DEV'
+- stage: DeployToDev
+  displayName: 'Deploying: DEV'
   dependsOn: InfrastructurePlanDev
   variables:
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
-  - template: templates\terraform.apply.yml@templates
-    parameters:
-      environment: $(pipeline#environment.infrastructure.dev)
-      poolImage: $(pipeline#vmImage)
-      workingDirectory: infrastructure\terraform@infrastructure
-      variablesFile: infrastructure\terraform\environment\dev.tfvars@infrastructure
-      azureSubscription: $(pipeline#azure.subscription)
-      terraformVersion: $(deploy#terraform.version)
-      stateResourceGroup: $(pipeline.terraform#resourceGroup)
-      stateStorageAccount: $(pipeline.terraform#storageAccount)
-      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
-      stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
+  - deployment: Deploying
+    displayName: Deploying
+    environment: $(pipeline#environment.infrastructure.dev)
+    pool:
+      vmImage: $(pipeline#vmImage)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # Deploy Infrastructure Change
+          - template: templates\terraform.apply.yml@templates
+            parameters:
+              environment: $(pipeline#environment.infrastructure.dev)
+              poolImage: $(pipeline#vmImage)
+              azureSubscription: $(pipeline#azure.subscription)
+              stateResourceGroup: $(pipeline.terraform#resourceGroup)
+              stateStorageAccount: $(pipeline.terraform#storageAccount)
+              stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
+              stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
+              workingDirectory: infrastructure\terraform@infrastructure
+              variablesFile: infrastructure\terraform\environment\dev.tfvars@infrastructure
 
-- stage: DeployToDev
-  displayName: 'Deploying: DEV'
-  dependsOn: InfrastructureApplyDev
-  jobs:
-  - template: templates\deploy.functionapp.yml@templates
-    parameters:
-      poolImage: $(pipeline#vmImage)
-      environment: $(pipeline#environment.deploy.dev)
-      azureSubscription: $(pipeline#azure.subscription.dev)
-      funcName: func-newmoon  # TODO: Should come from terraform output
+          # Deploy Func
+          - template: templates\deploy.functionapp.yml@templates
+            parameters:
+              azureSubscription: $(pipeline#azure.subscription.dev)
+              funcName: newmoon-dev-func-venues  # TODO: Should come from terraform output
 
-#   PROD
-- stage: InfrastructurePlanProd
-  displayName: 'Infrastructure Planning: Prod'
-  dependsOn: DeployToDev
-  variables:
-  - group: Pipeline.Terraform
-  - group: Pipeline.Terraform.Secret
-  jobs:
-  - template: templates\terraform.plan.yml@templates
-    parameters:
-      poolImage: $(pipeline#vmImage)
-      workingDirectory: infrastructure\terraform@infrastructure
-      variablesFile: infrastructure\terraform\environment\prod.tfvars@infrastructure
-      azureSubscription: $(pipeline#azure.subscription)
-      terraformVersion: $(deploy.terraform#version)
-      stateResourceGroup: $(pipeline.terraform#resourceGroup)
-      stateStorageAccount: $(pipeline.terraform#storageAccount)
-      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
-      stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
+  # TODO: PROD environment
 
-- stage: InfrastructureApplyProd
-  displayName: 'Infrastructure Applying: Prod'
-  dependsOn: InfrastructurePlanProd
-  variables:
-  - group: Pipeline.Terraform
-  - group: Pipeline.Terraform.Secret
-  jobs:
-  - template: templates\terraform.apply.yml@templates
-    parameters:
-      environment: $(pipeline#environment.infrastructure.prod)
-      poolImage: $(pipeline#vmImage)
-      workingDirectory: infrastructure\terraform@infrastructure
-      variablesFile: infrastructure\terraform\environment\prod.tfvars@infrastructure
-      azureSubscription: $(pipeline#azure.subscription)
-      terraformVersion: $(deploy.terraform#version)
-      stateResourceGroup: $(pipeline.terraform#resourceGroup)
-      stateStorageAccount: $(pipeline.terraform#storageAccount)
-      stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
-      stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
 
-- stage: DeployToProd
-  displayName: 'Deploying: PROD'
-  dependsOn: - stage: InfrastructureApplyProd
-  jobs:
-  - template: templates\deploy.functionapp.yml@templates
-    parameters:
-      poolImage: $(pipeline#vmImage)
-      environment: $(pipeline#environment.deploy.prod)
-      azureSubscription: $(pipeline#azure.subscription.prod)
-      funcName: func-newmoon-prod   # TODO: Should come from terraform output
-      # Slot
-      enableSlot: true
-      resourceGroupName: rg-newmoon-prod    # TODO: Should come from terraform output
-      slotName: stage     # TODO: Should come from terraform output
+  # - template: templates\deploy.functionapp.yml@templates
+  #   parameters:
+  #     poolImage: $(pipeline#vmImage)
+  #     environment: $(pipeline#environment.deploy.prod)
+  #     azureSubscription: $(pipeline#azure.subscription.prod)
+  #     funcName: func-newmoon-prod   # TODO: Should come from terraform output
+  #     # Slot
+  #     enableSlot: true
+  #     resourceGroupName: rg-newmoon-prod    # TODO: Should come from terraform output
+  #     slotName: stage     # TODO: Should come from terraform output
       
