@@ -178,17 +178,71 @@ stages:
               azureSubscription: $(pipeline#azure.subscription)
               funcName: newmoon-dev-func-venues  # TODO: Should come from terraform output
 
-  # TODO: PROD environment
+#   PROD
+- stage: PrepareProd
+  displayName: 'Preparing: PROD'
+  dependsOn: DeployToDev
+  variables:
+  - group: Infrastructure
+  - group: Pipeline.Terraform
+  - group: Pipeline.Terraform.Secret
+  jobs:
+  - job: TerraformPlanning
+    displayName: Infrastructure Planning
+    pool:
+      vmImage: $(pipeline#vmImage)
+    workspace:
+      clean: all
+    steps:
+    - checkout: infrastructure
+  
+    - template: templates\terraform.plan.yml@templates
+      parameters:
+        azureSubscription: $(pipeline#azure.subscription)
+        stateResourceGroup: $(pipeline.terraform#resourceGroup)
+        stateStorageAccount: $(pipeline.terraform#storageAccount)
+        stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
+        stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
+        workingDirectory: $(Build.SourcesDirectory)/terraform
+        arguments: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
 
+- stage: DeployToProd
+  displayName: 'Deploying: PROD'
+  dependsOn: PrepareProd
+  variables:
+  - group: Infrastructure
+  - group: Pipeline.Terraform
+  - group: Pipeline.Terraform.Secret
+  jobs:
+  - deployment: Deploying
+    displayName: Deploying
+    environment: $(pipeline#environment.deploy.prod)
+    pool:
+      vmImage: $(pipeline#vmImage)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # Deploy Infrastructure Change
+          - checkout: infrastructure
 
-  # - template: templates\deploy.functionapp.yml@templates
-  #   parameters:
-  #     vmImage: $(pipeline#vmImage)
-  #     environment: $(pipeline#environment.deploy.prod)
-  #     azureSubscription: $(pipeline#azure.subscription.prod)
-  #     funcName: func-newmoon-prod   # TODO: Should come from terraform output
-  #     # Slot
-  #     enableSlot: true
-  #     resourceGroupName: rg-newmoon-prod    # TODO: Should come from terraform output
-  #     slotName: stage     # TODO: Should come from terraform output
+          - template: templates\terraform.apply.yml@templates
+            parameters:
+              azureSubscription: $(pipeline#azure.subscription)
+              stateResourceGroup: $(pipeline.terraform#resourceGroup)
+              stateStorageAccount: $(pipeline.terraform#storageAccount)
+              stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
+              stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
+              workingDirectory: $(Build.SourcesDirectory)/terraform
+              arguments: '-auto-approve -var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
+              
+          # Deploy Func
+          - template: templates\deploy.functionapp.yml@templates
+            parameters:
+              azureSubscription: $(pipeline#azure.subscription)
+              funcName: newmoon-prod-func-venues  # TODO: Should come from terraform output
+              # Slot
+              enableSlot: true
+              resourceGroupName: rg-newmoon-prod    # TODO: Should come from terraform output
+              slotName: stage     # TODO: Should come from terraform output
       
