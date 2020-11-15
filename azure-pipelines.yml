@@ -62,7 +62,7 @@ stages:
   # Static Testing
   - template: templates\test.static.yml@templates
     parameters:
-      poolImage: ${{ variables['pipeline#vmImage'] }}
+      poolImage: ubuntu-latest # ${{ variables['pipeline#vmImage'] }}
 
   # Unit Testing
   - template: templates\test.unit.yml@templates
