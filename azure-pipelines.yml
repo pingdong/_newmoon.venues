@@ -146,6 +146,7 @@ stages:
   displayName: 'Deploying: DEV'
   dependsOn: PrepareDev
   variables:
+  - group: Infrastructure
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
