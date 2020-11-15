@@ -53,18 +53,18 @@ stages:
 # Quality Control
 - stage: QualityControl
   displayName: Quality Control
+  variables:
+    - group: Test.Static
+    - group: Test.Unit
+    - group: Test.Integration
   jobs:
   # Static Testing
   - template: templates\test.static.yml@templates
-    variables:
-    - group: Test.Static
     parameters:
       poolImage: $(pipeline#vmImage)
 
   # Unit Testing
   - template: templates\test.unit.yml@templates
-    variables:
-    - group: Test.Unit
     parameters:
       poolImage: $(pipeline#vmImage)
       buildConfiguration: $(build#configuration.release)
@@ -75,8 +75,6 @@ stages:
      
   # Integration Testing
   - template: templates\test.integration.yml@templates
-    variables:
-    - group: Test.Integration
     parameters:
       poolImage: $(pipeline#vmImage)
 
