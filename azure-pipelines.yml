@@ -138,7 +138,7 @@ stages:
   jobs:
   - deployment: Deploying
     displayName: Deploying
-    environment: $(pipeline#environment.infrastructure.dev)
+    environment: $(pipeline#environment.infrastructure.dev')
     pool:
       vmImage: $(pipeline#vmImage)
     strategy:
@@ -148,7 +148,7 @@ stages:
           # Deploy Infrastructure Change
           - template: templates\terraform.apply.yml@templates
             parameters:
-              azureSubscription: $(pipeline#azure.subscription)
+              azureSubscription: ${{ variables['pipeline#azure.subscription'] }}
               stateResourceGroup: $(pipeline.terraform#resourceGroup)
               stateStorageAccount: $(pipeline.terraform#storageAccount)
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
