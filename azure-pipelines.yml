@@ -62,7 +62,7 @@ stages:
   # Static Testing
   - template: templates\test.static.yml@templates
     parameters:
-      vmImage: $(pipeline#vmImage)
+      vmImage: ${{ pipeline#vmImage }}
 
   # Unit Testing
   - template: templates\test.unit.yml@templates
