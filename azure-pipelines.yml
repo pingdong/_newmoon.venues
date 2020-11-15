@@ -141,8 +141,8 @@ stages:
         stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
         workingDirectory: $(Build.SourcesDirectory)/terraform
         arguments: |          
-          -var service=$(local#service.name) \
-          -var environment=$(local#environment.dev) \
+          -var service=$(local#service.name) 
+          -var environment=$(local#environment.dev) 
           -var location=$(infrastructure#location)
 
 - stage: DeployToDev
