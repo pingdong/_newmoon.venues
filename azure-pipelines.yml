@@ -54,6 +54,7 @@ stages:
 - stage: QualityControl
   displayName: Quality Control
   variables:
+    - group: Build
     - group: Test.Static
     - group: Test.Unit
     - group: Test.Integration
