@@ -163,7 +163,7 @@ stages:
 
           - template: templates\terraform.apply.yml@templates
             parameters:
-              azureSubscription: ${{ variables['pipeline#azure.subscription'] }}
+              azureSubscription: $(pipeline#azure.subscription)
               stateResourceGroup: $(pipeline.terraform#resourceGroup)
               stateStorageAccount: $(pipeline.terraform#storageAccount)
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
