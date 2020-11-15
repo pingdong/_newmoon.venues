@@ -138,7 +138,7 @@ stages:
   jobs:
   - deployment: Deploying
     displayName: Deploying
-    environment: ${{ variables['pipeline#environment.infrastructure.dev'] }}
+    environment: $(pipeline#environment.infrastructure.dev)
     pool:
       vmImage: $(pipeline#vmImage)
     strategy:
