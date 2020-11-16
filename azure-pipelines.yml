@@ -234,15 +234,15 @@ stages:
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
               stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
               workingDirectory: $(Build.SourcesDirectory)/terraform
-              #variables: '-auto-approve -var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
+              variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
               
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
             parameters:
               azureSubscription: $(pipeline#azure.subscription)
-              funcName: newmoon-prod-func-venues  # TODO: Should come from terraform output
+              funcName: $(TF_OUT_FUNC-VENUE-NAME)
               # Slot
               enableSlot: true
-              resourceGroupName: rg-newmoon-prod    # TODO: Should come from terraform output
-              slotName: stage     # TODO: Should come from terraform output
+              resourceGroupName: $(TF_OUT_RG-COMPUTE_NAME)
+              slotName: $(TF_OUT_FUNC-VENUE-SLOT_NAME)
       
