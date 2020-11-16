@@ -119,7 +119,6 @@ stages:
   displayName: 'Verify: DEV'
   dependsOn: Build
   variables:
-  - group: Infrastructure
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
@@ -140,13 +139,12 @@ stages:
         stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
         stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(infrastructure#location)'
+        variables: '-var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(pipeline#azure.location)'
 
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
   dependsOn: VerifyDev
   variables:
-  - group: Infrastructure
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
@@ -170,7 +168,7 @@ stages:
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
               stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
               workingDirectory: $(Build.SourcesDirectory)/terraform
-              variables: '-var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(infrastructure#location)'
+              variables: '-var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(pipeline#azure.location)'
               
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
@@ -183,7 +181,6 @@ stages:
   displayName: 'Verifying: PROD'
   dependsOn: DeployToDev
   variables:
-  - group: Infrastructure
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
@@ -204,13 +201,12 @@ stages:
         stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
         stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
+        variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(pipeline#azure.location'
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
   dependsOn: VerifyProd
   variables:
-  - group: Infrastructure
   - group: Pipeline.Terraform
   - group: Pipeline.Terraform.Secret
   jobs:
@@ -234,7 +230,7 @@ stages:
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
               stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
               workingDirectory: $(Build.SourcesDirectory)/terraform
-              variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
+              variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(pipeline#azure.location)'
               
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
