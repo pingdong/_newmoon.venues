@@ -176,7 +176,7 @@ stages:
           - template: templates\deploy.functionapp.yml@templates
             parameters:
               azureSubscription: $(pipeline#azure.subscription)
-              funcName: newmoon-dev-func-venues  # TODO: Should come from terraform output
+              funcName: newmoon-dev-func-venue  # TODO: Should come from terraform output
 
 #   PROD
 - stage: PrepareProd
