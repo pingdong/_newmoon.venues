@@ -15,7 +15,7 @@ variables:
 - name  : local#project.name
   value : Venues.FunctionApp
 - name  : local#service.name
-  value : Newmoon
+  value : newmoon
 - name  : local#environment.dev
   value : dev
 - name  : local#environment.prod
