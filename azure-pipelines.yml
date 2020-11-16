@@ -204,7 +204,7 @@ stages:
         stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
         stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        arguments: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
+        variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
@@ -234,7 +234,7 @@ stages:
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
               stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
               workingDirectory: $(Build.SourcesDirectory)/terraform
-              arguments: '-auto-approve -var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
+              #variables: '-auto-approve -var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(infrastructure#location)'
               
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
