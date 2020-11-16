@@ -170,7 +170,7 @@ stages:
               stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.dev)
               stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
               workingDirectory: $(Build.SourcesDirectory)/terraform
-              #variables: '-var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(infrastructure#location)'
+              variables: '-var service=$(local#service.name) -var environment=$(local#environment.dev) -var location=$(infrastructure#location)'
               
           # Deploy Func
           - template: templates\deploy.functionapp.yml@templates
