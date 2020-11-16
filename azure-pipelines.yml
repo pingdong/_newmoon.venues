@@ -115,8 +115,8 @@ stages:
   
 # Deployment
 #   DEV
-- stage: PrepareDev
-  displayName: 'Preparing: DEV'
+- stage: VerifyDev
+  displayName: 'Verify: DEV'
   dependsOn: Build
   variables:
   - group: Infrastructure
@@ -124,7 +124,7 @@ stages:
   - group: Pipeline.Terraform.Secret
   jobs:
   - job: TerraformPlanning
-    displayName: Infrastructure Planning
+    displayName: Infrastructure Verifying
     pool:
       vmImage: $(pipeline#vmImage)
     workspace:
@@ -144,7 +144,7 @@ stages:
 
 - stage: DeployToDev
   displayName: 'Deploying: DEV'
-  dependsOn: PrepareDev
+  dependsOn: VerifyDev
   variables:
   - group: Infrastructure
   - group: Pipeline.Terraform
@@ -179,8 +179,8 @@ stages:
               funcName: newmoon-dev-func-venue  # TODO: Should come from terraform output
 
 #   PROD
-- stage: PrepareProd
-  displayName: 'Preparing: PROD'
+- stage: VerifyProd
+  displayName: 'Verifying: PROD'
   dependsOn: DeployToDev
   variables:
   - group: Infrastructure
@@ -208,7 +208,7 @@ stages:
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
-  dependsOn: PrepareProd
+  dependsOn: VerifyProd
   variables:
   - group: Infrastructure
   - group: Pipeline.Terraform
