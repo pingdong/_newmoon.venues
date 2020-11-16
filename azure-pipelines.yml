@@ -124,7 +124,7 @@ stages:
   - group: Pipeline.Terraform.Secret
   jobs:
   - job: TerraformPlanning
-    displayName: Infrastructure Verifying
+    displayName: Verifying Infrastructure
     pool:
       vmImage: $(pipeline#vmImage)
     workspace:
@@ -188,7 +188,7 @@ stages:
   - group: Pipeline.Terraform.Secret
   jobs:
   - job: TerraformPlanning
-    displayName: Infrastructure Planning
+    displayName: Verifying Infrastructure
     pool:
       vmImage: $(pipeline#vmImage)
     workspace:
