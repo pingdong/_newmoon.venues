@@ -201,7 +201,7 @@ stages:
         stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.prod)
         stateStorageAccountKey: $(StateStorageKey)  # <- from Pipeline.Terraform.Secret
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(pipeline#azure.location'
+        variables: '-var service=$(local#service.name) -var environment=$(local#environment.prod) -var location=$(pipeline#azure.location)'
 
 - stage: DeployToProd
   displayName: 'Deploying: PROD'
