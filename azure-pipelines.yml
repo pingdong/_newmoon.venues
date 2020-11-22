@@ -141,7 +141,7 @@ stages:
       displayName: Running Integration Testings
       inputs:
         command: test
-        arguments: '--no-build --configuration ${{ parameters.buildConfiguration }}'
+        arguments: '--no-build --configuration $(build#configuration.release)'
         publishTestResults: true
         projects: '**/*.[Ii]ntegration[Tt]ests/*.csproj'
 
