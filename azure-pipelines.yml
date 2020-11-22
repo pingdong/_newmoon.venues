@@ -126,7 +126,6 @@ stages:
     # Building Resourse
     - template: templates\build.yml@templates
       parameters:
-        vmImage: $(pipeline#vmImage)
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
     
@@ -165,11 +164,17 @@ stages:
   variables:
   - group: Build
   jobs:
-  - template: templates\build.yml@templates
-    parameters:
+  - job: Build
+    displayName: Building
+    pool:
       vmImage: $(pipeline#vmImage)
-      projectName: $(local#project.name)
-      buildConfiguration: $(build#configuration.release)
+    workspace:
+      clean: all
+    steps:
+    - template: templates\build.yml@templates
+      parameters:
+        projectName: $(local#project.name)
+        buildConfiguration: $(build#configuration.release)
   
 # Deployment
 #   DEV
