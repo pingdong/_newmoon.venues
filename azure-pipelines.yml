@@ -18,6 +18,8 @@ variables:
   value : newmoon
 - name  : local#environment.dev
   value : dev
+- name  : local#environment.integrationTestings
+  value : integration.testings
 - name  : local#environment.prod
   value : prod
 # Existing issue:
@@ -74,11 +76,6 @@ stages:
       coverageHistoryFeed: $(test.unit#coverage.history.feed)
       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
      
-  # Integration Testing
-  - template: templates\test.integration.yml@templates
-    parameters:
-      vmImage: $(pipeline#vmImage)
-
   # Validating Infrastructure
   - job: TerraformValidating
     displayName: Validating Terraform
@@ -93,6 +90,67 @@ stages:
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/terraform
 
+  # Integration Testing
+  - job: IntegrationTesting
+    displayName: Integration Testing
+    pool:
+      vmImage: $(pipeline#vmImage)
+    variables:
+    - group: Pipeline.Terraform
+    - group: Pipeline.Terraform.Secret
+    - name : local#integration.testing.parameter.target
+      value: '{ features = ["venue"]   suffix = "298F" }'  # TODO: Generate random suffix
+    workspace:
+      clean: all
+    condition: |
+      or
+      (
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        eq(variables['Build.Reason'], 'PullRequest'),
+        eq(variables['Build.Reason'], 'Schedule')
+      )
+    steps:
+    - checkout: infrastructure
+
+    # Deploying Shared Resources of Integration Testing 
+    - template: templates\terraform.apply.yml@templates
+      parameters:
+        azureSubscription: $(pipeline#azure.subscription)
+        stateResourceGroup: $(pipeline.terraform#resourceGroup)
+        stateStorageAccount: $(pipeline.terraform#storageAccount)
+        stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.integrationTestings)
+        stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
+        workingDirectory: $(Build.SourcesDirectory)/terraform
+        variables: '-var service=$(local#service.name) -var environment=$(local#environment.integrationTestings) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
+    
+    # Building Resourse
+    - template: templates\build.yml@templates
+      parameters:
+        vmImage: $(pipeline#vmImage)
+        projectName: $(local#project.name)
+        buildConfiguration: $(build#configuration.release)
+    
+    # Deploying Testing Resources
+    - template: templates\terraform.apply.yml@templates
+      parameters:
+        workingDirectory: $(Build.SourcesDirectory)/terraform
+        variables: '-var service=$(local#service.name) -var environment=$(local#environment.integrationTestings) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+    
+    # Running Integration Testings
+    - task: DotNetCoreCLI@2
+      displayName: Running Integration Testings
+      inputs:
+        command: test
+        arguments: '--no-build --configuration ${{ parameters.buildConfiguration }}'
+        publishTestResults: true
+        projects: '**/*.[Ii]ntegration[Tt]ests/*.csproj'
+
+    # Tearing down Integration Testings Resources
+    - template: templates\terraform.destory.yml@templates
+      parameters:
+        workingDirectory: $(Build.SourcesDirectory)/terraform
+        variables: '-var service=$(local#service.name) -var environment=$(local#environment.integrationTestings) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+    
 # Build
 - stage: Build
   displayName: Building
