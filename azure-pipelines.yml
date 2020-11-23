@@ -125,6 +125,7 @@ stages:
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
     
     # Provisioning Testing Resources
+    #   Terraform currently doesn't support multiple backend
     - task: Samayas.azuredevops-samayas-replaceinfiles.ReplaceInFilesTextByText.ReplaceInFilesTextByText@1
       displayName: Change backend type
       inputs:
