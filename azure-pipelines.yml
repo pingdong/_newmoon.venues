@@ -92,7 +92,7 @@ stages:
   - job: IntegrationTesting
     displayName: Integration Testing
     pool:
-      vmImage: $(test.integration#vmImage)
+      vmImage: $(pipeline#vmImage)
     variables:
     - group: Build
     - group: Pipeline.Terraform
@@ -126,12 +126,11 @@ stages:
     
     # Provisioning Testing Resources
     #   Terraform currently doesn't support multiple backend
-    - task: Samayas.azuredevops-samayas-replaceinfiles.ReplaceInFilesTextByText.ReplaceInFilesTextByText@1
-      displayName: Change backend type
-      inputs:
-        parameterSearchText: 'backend "azurerm" {'
-        parameterReplaceText: 'backend "local" {'
-        parameterFilesPattern: '**/main.tf'
+    - template: templates\tools.replacetext.yml@templates
+      parameters:
+        searchText: 'backend "azurerm" {'
+        replaceText: 'backend "local" {'
+        filesPattern: '**/main.tf'
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
