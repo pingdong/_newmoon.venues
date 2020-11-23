@@ -115,6 +115,7 @@ stages:
     # Provisioning Shared Resources of Integration Testing 
     - template: templates\terraform.apply.yml@templates
       parameters:
+        backendConfigFile: $(Build.SourcesDirectory)/terraform/backend/azurerm.tf
         azureSubscription: $(pipeline#azure.subscription)
         stateResourceGroup: $(pipeline.terraform#resourceGroup)
         stateStorageAccount: $(pipeline.terraform#storageAccount)
@@ -202,6 +203,7 @@ stages:
   
     - template: templates\terraform.plan.yml@templates
       parameters:
+        backendConfigFile: $(Build.SourcesDirectory)/terraform/backend/azurerm.tf
         azureSubscription: $(pipeline#azure.subscription)
         stateResourceGroup: $(pipeline.terraform#resourceGroup)
         stateStorageAccount: $(pipeline.terraform#storageAccount)
@@ -231,6 +233,7 @@ stages:
 
           - template: templates\terraform.apply.yml@templates
             parameters:
+              backendConfigFile: $(Build.SourcesDirectory)/terraform/backend/azurerm.tf
               azureSubscription: $(pipeline#azure.subscription)
               stateResourceGroup: $(pipeline.terraform#resourceGroup)
               stateStorageAccount: $(pipeline.terraform#storageAccount)
@@ -264,6 +267,7 @@ stages:
   
     - template: templates\terraform.plan.yml@templates
       parameters:
+        backendConfigFile: $(Build.SourcesDirectory)/terraform/backend/azurerm.tf
         azureSubscription: $(pipeline#azure.subscription)
         stateResourceGroup: $(pipeline.terraform#resourceGroup)
         stateStorageAccount: $(pipeline.terraform#storageAccount)
@@ -293,6 +297,7 @@ stages:
 
           - template: templates\terraform.apply.yml@templates
             parameters:
+              backendConfigFile: $(Build.SourcesDirectory)/terraform/backend/azurerm.tf
               azureSubscription: $(pipeline#azure.subscription)
               stateResourceGroup: $(pipeline.terraform#resourceGroup)
               stateStorageAccount: $(pipeline.terraform#storageAccount)
