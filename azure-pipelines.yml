@@ -19,7 +19,7 @@ variables:
 - name  : local#environment.dev
   value : dev
 - name  : local#environment.integrationTestings
-  value : integration.testings
+  value : it
 - name  : local#environment.prod
   value : prod
 # Existing issue:
