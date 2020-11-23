@@ -123,17 +123,18 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)/terraform
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
     
+    # Building Resourse
+    - template: templates\build.yml@templates
+      parameters:
+        projectName: $(local#project.name)
+        buildConfiguration: $(build#configuration.release)
+        
     # Provisioning Testing Resources
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/terraform
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
     
-    # Building Resourse
-    - template: templates\build.yml@templates
-      parameters:
-        projectName: $(local#project.name)
-        buildConfiguration: $(build#configuration.release)
 
     # Deploying Resource
     - template: templates\deploy.functionapp.yml@templates
