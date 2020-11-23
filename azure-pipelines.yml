@@ -18,8 +18,6 @@ variables:
   value : newmoon
 - name  : local#environment.dev
   value : dev
-- name  : local#environment.integrationTestings
-  value : it
 - name  : local#environment.prod
   value : prod
 # Existing issue:
@@ -98,6 +96,7 @@ stages:
     variables:
     - group: Pipeline.Terraform
     - group: Pipeline.Terraform.Secret
+    - group: Test.Integration
     - name : local#integration.testing.parameter.target
       value: '{ features = ["venue"]   suffix = "298F" }'  # TODO: Generate random suffix
     workspace:
@@ -121,7 +120,7 @@ stages:
         stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.integrationTestings)
         stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(local#environment.integrationTestings) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
+        variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
     
     # Building Resourse
     - template: templates\build.yml@templates
@@ -133,7 +132,7 @@ stages:
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(local#environment.integrationTestings) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+        variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
     
     # Running Integration Testings
     - task: DotNetCoreCLI@2
@@ -148,7 +147,7 @@ stages:
     - template: templates\terraform.destory.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(local#environment.integrationTestings) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+        variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
     
 # Build
 - stage: Build
