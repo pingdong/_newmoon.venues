@@ -110,8 +110,8 @@ stages:
         eq(variables['Build.Reason'], 'Schedule')
       )
     steps:
-    - checkout: infrastructure
     - checkout: self
+    - checkout: infrastructure
 
     # Provisioning Shared Resources of Integration Testing 
     - template: templates\terraform.apply.yml@templates
@@ -121,7 +121,7 @@ stages:
         stateStorageAccount: $(pipeline.terraform#storageAccount)
         stateStorageAccountContainer: $(pipeline.terraform#storageAccount.container.integrationTestings)
         stateStorageAccountKey: $(StateStorageKey) # <- from Pipeline.Terraform.Secret
-        workingDirectory: $(Build.SourcesDirectory)/terraform
+        workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
     
     # Building Resourse
@@ -133,7 +133,7 @@ stages:
     # Provisioning Testing Resources
     - template: templates\terraform.apply.yml@templates
       parameters:
-        workingDirectory: $(Build.SourcesDirectory)/terraform
+        workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
     
 
@@ -155,7 +155,7 @@ stages:
     # Tearing down Integration Testings Resources
     - template: templates\terraform.destory.yml@templates
       parameters:
-        workingDirectory: $(Build.SourcesDirectory)/terraform
+        workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
     
 # Build
