@@ -92,7 +92,7 @@ stages:
   - job: IntegrationTesting
     displayName: Integration Testing
     pool:
-      vmImage: $(pipeline#vmImage)
+      vmImage: $(test.integration#vmImage)
     variables:
     - group: Build
     - group: Pipeline.Terraform
