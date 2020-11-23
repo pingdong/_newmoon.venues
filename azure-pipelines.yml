@@ -131,7 +131,7 @@ stages:
       inputs:
         parameterSearchText: 'backend "azurerm" {'
         parameterReplaceText: 'backend "local" {'
-        parameterFilesPattern: '$(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf'
+        parameterFilesPattern: '**/main.tf'
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
