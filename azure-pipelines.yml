@@ -124,18 +124,17 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
     
-    # Building Resourse
-    - template: templates\build.yml@templates
-      parameters:
-        projectName: $(local#project.name)
-        buildConfiguration: $(build#configuration.release)
-
     # Provisioning Testing Resources
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
-    
+
+    # Building Resourse
+    - template: templates\build.yml@templates
+      parameters:
+        projectName: $(local#project.name)
+        buildConfiguration: $(build#configuration.release)
 
     # Deploying Resource
     - template: templates\deploy.functionapp.yml@templates
@@ -151,6 +150,8 @@ stages:
         arguments: '--no-build --configuration $(build#configuration.release)'
         publishTestResults: true
         projects: '**/*.[Ii]ntegration[Tt]ests/*.csproj'
+      env:
+        FuncApp__BaseUrl: $(TF_OUT_FUNC-VENUE-BASEURL)
 
     # Tearing down Integration Testings Resources
     - template: templates\terraform.destory.yml@templates
