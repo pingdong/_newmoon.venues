@@ -131,7 +131,8 @@ stages:
       inputs:
         FindRegex: 'backend "azurerm" {'
         ReplaceRegex: 'backend "local" {'
-        InputSearchPattern: '**/main.tf'
+        InputSearchPattern: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
+    - powershell: type $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
