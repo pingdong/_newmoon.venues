@@ -126,11 +126,12 @@ stages:
     
     # Provisioning Testing Resources
     #   Terraform currently doesn't support multiple backend
-    - template: templates\tools.replacetext.yml@templates
-      parameters:
-        searchText: 'backend "azurerm" {'
-        replaceText: 'backend "local" {'
-        filesPattern: '**/main.tf'
+    - task: knom.regexreplace-task.regex-replace.RegexReplace@3
+      displayName: Change backend type
+      inputs:
+        FindRegex: 'backend "azurerm" {'
+        ReplaceRegex: 'backend "local" {'
+        InputSearchPattern: '**/main.tf'
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
