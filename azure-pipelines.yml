@@ -94,6 +94,7 @@ stages:
     pool:
       vmImage: $(pipeline#vmImage)
     variables:
+    - group: Build
     - group: Pipeline.Terraform
     - group: Pipeline.Terraform.Secret
     - group: Test.Integration
@@ -124,10 +125,11 @@ stages:
     
     # Building Resourse
     - template: templates\build.yml@templates
+      continueOnError: true
       parameters:
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
-    
+
     # Deploying Testing Resources
     - template: templates\terraform.apply.yml@templates
       parameters:
