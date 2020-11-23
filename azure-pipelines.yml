@@ -135,7 +135,8 @@ stages:
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+        variablesFile: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/environment/integration_test.venue.tfvars
+        #variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
 
     # Building Resourse
     - template: templates\build.yml@templates
@@ -164,7 +165,8 @@ stages:
     - template: templates\terraform.destory.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+        variablesFile: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/environment/integration_test.venue.tfvars
+        #variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
     
 # Build
 - stage: Build
