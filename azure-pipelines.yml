@@ -125,6 +125,12 @@ stages:
         variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test-shared'
     
     # Provisioning Testing Resources
+    - task: Samayas.azuredevops-samayas-replaceinfiles.ReplaceInFilesTextByText.ReplaceInFilesTextByText@1
+      displayName: Change backend type
+      inputs:
+        parameterSearchText: 'backend "azurerm" {'
+        parameterReplaceText: 'backend "local" {'
+        parameterFilesPattern: '$(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf'
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
