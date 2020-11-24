@@ -99,7 +99,7 @@ stages:
     - group: Pipeline.Terraform.Secret
     - group: Test.Integration
     - name : local#integration.testing.parameter.target
-      value: '{ features = ["venue"]   suffix = "298F" }'  # TODO: Generate random suffix
+      value: '{ features = ["venue"],  suffix = "298F" }'  # TODO: Generate random suffix
     workspace:
       clean: all
     condition: |
@@ -126,6 +126,7 @@ stages:
     
     # Provisioning Testing Resources
     #   Terraform currently doesn't support multiple backend
+    #   TODO: Find a ubuntu version replace
     - task: knom.regexreplace-task.regex-replace.RegexReplace@3
       displayName: Change backend type
       inputs:
@@ -135,8 +136,7 @@ stages:
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/environment/integration_test.venue.tfvars
-        #variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+        variables: "-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing='$(local#integration.testing.parameter.target)'"
 
     # Building Resourse
     - template: templates\build.yml@templates
@@ -165,8 +165,7 @@ stages:
     - template: templates\terraform.destory.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/environment/integration_test.venue.tfvars
-        #variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
+        variables: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing=$(local#integration.testing.parameter.target)'
     
 # Build
 - stage: Build
