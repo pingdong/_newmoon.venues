@@ -96,6 +96,8 @@ stages:
     variables:
     - group: Build
     - group: Test.Integration
+    - name : local#terraform.variablesFile
+      value: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/deployment/integration_test.venue.tfvars
     workspace:
       clean: all
     condition: |
@@ -121,7 +123,7 @@ stages:
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/deployment/integration_test.venue.tfvars
+        variablesFile: $(local#terraform.variablesFile)
 
     # Building Resourse
     - template: templates\build.yml@templates
@@ -150,7 +152,7 @@ stages:
     - template: templates\terraform.destory.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/deployment/integration_test.venue.tfvars
+        variablesFile: $(local#terraform.variablesFile)
     
 # Build
 - stage: Build
