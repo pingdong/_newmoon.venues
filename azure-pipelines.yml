@@ -153,7 +153,7 @@ stages:
     - template: templates\terraform.destory.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: $(local#terraform.variablesFile)
+        variablesFile: integration_test.venue.tfvars
     
 # Build
 - stage: Build
