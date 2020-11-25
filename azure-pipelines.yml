@@ -123,7 +123,8 @@ stages:
     - template: templates\terraform.apply.new.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: $(local#terraform.variablesFile)
+        variablesFile: integration_test.venue.tfvars
+        #$(local#terraform.variablesFile)
     
     # Building Resourse
     - template: templates\build.yml@templates
