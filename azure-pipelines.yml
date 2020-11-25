@@ -96,8 +96,9 @@ stages:
     variables:
     - group: Build
     - group: Test.Integration
-    - name : local#terraform.variablesFile
-      value: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/deployment/integration_test.venue.tfvars
+    - name : local#terraform.variables
+      value: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing-suffix=30db -var integration_testing-features  = ["venue"]'
+      # TODO: Generate Random Suffix
     workspace:
       clean: all
     condition: |
@@ -124,23 +125,26 @@ stages:
       parameters:
         azureSubscription: $(pipeline#azure.subscription)
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: integration_test.venue.tfvars
-    
+        variables: $(local#terraform.variables)
+
     # Building Resourse
     - template: templates\build.yml@templates
       parameters:
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
+        continueOnError: true
 
     # Deploying Resource
     - template: templates\deploy.functionapp.yml@templates
       parameters:
         azureSubscription: $(pipeline#azure.subscription)
         funcName: $(TF_OUT_FUNC-VENUE-NAME)
+        continueOnError: true
 
     # Running Integration Testings
     - task: DotNetCoreCLI@2
       displayName: Running Integration Testings
+      continueOnError: true
       inputs:
         command: test
         arguments: '--no-build --configuration $(build#configuration.release)'
@@ -154,7 +158,7 @@ stages:
       parameters:
         azureSubscription: $(pipeline#azure.subscription)
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-        variablesFile: integration_test.venue.tfvars
+        variables: $(local#terraform.variables)
     
 # Build
 - stage: Build
