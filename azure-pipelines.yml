@@ -114,20 +114,20 @@ stages:
     # Provisioning Testing Resources
     #   Terraform currently doesn't support multiple backend
     #   TODO: Find a ubuntu version replace
-    - pwsh: ls $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-
     - task: knom.regexreplace-task.regex-replace.RegexReplace@3
       displayName: Change backend type
       inputs:
         FindRegex: 'backend "azurerm" {'
         ReplaceRegex: 'backend "local" {'
         InputSearchPattern: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
-    
-    - pwsh: ls $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
     - template: templates\terraform.apply.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variablesFile: $(local#terraform.variablesFile)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: $(Build.SourcesDirectory)
+        artifactName: Sources
 
     # Building Resourse
     - template: templates\build.yml@templates
