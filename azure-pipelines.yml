@@ -120,7 +120,7 @@ stages:
         FindRegex: 'backend "azurerm" {'
         ReplaceRegex: 'backend "local" {'
         InputSearchPattern: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
-    - template: templates\terraform.apply.yml@templates
+    - template: templates\terraform.apply.new.yml@templates
       parameters:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variablesFile: $(local#terraform.variablesFile)
