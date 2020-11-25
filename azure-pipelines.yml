@@ -133,6 +133,7 @@ stages:
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
         continueOnError: true
+        artifact: integration_test
 
     # Deploying Resource
     - template: templates\deploy.functionapp.yml@templates
@@ -140,6 +141,7 @@ stages:
         azureSubscription: $(pipeline#azure.subscription)
         funcName: $(TF_OUT_FUNC-VENUE-NAME)
         continueOnError: true
+        artifact: integration_test
 
     # Running Integration Testings
     - task: DotNetCoreCLI@2
