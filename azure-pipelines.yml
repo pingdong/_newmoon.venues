@@ -122,9 +122,9 @@ stages:
         InputSearchPattern: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
     - template: templates\terraform.apply.yml@templates
       parameters:
+        azureSubscription: $(pipeline#azure.subscription)
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variablesFile: integration_test.venue.tfvars
-        #$(local#terraform.variablesFile)
     
     # Building Resourse
     - template: templates\build.yml@templates
@@ -152,6 +152,7 @@ stages:
     # Tearing down Integration Testings Resources
     - template: templates\terraform.destory.yml@templates
       parameters:
+        azureSubscription: $(pipeline#azure.subscription)
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variablesFile: integration_test.venue.tfvars
     
