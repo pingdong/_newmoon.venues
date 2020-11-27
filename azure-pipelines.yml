@@ -161,7 +161,6 @@ stages:
         azureSubscription: $(pipeline#azure.subscription)
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: $(local#terraform.variables)
-      # TODO: Destroying not work
     
 # Build
 - stage: Build
