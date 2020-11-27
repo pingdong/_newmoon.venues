@@ -149,7 +149,7 @@ stages:
       continueOnError: true
       inputs:
         command: test
-        arguments: '--no-build --configuration $(test.integration#build.configuration)'
+        arguments: '--configuration $(test.integration#build.configuration)'
         publishTestResults: true
         projects: '**/*.[Ii]ntegration[Tt]ests.csproj'
       env:
