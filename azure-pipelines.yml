@@ -97,8 +97,7 @@ stages:
     - group: Build
     - group: Test.Integration
     - name : local#terraform.variables
-      value: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing-suffix=30db -var integration_testing-features=["\"venue\""]'
-      # TODO: Generate Random Suffix
+      value: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing-features=["\"venue\""]'
     workspace:
       clean: all
     condition: |
