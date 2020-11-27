@@ -68,7 +68,7 @@ stages:
   - template: templates\test.unit.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
-      buildConfiguration: $(build#configuration.release)
+      buildConfiguration: $(test.unit#build.configuration)
       projectName: ${{ variables['local#project.name'] }}   # Can't use $(local@app.name) here
                                                     #  as parameter appName is used to build variable in compile time inside template.
       coverageHistoryFeed: $(test.unit#coverage.history.feed)
