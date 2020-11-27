@@ -316,4 +316,3 @@ stages:
               enableSlot: true
               resourceGroupName: $(TF_OUT_RG-COMPUTE_NAME)
               slotName: $(TF_OUT_FUNC-VENUE-SLOT_NAME)
-      
