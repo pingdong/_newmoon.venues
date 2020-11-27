@@ -155,7 +155,7 @@ stages:
         FuncApp__BaseUrl: $(TF_OUT_FUNC-VENUE-BASEURL)
 
     # Tearing down Integration Testings Resources
-    - template: templates\terraform.destory.yml@templates
+    - template: templates\terraform.destroy.yml@templates
       parameters:
         azureSubscription: $(pipeline#azure.subscription)
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
