@@ -149,11 +149,12 @@ stages:
       continueOnError: true
       inputs:
         command: test
-        arguments: '--no-build --configuration $(build#configuration.release)'
+        arguments: '--no-build --configuration $(test.integration#build.configuration)'
         publishTestResults: true
         projects: '**/*.[Ii]ntegration[Tt]ests/*.csproj'
       env:
         FuncApp__BaseUrl: $(TF_OUT_FUNC-VENUE-BASEURL)
+      # TODO: Integration Testings not run
 
     # Tearing down Integration Testings Resources
     - template: templates\terraform.destory.yml@templates
@@ -161,6 +162,7 @@ stages:
         azureSubscription: $(pipeline#azure.subscription)
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: $(local#terraform.variables)
+      # TODO: Destroying not work
     
 # Build
 - stage: Build
