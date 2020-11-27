@@ -18,5 +18,11 @@ namespace PingDong.Newmoon.Venues.IntegrationTests
 
             Initialize(configuration["FuncApp:BaseUrl"]);
         }
+
+        // Clean up the HttpClient after testing
+        public void Reset()
+        {
+            Client.DefaultRequestHeaders.Clear();
+        }
     }
 }

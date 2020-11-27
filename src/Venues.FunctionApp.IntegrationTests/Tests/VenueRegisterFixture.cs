@@ -10,7 +10,7 @@ using Xunit;
 namespace PingDong.Newmoon.Venues.IntegrationTests
 {
     [Collection(nameof(IntegrationTestFixtures))]
-    public class VenueRegisterFixture
+    public class VenueRegisterFixture : IDisposable
     {
         private readonly HttpTestFixture _http;
         private readonly JsonTestFixture _json;
@@ -24,7 +24,12 @@ namespace PingDong.Newmoon.Venues.IntegrationTests
             _http = http;
             _json = json;
         }
-        
+
+        public void Dispose()
+        {
+            _http.Reset();
+        }
+
         [Theory]
         [InlineData("VenueRegister", "default.json")]
         public async Task Register_WithValue_ReturnOk(string folder, string file)
@@ -35,7 +40,7 @@ namespace PingDong.Newmoon.Venues.IntegrationTests
             var response = await _http.Client
                                         .AddRequestId(Guid.NewGuid().ToString())
                                         .AddCorrelationId(Guid.NewGuid().ToString())
-                                        .Post1Async(Endpoint, content);
+                                        .PostAsync(Endpoint, content);
 
             response.EnsureSuccessStatusCode();
         }
@@ -48,8 +53,8 @@ namespace PingDong.Newmoon.Venues.IntegrationTests
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
             var response = await _http.Client
-                .AddCorrelationId(Guid.NewGuid().ToString())
-                .Post1Async(Endpoint, content);
+                                        .AddCorrelationId(Guid.NewGuid().ToString())
+                                        .PostAsync(Endpoint, content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -62,8 +67,8 @@ namespace PingDong.Newmoon.Venues.IntegrationTests
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
             var response = await _http.Client
-                .AddRequestId(Guid.NewGuid().ToString())
-                .Post1Async(Endpoint, content);
+                                        .AddRequestId(Guid.NewGuid().ToString())
+                                        .PostAsync(Endpoint, content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }

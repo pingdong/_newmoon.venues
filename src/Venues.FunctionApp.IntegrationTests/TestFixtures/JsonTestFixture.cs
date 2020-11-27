@@ -6,7 +6,7 @@ namespace PingDong.Newmoon.Venues.IntegrationTests
     {
         public JsonTestFixture()
         {
-            Initialize("PingDong.Newmoon.Venues.Function.IntegrationTestings.Json");
+            Initialize("PingDong.Newmoon.Venues.FunctionApp.IntegrationTests.Json");
         }
     }
 }

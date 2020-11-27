@@ -9,7 +9,7 @@ namespace PingDong.Http.Testings
     {
         #region Post
 
-        public static async Task<HttpResponseMessage> Post1Async(this HttpClient client, string endpoint, HttpContent content)
+        public static async Task<HttpResponseMessage> PostAsync(this HttpClient client, string endpoint, HttpContent content)
         {
             endpoint = endpoint.EnsureNotNullDefaultOrWhitespace(nameof(endpoint))
                                 .EnsureBeginningForwardSlash();

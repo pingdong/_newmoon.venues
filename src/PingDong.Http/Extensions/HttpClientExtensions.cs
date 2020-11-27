@@ -9,6 +9,8 @@ namespace PingDong.Http
             client.EnsureNotNull(nameof(client));
             requestId.EnsureNotNullOrWhitespace(nameof(requestId));
 
+            if (client.DefaultRequestHeaders.Contains(key))
+                client.DefaultRequestHeaders.Remove(key);
             client.DefaultRequestHeaders.Add(key, requestId);
 
             return client;
@@ -19,6 +21,8 @@ namespace PingDong.Http
             client.EnsureNotNull(nameof(client));
             correlationId.EnsureNotNullOrWhitespace(nameof(correlationId));
 
+            if (client.DefaultRequestHeaders.Contains(key))
+                client.DefaultRequestHeaders.Remove(key);
             client.DefaultRequestHeaders.Add(key, correlationId);
 
             return client;
@@ -29,6 +33,8 @@ namespace PingDong.Http
             client.EnsureNotNull(nameof(client));
             tenantId.EnsureNotNullOrWhitespace(nameof(tenantId));
 
+            if (client.DefaultRequestHeaders.Contains(key))
+                client.DefaultRequestHeaders.Remove(key);
             client.DefaultRequestHeaders.Add(key, tenantId);
 
             return client;
