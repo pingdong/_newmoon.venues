@@ -188,7 +188,6 @@ stages:
       parameters:
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
-        versionSpec: $(build#version.major).$(build#version.minor).$(build#version.patch).x
 
 # Deployment
 #   DEV
