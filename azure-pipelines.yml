@@ -165,13 +165,13 @@ stages:
 - stage: Build
   displayName: Building
   # dependsOn: QualityControl
-  condition: |
-    and
-    (
-      succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['Build.Reason'], 'Schedule')
-    )
+  # condition: |
+  #   and
+  #   (
+  #     succeeded(),
+  #     eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+  #     ne(variables['Build.Reason'], 'Schedule')
+  #   )
   variables:
   - group: Build
   # Unable to have both variables and steps in one template
