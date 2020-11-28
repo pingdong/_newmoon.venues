@@ -50,7 +50,7 @@ schedules:
                     # The default is false.
 
 stages:
-Quality Control
+# Quality Control
 - stage: QualityControl
   displayName: Quality Control
   variables:
