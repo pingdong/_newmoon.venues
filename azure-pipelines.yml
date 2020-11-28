@@ -50,128 +50,127 @@ schedules:
                     # The default is false.
 
 stages:
-# Quality Control
-# - stage: QualityControl
-#   displayName: Quality Control
-#   variables:
-#     - group: Build
-#     - group: Test.Static
-#     - group: Test.Unit
-#     - group: Test.Integration
-#   jobs:
-#   # Static Testing
-#   - template: templates\test.static.yml@templates
-#     parameters:
-#       vmImage: $(pipeline#vmImage)
+Quality Control
+- stage: QualityControl
+  displayName: Quality Control
+  variables:
+    - group: Build
+    - group: Test.Static
+    - group: Test.Unit
+    - group: Test.Integration
+  jobs:
+  # Static Testing
+  - template: templates\test.static.yml@templates
+    parameters:
+      vmImage: $(pipeline#vmImage)
 
-#   # Unit Testing
-#   - template: templates\test.unit.yml@templates
-#     parameters:
-#       vmImage: $(pipeline#vmImage)
-#       buildConfiguration: $(test.unit#build.configuration)
-#       projectName: ${{ variables['local#project.name'] }}   # Can't use $(local@app.name) here
-#                                                     #  as parameter appName is used to build variable in compile time inside template.
-#       coverageHistoryFeed: $(test.unit#coverage.history.feed)
-#       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
+  # Unit Testing
+  - template: templates\test.unit.yml@templates
+    parameters:
+      vmImage: $(pipeline#vmImage)
+      buildConfiguration: $(test.unit#build.configuration)
+      projectName: ${{ variables['local#project.name'] }}   # Can't use $(local@app.name) here
+                                                            #  as parameter appName is used to build variable in compile time inside template.
+      coverageHistoryFeed: $(test.unit#coverage.history.feed)
+      sonarcloudOrganization: $(test.unit#sonarcloud.organization)
      
-#   # Validating Infrastructure
-#   - job: TerraformValidating
-#     displayName: Validating Terraform
-#     pool:
-#       vmImage: $(pipeline#vmImage)
-#     workspace:
-#       clean: all
-#     steps:
-#     - checkout: infrastructure
+  # Validating Infrastructure
+  - job: TerraformValidating
+    displayName: Validating Terraform
+    pool:
+      vmImage: $(pipeline#vmImage)
+    workspace:
+      clean: all
+    steps:
+    - checkout: infrastructure
 
-#     - template: templates\terraform.validate.yml@templates
-#       parameters:
-#         workingDirectory: $(Build.SourcesDirectory)/terraform
+    - template: templates\terraform.validate.yml@templates
+      parameters:
+        workingDirectory: $(Build.SourcesDirectory)/terraform
 
-#   # Integration Testing
-#   - job: IntegrationTesting
-#     displayName: Integration Testing
-#     pool:
-#       vmImage: $(test.integration#vmImage)
-#     variables:
-#     - group: Build
-#     - group: Test.Integration
-#     - name : local#terraform.variables
-#       value: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing-features=["\"venue\""]'
-#     workspace:
-#       clean: all
-#     condition: |
-#       or
-#       (
-#         eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-#         eq(variables['Build.Reason'], 'PullRequest'),
-#         eq(variables['Build.Reason'], 'Schedule')
-#       )
-#     steps:
-#     - checkout: self
-#     - checkout: infrastructure
+  # Integration Testing
+  - job: IntegrationTesting
+    displayName: Integration Testing
+    pool:      
+      vmImage: $(test.integration#vmImage)
+    variables:
+    - group: Build
+    - group: Test.Integration
+    - name : local#terraform.variables
+      value: '-var service=$(local#service.name) -var environment=$(test.integration#environment.name) -var location=$(pipeline#azure.location) -var target=integration_test -var integration_testing-features=["\"venue\""]'
+    workspace:
+      clean: all
+    condition: |
+      or
+      (
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        eq(variables['Build.Reason'], 'PullRequest'),
+        eq(variables['Build.Reason'], 'Schedule')
+      )
+    steps:
+    - checkout: self
+    - checkout: infrastructure
 
-#     # Provisioning Testing Resources
-#     #   Terraform currently doesn't support multiple backend
-#     #   TODO: Find a ubuntu version replace
-#     - task: knom.regexreplace-task.regex-replace.RegexReplace@3
-#       displayName: Change backend type
-#       inputs:
-#         FindRegex: 'backend "azurerm" {'
-#         ReplaceRegex: 'backend "local" {'
-#         InputSearchPattern: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
-#     - template: templates\terraform.apply.yml@templates
-#       parameters:
-#         azureSubscription: $(pipeline#azure.subscription)
-#         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-#         variables: $(local#terraform.variables)
+    # Provisioning Testing Resources
+    #   Terraform currently doesn't support multiple backend
+    - task: knom.regexreplace-task.regex-replace.RegexReplace@3   # TODO: Find a ubuntu version replacement tool
+      displayName: Change backend type
+      inputs:
+        FindRegex: 'backend "azurerm" {'
+        ReplaceRegex: 'backend "local" {'
+        InputSearchPattern: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
+    - template: templates\terraform.apply.yml@templates
+      parameters:
+        azureSubscription: $(pipeline#azure.subscription)
+        workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
+        variables: $(local#terraform.variables)
 
-#     # Building Resourse
-#     - template: templates\build.yml@templates
-#       parameters:
-#         projectName: $(local#project.name)
-#         buildConfiguration: $(build#configuration.release)
-#         continueOnError: true
-#         artifact: integration_test
+    # Building Resourse
+    - template: templates\build.yml@templates
+      parameters:
+        projectName: $(local#project.name)
+        buildConfiguration: $(build#configuration.release)
+        continueOnError: true
+        artifact: integration_test
 
-#     # Deploying Resource
-#     - template: templates\deploy.functionapp.yml@templates
-#       parameters:
-#         azureSubscription: $(pipeline#azure.subscription)
-#         funcName: $(TF_OUT_FUNC-VENUE-NAME)
-#         continueOnError: true
-#         artifact: integration_test
+    # Deploying Resource
+    - template: templates\deploy.functionapp.yml@templates
+      parameters:
+        azureSubscription: $(pipeline#azure.subscription)
+        funcName: $(TF_OUT_FUNC-VENUE-NAME)
+        continueOnError: true
+        artifact: integration_test
 
-#     # Running Integration Testings
-#     - task: DotNetCoreCLI@2
-#       displayName: Running Integration Testings
-#       continueOnError: true
-#       inputs:
-#         command: test
-#         arguments: '--configuration $(test.integration#build.configuration)'
-#         publishTestResults: true
-#         projects: '**/*.[Ii]ntegration[Tt]ests.csproj'
-#       env:
-#         FuncApp__BaseUrl: $(TF_OUT_FUNC-VENUE-BASEURL)
+    # Running Integration Testings
+    - task: DotNetCoreCLI@2
+      displayName: Running Integration Testings
+      continueOnError: true
+      inputs:
+        command: test
+        arguments: '--configuration $(test.integration#build.configuration)'
+        publishTestResults: true
+        projects: '**/*.[Ii]ntegration[Tt]ests.csproj'
+      env:
+        FuncApp__BaseUrl: $(TF_OUT_FUNC-VENUE-BASEURL)
 
-#     # Tearing down Integration Testings Resources
-#     - template: templates\terraform.destroy.yml@templates
-#       parameters:
-#         azureSubscription: $(pipeline#azure.subscription)
-#         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
-#         variables: $(local#terraform.variables)
+    # Tearing down Integration Testings Resources
+    - template: templates\terraform.destroy.yml@templates
+      parameters:
+        azureSubscription: $(pipeline#azure.subscription)
+        workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
+        variables: $(local#terraform.variables)
     
 # Build
 - stage: Build
   displayName: Building
-  # dependsOn: QualityControl
-  # condition: |
-  #   and
-  #   (
-  #     succeeded(),
-  #     eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-  #     ne(variables['Build.Reason'], 'Schedule')
-  #   )
+  dependsOn: QualityControl
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['Build.Reason'], 'Schedule')
+    )
   variables:
   - group: Build
   # Unable to have both variables and steps in one template
