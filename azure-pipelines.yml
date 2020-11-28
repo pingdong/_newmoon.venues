@@ -188,7 +188,7 @@ stages:
       parameters:
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
-        versionSpec: '1.0.0.x' #${{ variables['build#version.major'].variables['build#version.minor'].variables['build#version.patch'].x }}
+        versionSpec: $(build#version.major).$(build#version.minor).$(build#version.patch).x
 
 # Deployment
 #   DEV
