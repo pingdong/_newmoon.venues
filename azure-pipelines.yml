@@ -167,15 +167,14 @@ stages:
 - stage: Build
   displayName: Building
   # TODO: Restore Dependency
-  #dependsOn: QualityControl
-  condition: |
-    and
-    (
-      # TODO: Restore Condition
-      #succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['Build.Reason'], 'Schedule')
-    )
+  # dependsOn: QualityControl
+  # condition: |
+  #   and
+  #   (
+  #     succeeded(),
+  #     eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+  #     ne(variables['Build.Reason'], 'Schedule')
+  #   )
   variables:
   - group: Build
   # Unable to have both variables and steps in one template
