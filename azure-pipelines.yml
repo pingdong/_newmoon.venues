@@ -114,8 +114,7 @@ stages:
     # Provisioning Testing Resources
     #   Terraform currently doesn't support multiple backend
     - pwsh: |
-        (Get-Content $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/backend.tf) 
-         -replace 'backend "azurerm" {', 'backend "local" {' 
+        (Get-Content $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/backend.tf) -replace 'backend "azurerm" {', 'backend "local" {' 
         || Out-File -encoding ASCII $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/backend.tf
       displayName: Change backend type
     - template: templates\terraform.apply.yml@templates
