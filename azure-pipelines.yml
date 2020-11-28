@@ -186,7 +186,10 @@ stages:
       parameters:
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
-  
+        versionMajor: $(build#version.major)
+        versionMinor: $(build#version.minor)
+        versionPatch: $(build#version.patch)
+
 # Deployment
 #   DEV
 - stage: VerifyDev
