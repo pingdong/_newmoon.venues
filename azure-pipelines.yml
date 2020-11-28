@@ -187,6 +187,7 @@ stages:
       parameters:
         projectName: $(local#project.name)
         buildConfiguration: $(build#configuration.release)
+        forRelease: true
 
 # Deployment
 #   DEV
