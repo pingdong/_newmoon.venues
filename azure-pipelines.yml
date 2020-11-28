@@ -53,6 +53,7 @@ stages:
 # Quality Control
 - stage: QualityControl
   displayName: Quality Control
+  # TODO: Remove Condition
   condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
   variables:
     - group: Build
@@ -165,11 +166,13 @@ stages:
 # Build
 - stage: Build
   displayName: Building
+  # TODO: Restore Dependency
   #dependsOn: QualityControl
   condition: |
     and
     (
-      succeeded(),
+      # TODO: Restore Condition
+      #succeeded(),
       eq(variables['Build.SourceBranch'], 'refs/heads/master'),
       ne(variables['Build.Reason'], 'Schedule')
     )
