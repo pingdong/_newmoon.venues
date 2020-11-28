@@ -53,6 +53,7 @@ stages:
 # Quality Control
 - stage: QualityControl
   displayName: Quality Control
+  condition: ne(variables['Build.SourceBranch'], 'refs/heads/master'),
   variables:
     - group: Build
     - group: Test.Static
@@ -164,7 +165,7 @@ stages:
 # Build
 - stage: Build
   displayName: Building
-  dependsOn: QualityControl
+  #dependsOn: QualityControl
   condition: |
     and
     (
