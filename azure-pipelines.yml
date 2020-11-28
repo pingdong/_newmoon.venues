@@ -175,7 +175,7 @@ stages:
   variables:
   - group: Build
   # Unable to have both variables and steps in one template
-  - templates: templates\build.vars.yml@templates
+  - template: templates\build.vars.yml@templates
   jobs:
   - job: Build
     displayName: Building
