@@ -114,7 +114,9 @@ stages:
     # Provisioning Testing Resources
     #   Terraform currently doesn't support multiple backend
     # - pwsh: (Get-Content $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf) -replace 'backend "azurerm" {', 'backend "local" {' | Out-File -encoding ASCII $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/main.tf
-
+    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+      displayName: 'Replace tokens in **/*.config'
+      
     - task: knom.regexreplace-task.regex-replace.RegexReplace@3   # TODO: Find a ubuntu version replacement tool
       displayName: Change backend type
       inputs:
