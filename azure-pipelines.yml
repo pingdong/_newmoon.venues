@@ -67,10 +67,10 @@ stages:
       buildConfiguration: $(test.unit#build.configuration)
       projectName: ${{ variables['local#vs.project.name'] }}   # Can't use $(local@app.name) here
                                                             #  as parameter appName is used to build variable in compile time inside template.
-      sonarCloudProjectKey: $(local#project.name)
       coverageHistoryFeed: $(test.unit#coverage.history.feed)
       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
-     
+      sonarCloudProjectKey: ${{ lower(variables['local#project.name']) }}
+      
   # Integration Testing
   - job: IntegrationTesting
     displayName: Integration Testing
