@@ -12,12 +12,12 @@ resources:
     endpoint: GitHub
 
 variables:
-- name  : local#project.name
-  value : Venues.FunctionApp
-- name  : local#service.name
-  value : Newmoon.Venues
 - name  : local#service.name
   value : newmoon
+- name  : local#project.name
+  value : Newmoon.Venues
+- name  : local#vs.project.name
+  value : Venues.FunctionApp
 - name  : local#environment.dev
   value : dev
 - name  : local#environment.prod
@@ -57,40 +57,20 @@ stages:
   displayName: Quality Control
   variables:
     - group: Build
-    - group: Test.Static
     - group: Test.Unit
     - group: Test.Integration
   jobs:
-  # Static Testing
-  - template: templates\test.static.yml@templates
-    parameters:
-      vmImage: $(pipeline#vmImage)
-
   # Unit Testing
   - template: templates\test.unit.yml@templates
     parameters:
       vmImage: $(pipeline#vmImage)
       buildConfiguration: $(test.unit#build.configuration)
-      projectName: ${{ variables['local#project.name'] }}   # Can't use $(local@app.name) here
+      projectName: ${{ variables['local#vs.project.name'] }}   # Can't use $(local@app.name) here
                                                             #  as parameter appName is used to build variable in compile time inside template.
-      sonarProjectKey: $(local#service.name)
+      sonarCloudProjectKey: $(local#project.name)
       coverageHistoryFeed: $(test.unit#coverage.history.feed)
       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
      
-  # Validating Infrastructure
-  - job: TerraformValidating
-    displayName: Validating Terraform
-    pool:
-      vmImage: $(pipeline#vmImage)
-    workspace:
-      clean: all
-    steps:
-    - checkout: infrastructure
-
-    - template: templates\terraform.validate.yml@templates
-      parameters:
-        workingDirectory: $(Build.SourcesDirectory)/terraform
-
   # Integration Testing
   - job: IntegrationTesting
     displayName: Integration Testing
@@ -127,7 +107,7 @@ stages:
     # Building Resourse
     - template: templates\build.yml@templates
       parameters:
-        projectName: $(local#project.name)
+        projectName: $(local#vs.project.name)
         buildConfiguration: $(build#configuration.release)
         continueOnError: true
         artifact: integration_test
@@ -159,6 +139,25 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)/newmoon.infrastructure/terraform
         variables: $(local#terraform.variables)
     
+  # Security Validating
+  - template: templates\security.validation.yml@templates
+    parameters:
+      vmImage: $(pipeline#vmImage)
+
+  # Infrastructure Validating
+  - job: InfrastructureValidating
+    displayName: Validating Infrastructure
+    pool:
+      vmImage: $(pipeline#vmImage)
+    workspace:
+      clean: all
+    steps:
+    - checkout: infrastructure
+
+    - template: templates\terraform.validate.yml@templates
+      parameters:
+        workingDirectory: $(Build.SourcesDirectory)/terraform
+
 # Build
 - stage: Build
   displayName: Building
@@ -184,7 +183,7 @@ stages:
     steps:
     - template: templates\build.yml@templates
       parameters:
-        projectName: $(local#project.name)
+        projectName: $(local#vs.project.name)
         buildConfiguration: $(build#configuration.release)
         forRelease: true
 
