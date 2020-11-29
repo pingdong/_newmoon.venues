@@ -5,17 +5,7 @@ Place management service
 
 If you want to check the authentication service, check [newmoon.authentication](https://github.com/pingdong/newmoon.authentication)
 
-Develop Branch:<br />
-[![Build Status](https://pingdong.visualstudio.com/Newmoon/_apis/build/status/places?branchName=develop)](https://pingdong.visualstudio.com/Newmoon/_build/latest?definitionId=29&branchName=develop)<br />
-Master Branch:<br />
-[![Build Status](https://pingdong.visualstudio.com/Newmoon/_apis/build/status/places?branchName=master)](https://pingdong.visualstudio.com/Newmoon/_build/latest?definitionId=29&branchName=master)<br />
-<br />
-
-Deployment to QA<br />
-[![Deployment Status](https://pingdong.vsrm.visualstudio.com/_apis/public/Release/badge/e91eaf4f-be05-424d-b72e-fc1d8aab16fc/4/10)](https://pingdong.visualstudio.com/Newmoon/_release?definitionId=4)<br />
-Deployment to Production<br />
-[![Deployment Status](https://pingdong.vsrm.visualstudio.com/_apis/public/Release/badge/e91eaf4f-be05-424d-b72e-fc1d8aab16fc/4/11)](https://pingdong.visualstudio.com/Newmoon/_release?definitionId=4)<br />
-<br />
+[![Build Status](https://dev.azure.com/pingdong/Newmoon/_apis/build/status/pingdong.newmoon.venues?repoName=pingdong%2Fnewmoon.venues&branchName=master)](https://dev.azure.com/pingdong/Newmoon/_build/latest?definitionId=47&repoName=pingdong%2Fnewmoon.venues&branchName=master)
 
 The place service requires a local.setting.json with the following configuration under \src\places
 
