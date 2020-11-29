@@ -15,6 +15,8 @@ variables:
 - name  : local#project.name
   value : Venues.FunctionApp
 - name  : local#service.name
+  value : Newmoon.Venues
+- name  : local#service.name
   value : newmoon
 - name  : local#environment.dev
   value : dev
@@ -71,6 +73,7 @@ stages:
       buildConfiguration: $(test.unit#build.configuration)
       projectName: ${{ variables['local#project.name'] }}   # Can't use $(local@app.name) here
                                                             #  as parameter appName is used to build variable in compile time inside template.
+      sonarProjectKey: $(local#service.name)
       coverageHistoryFeed: $(test.unit#coverage.history.feed)
       sonarcloudOrganization: $(test.unit#sonarcloud.organization)
      
