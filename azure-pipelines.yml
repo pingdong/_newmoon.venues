@@ -97,7 +97,7 @@ stages:
     # Provisioning Testing Resources
     #   Terraform currently doesn't support multiple backend
     - pwsh: (Get-Content $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/backend.tf) -replace 'backend "azurerm" {', 'backend "local" {' | Out-File -encoding ASCII $(Build.SourcesDirectory)/newmoon.infrastructure/terraform/backend.tf
-      displayName: Change backend type
+      displayName: Changing Backend Type
     - template: templates\terraform.apply.yml@templates
       parameters:
         azureSubscription: $(pipeline#azure.subscription)
@@ -122,7 +122,7 @@ stages:
 
     # Running Integration Testings
     - task: DotNetCoreCLI@2
-      displayName: Running Integration Testings
+      displayName: Running Integration Tests
       continueOnError: true
       inputs:
         command: test
